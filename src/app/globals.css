@@ -1,26 +1,59 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-light: #f1f1f1;
+  --color-dark: #222222;
+  --color-primary: #05a4ec;
+
+  /* FONTS */
+  --font-bebas: 'Bebas Neue';
+  --font-rubik: 'Rubik'
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-primary: var(--color-primary);
+  --color-dark: var(--color-dark);
+  --color-light: var(--color-light);
+
+  --font-rubik: var(--font-rubik);
+  --font-bebas: var(--font-bebas);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-light);
+  font-family: var(--font-rubik);
+}
+
+.slider-wrapper {
+  overflow: hidden;
+  width: 100%;
+  /* optional: fix height if you want */
+}
+
+.slider-track {
+  display: flex;
+  width: calc(150px * 10);
+  /* width = item width * total items (2 * 5 clients) */
+  animation: scroll-left 20s linear infinite;
+}
+
+.slider-wrapper:hover .slider-track {
+  animation-play-state: paused;
+}
+
+.client-item {
+  flex: 0 0 auto;
+  width: 150px;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(calc(-150px * 5));
+    /* scroll by width of original clients once */
+  }
 }
