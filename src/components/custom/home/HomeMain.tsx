@@ -20,13 +20,12 @@ const HomeMain = () => {
     const y = useTransform(scrollYProgress, [0, 0.6], [0, -400]);
     const scale = useTransform(scrollYProgress, [0, 0.3], [0.6, 1]);
     const pathname = usePathname()
-    const searchParams = useSearchParams()
+    const searchParams = useSearchParams();
 
     const currentUrl = `${pathname}?${searchParams.toString()}`
 
     const activeService = currentUrl.split('=')[1];
     const activeData = heroMainData.find(data => data.service === activeService)
-    console.log(activeData)
 
 
 
