@@ -70,7 +70,7 @@ const NavigationContainer = () => {
                                 if (!hasScrolled) setActiveId(null)
                             }}
                             onClick={() => handleClick(data.id)}
-                            isBorder={hasScrolled && data.isBorder}
+                            isBorder={!hasScrolled && data.isBorder}
                         />
                     )
                 })}
