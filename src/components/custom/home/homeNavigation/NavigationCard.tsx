@@ -10,7 +10,8 @@ interface NavigationCardProps {
     onMouseEnter?: MouseEventHandler<HTMLDivElement>
     onMouseLeave?: MouseEventHandler<HTMLDivElement>
     isBorder?: boolean
-    data: HomeNavigationItem
+    data: HomeNavigationItem,
+    onClick?: MouseEventHandler<HTMLDivElement>
 }
 
 const NavigationCard = ({
@@ -19,6 +20,7 @@ const NavigationCard = ({
     onMouseEnter,
     onMouseLeave,
     isBorder = true,
+    onClick,
 }: NavigationCardProps) => {
     const [isHovered, setIsHovered] = useState(false)
 
@@ -34,6 +36,7 @@ const NavigationCard = ({
                 setIsHovered(false)
                 onMouseLeave?.(e)
             }}
+            onClick={onClick}
             className={`relative flex items-center justify-center flex-col px-6 cursor-pointer overflow-hidden ${className} ${isBorder ? 'border-r' : ''}`}
         >
             <div className="flex items-center flex-col justify-evenly h-full my-16 relative w-full">

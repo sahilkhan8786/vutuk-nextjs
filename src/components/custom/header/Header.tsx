@@ -8,7 +8,7 @@ import Image from 'next/image'
 
 const Header = () => {
     return (
-        <header className='w-full bg-dark text-light'>
+        <header className='w-full bg-dark text-light fixed top-0 left-0 z-50'>
             <WidthCard className=' flex items-center justify-between px-4 py-4 h-[65px]'>
 
                 <div>
