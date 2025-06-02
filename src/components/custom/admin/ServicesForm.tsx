@@ -11,12 +11,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { FormProvider, useForm } from "react-hook-form"
 import { z } from "zod"
 import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 
 const formSchema = z.object({
     serviceName: z.string().min(2).max(50),
     description: z.string().min(5),
-    image: z.any().refine(file => file?.length === 1, "Image is required").optional()
+    image: z.any().refine(file => file?.length === 1, "Image is required").optional(),
+    stream: z.enum(["media", "design", "web-development"])
 
 })
 
@@ -33,7 +35,8 @@ const ServicesForm = ({ isEditing = false }: {
         defaultValues: {
             serviceName: "",
             description: "",
-            image: null
+            image: null,
+            stream: "media",
         },
     })
 
@@ -79,6 +82,33 @@ const ServicesForm = ({ isEditing = false }: {
                                         <FormLabel>Description</FormLabel>
                                         <FormControl>
                                             <Input placeholder="Enter Description" {...field} />
+                                        </FormControl>
+
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="stream"
+                                render={({ field }) => (
+                                    <FormItem >
+                                        <FormLabel>Stream</FormLabel>
+                                        <FormControl>
+                                            <Select onValueChange={field.onChange} value={field.value}>
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Select a Steam" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        <SelectLabel>Stream</SelectLabel>
+                                                        <SelectItem value="apple">Vutuk Media</SelectItem>
+                                                        <SelectItem value="banana">Vutuk Design</SelectItem>
+                                                        <SelectItem value="blueberry">Vutuk Web Development</SelectItem>
+
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
                                         </FormControl>
 
                                         <FormMessage />
