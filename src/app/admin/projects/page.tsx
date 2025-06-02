@@ -15,11 +15,9 @@ const AdminProjectsPage = () => {
                         className='w-full'>
                         Add Projects
                     </Button>
-
                 </SheetTrigger>
 
                 <ProjectsForm />
-
             </Sheet>
 
             <div className='grid grid-row-2 grid-cols-3 gap-6 p-2'>
