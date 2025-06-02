@@ -7,7 +7,7 @@ import React from 'react'
 
 const AboutUsPage = () => {
     return (
-        <div className='space-y-16'>
+        <div className='space-y-16 mt-[70px]'>
             <AboutHero />
             {
                 aboutDetailsSection.map(section => (

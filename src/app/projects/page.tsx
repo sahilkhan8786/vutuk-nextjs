@@ -5,7 +5,7 @@ import React from 'react'
 
 const ProjectsPage = () => {
     return (
-        <div className='space-y-16'>
+        <div className='space-y-16 mt-[70px]'>
             <WidthCard className='grid grid-cols-12 gap-6'>
                 <div className='col-span-2'>
                     <ProjectsSidebar className='sticky top-0' />

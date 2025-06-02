@@ -4,42 +4,30 @@ import WidthCard from '@/components/ui/WidthCard'
 import Image from 'next/image'
 import React, { useRef } from 'react'
 import { FaPlay } from 'react-icons/fa6'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, } from 'framer-motion'
 
-import { usePathname, useSearchParams } from 'next/navigation'
-import { heroMainData } from '@/constants/heromain'
+import useCurrentRoute from '@/hooks/useCurrentRoute'
 
 const HomeMain = () => {
-    const ref = useRef(null)
-        ;
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ['start end', 'end start'],
-    })
+    const ref = useRef(null);
 
-    const y = useTransform(scrollYProgress, [0, 0.6], [0, -400]);
-    const scale = useTransform(scrollYProgress, [0, 0.3], [0.6, 1]);
-    const pathname = usePathname()
-    const searchParams = useSearchParams();
-
-    const currentUrl = `${pathname}?${searchParams.toString()}`
-
-    const activeService = currentUrl.split('=')[1];
-    const activeData = heroMainData.find(data => data.service === activeService)
-
-
-
+    const { activeData } = useCurrentRoute();
 
     return (
         <motion.div
             ref={ref}
-            style={{ y, scale }}
-            className='bg-white mt-16 origin-bottom relative overflow-hidden  border-t backdrop-blur-2xl'
+            className='bg-white pt-64 origin-bottom relative overflow-hidden   backdrop-blur-2xl  flex items-center justify-center'
+            initial={{
+                y: -500,
+
+            }}
+            whileInView={{
+                y: 0
+            }}
         >
-            <WidthCard className='rounded-xl grid grid-cols-2 py-16 mb-8 min-h-[80vh] content-center '>
+            <WidthCard className='rounded-xl grid grid-cols-2 py-16 mb-8  content-center '>
                 <motion.div
-                    className='col-span-1 text-dark space-y-8 flex flex-col items-center justify-center    w-full h-full mt-[25vh]'
-                    style={{ y }}
+                    className='col-span-1 text-dark space-y-8 flex flex-col items-center justify-center    w-full h-full '
                 >
                     <h2>WE ARE A TEAM OF PROFESSIONAL</h2>
                     <h1 className='text-5xl'>{activeData?.tyeWriterText}</h1>
@@ -57,7 +45,7 @@ const HomeMain = () => {
                 </motion.div>
                 <motion.div
                     className='col-span-1 relative h-[600px]'
-                    style={{ y: useTransform(scrollYProgress, [0, 0.6], [0, -100]), scale }}
+
                 >
                     {activeData?.image && <Image
                         src={activeData?.image}

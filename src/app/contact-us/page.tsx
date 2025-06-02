@@ -16,7 +16,7 @@ const ContactUsPage = () => {
     const [selectedCountry, setSelectedCountry] = useState(countries[0])
 
     return (
-        <WidthCard className='bg-white rounded-xl p-6 grid grid-cols-2 gap-6 h-[550px]  relative my-16'>
+        <WidthCard className='bg-white rounded-xl p-6 grid grid-cols-2 gap-6 h-[550px]  relative my-16  mt-32'>
 
             <div className='grid-cols-1'></div>
             <div className='bg-light border-r rounded-xl absolute -top-[25px] left-[10%] w-1/3 shadow-dark shadow h-[600px]'>
