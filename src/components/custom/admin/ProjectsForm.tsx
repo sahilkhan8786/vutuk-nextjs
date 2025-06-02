@@ -23,7 +23,7 @@ const formSchema = z.object({
 })
 
 
-const ServicesForm = ({ isEditing = false }: {
+const ProjectsForm = ({ isEditing = false }: {
     isEditing?: boolean
 }) => {
 
@@ -168,4 +168,4 @@ const ServicesForm = ({ isEditing = false }: {
     )
 }
 
-export default ServicesForm
+export default ProjectsForm
