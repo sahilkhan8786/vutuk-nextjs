@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, PlusSquare, ProjectorIcon, Search, Settings, Users } from "lucide-react"
+import { BookCopy, Home, PlusSquare, ProjectorIcon, Settings, Users } from "lucide-react"
 
 import {
     Sidebar,
@@ -10,6 +10,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import Link from "next/link"
 
 // Menu items.
 const items = [
@@ -22,6 +23,11 @@ const items = [
         title: "Team",
         url: "/admin/team",
         icon: Users,
+    },
+    {
+        title: "Services",
+        url: "/admin/services",
+        icon: BookCopy,
     },
     {
         title: "Projects",
@@ -51,10 +57,10 @@ export function AppSidebar() {
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <a href={item.url}>
+                                        <Link href={item.url}>
                                             <item.icon />
                                             <span>{item.title}</span>
-                                        </a>
+                                        </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
