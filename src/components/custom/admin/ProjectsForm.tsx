@@ -15,10 +15,12 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 
 
 const formSchema = z.object({
-    serviceName: z.string().min(2).max(50),
+    projectName: z.string().min(2).max(50),
     description: z.string().min(5),
     image: z.any().refine(file => file?.length === 1, "Image is required").optional(),
-    stream: z.enum(["media", "design", "web-development"])
+    stream: z.enum(["media", "design", "web"]),
+    contentType: z.enum(["video", "images", "web"]),
+    videoURL: z.string().url().optional()
 
 })
 
@@ -33,10 +35,14 @@ const ProjectsForm = ({ isEditing = false }: {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            serviceName: "",
+            projectName: "",
             description: "",
             image: null,
             stream: "media",
+            contentType: "video",
+            videoURL: ""
+
+
         },
     })
 
@@ -55,19 +61,19 @@ const ProjectsForm = ({ isEditing = false }: {
                 <SheetHeader >
 
                     <SheetTitle>
-                        {isEditing ? "Edit Servie" : "Add New Service"}
+                        {isEditing ? "Edit Project" : "Add New Project"}
 
                     </SheetTitle>
                     <SheetDescription asChild>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                             <FormField
                                 control={form.control}
-                                name="serviceName"
+                                name="projectName"
                                 render={({ field }) => (
                                     <FormItem >
-                                        <FormLabel>Service Name</FormLabel>
+                                        <FormLabel>Project Name</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Enter Service Name" {...field} />
+                                            <Input placeholder="Enter Project Name" {...field} />
                                         </FormControl>
 
                                         <FormMessage />
@@ -102,9 +108,9 @@ const ProjectsForm = ({ isEditing = false }: {
                                                 <SelectContent>
                                                     <SelectGroup>
                                                         <SelectLabel>Stream</SelectLabel>
-                                                        <SelectItem value="apple">Vutuk Media</SelectItem>
-                                                        <SelectItem value="banana">Vutuk Design</SelectItem>
-                                                        <SelectItem value="blueberry">Vutuk Web Development</SelectItem>
+                                                        <SelectItem value="media">Vutuk Media</SelectItem>
+                                                        <SelectItem value="design">Vutuk Design</SelectItem>
+                                                        <SelectItem value="web">Vutuk Web Development</SelectItem>
 
                                                     </SelectGroup>
                                                 </SelectContent>
@@ -152,6 +158,51 @@ const ProjectsForm = ({ isEditing = false }: {
                                     </FormItem>
                                 )}
                             />
+                            <FormField
+                                control={form.control}
+                                name="contentType"
+                                render={({ field }) => (
+                                    <FormItem >
+                                        <FormLabel>Content Type</FormLabel>
+                                        <FormControl>
+                                            <Select onValueChange={field.onChange} value={field.value}>
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Select a type" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        <SelectLabel>Type Of Content</SelectLabel>
+                                                        <SelectItem value="video">Video</SelectItem>
+                                                        <SelectItem value="images">Images</SelectItem>
+                                                        <SelectItem value="web">website URL</SelectItem>
+
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+
+                            {form.watch('contentType') === 'video' && (
+                                <FormField
+                                    control={form.control}
+                                    name="videoURL"
+                                    render={({ field }) => (
+                                        <FormItem >
+                                            <FormLabel>Enter Youtube URL</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Enter Youtube URL" {...field} />
+                                            </FormControl>
+
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />)}
+
                             <SheetFooter>
                                 <Button type="submit">{isEditing ? "Save changes" : "Add Service"}</Button>
                                 <SheetClose asChild>

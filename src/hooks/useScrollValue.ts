@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
-function useScrollValue() {
+function useScrollValue({ scrollValue=80 }: {
+    scrollValue?:number
+}) {
     
  const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
@@ -8,7 +10,7 @@ function useScrollValue() {
         function handleScroll() {
             const scrollY = window.scrollY;
 
-            if (scrollY > 80) {
+            if (scrollY > scrollValue) {
                 setIsScrolled(true)
             } else {
                 setIsScrolled(false)

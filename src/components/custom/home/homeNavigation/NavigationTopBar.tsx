@@ -10,7 +10,7 @@ interface NavigationTopBarProps {
 }
 
 const NavigationTopBar = ({ showOnScrollOnly = true }: NavigationTopBarProps) => {
-    const { isScrolled } = useScrollValue();
+    const { isScrolled } = useScrollValue({ scrollValue: 150 });
     const { activeService } = useCurrentRoute();
     const router = useRouter();
 
@@ -26,25 +26,31 @@ const NavigationTopBar = ({ showOnScrollOnly = true }: NavigationTopBarProps) =>
         }, 500);
     }
 
-    // Decide whether to render based on prop and scroll state
-    if (showOnScrollOnly && !isScrolled) {
-        return null;
-    }
+    const shouldShowBar = !showOnScrollOnly || isScrolled;
 
     return (
-        <div className='bg-light mt-16 sticky z-50 top-16 shadow'>
-            <WidthCard className="h-10 flex items-end justify-start gap-8">
-                {['media', 'design', 'web-development'].map((service) => (
-                    <p
-                        key={service}
-                        className={`cursor-pointer hover:-translate-y-1.5 transition ${activeService === service && 'border-b-2 border-primary'}`}
-                        onClick={() => handleRedirect(service)}
-                    >
-                        {`Vutuk ${service === 'web-development' ? 'Web Development' : service.charAt(0).toUpperCase() + service.slice(1)}`}
-                    </p>
-                ))}
-            </WidthCard>
-        </div>
+        <>
+            {shouldShowBar ? (
+                <div className='bg-light mt-16 sticky z-50 top-16 shadow'>
+                    <WidthCard className="h-10 flex items-end justify-center gap-8">
+                        {['media', 'design', 'web-development'].map((service) => (
+                            <p
+                                key={service}
+                                className={`cursor-pointer hover:-translate-y-1.5 transition ${activeService === service ? 'border-b-2 border-primary' : ''}`}
+                                onClick={() => handleRedirect(service)}
+                            >
+                                {`Vutuk ${service === 'web-development' ? 'Web Development' : service.charAt(0).toUpperCase() + service.slice(1)}`}
+                            </p>
+                        ))}
+                    </WidthCard>
+                </div>
+            ) : (
+                <div
+                    className=" mt-16 sticky z-50 top-16"
+                    style={{ height: '40px' /* same height as bar */, pointerEvents: 'auto' }}
+                />
+            )}
+        </>
     );
 }
 

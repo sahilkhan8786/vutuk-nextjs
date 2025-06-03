@@ -55,7 +55,7 @@ const ServicesForm = ({ isEditing = false }: {
                 <SheetHeader >
 
                     <SheetTitle>
-                        {isEditing ? "Edit Servie" : "Add New Service"}
+                        {isEditing ? "Edit Service" : "Add New Service"}
 
                     </SheetTitle>
                     <SheetDescription asChild>
