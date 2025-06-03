@@ -10,6 +10,7 @@ import { FaPlay } from 'react-icons/fa'
 import useCurrentRoute from '@/hooks/useCurrentRoute'
 import { heroMainData } from '@/constants/heromain'
 
+
 const NavigationContainer = () => {
     const router = useRouter()
     const { isScrolled } = useScrollValue({ scrollValue: 150 })
@@ -91,7 +92,7 @@ const NavigationContainer = () => {
                                             transition={{ duration: 0.6, delay: 0.2 }}
                                         >
                                             <h3 className="text-xl uppercase">We are a team of professionals</h3>
-                                            <h1 className="text-4xl font-bold">{box.typewriterText}</h1>
+                                            <h1 className="text-4xl font-bold">{box.typeWriterText}</h1>
                                             <p>{box.description}</p>
                                             <div className="flex gap-4">
                                                 <span className="flex items-center justify-center border border-white rounded-full size-12 hover:scale-110 transition-all cursor-pointer">

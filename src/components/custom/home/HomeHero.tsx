@@ -7,8 +7,8 @@ const HomeHero = () => {
         <>
             <Suspense fallback={<div>Loading...</div>}>
                 <NavigationTopBar />
+                <NavigationContainer />
             </Suspense>
-            <NavigationContainer />
         </>
 
 

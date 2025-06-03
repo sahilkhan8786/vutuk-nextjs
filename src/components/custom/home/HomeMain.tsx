@@ -30,7 +30,7 @@ const HomeMain = () => {
                     className='col-span-1 text-dark space-y-8 flex flex-col items-center justify-center    w-full h-full '
                 >
                     <h2>WE ARE A TEAM OF PROFESSIONAL</h2>
-                    <h1 className='text-5xl'>{activeData?.tyeWriterText}</h1>
+                    <h1 className='text-5xl'>{activeData?.typeWriterText}</h1>
                     <p>
                         {activeData?.description}
                     </p>
