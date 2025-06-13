@@ -9,9 +9,7 @@ const ShopLayout = () => {
             <FirstDiv />
             <div className='w-full h-full bg-red-400 col-span-3 row-span-2'>s</div>
             <div className='w-full h-full bg-red-500 col-span-3 row-span-2'>s</div>
-            <div className='w-full h-full bg-red-700 col-span-1 row-span-1 rounded-xl flex items-center justify-center'>
-                <h1>Scroll for More products</h1>
-            </div>
+
 
         </WidthCard>
     )
