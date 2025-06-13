@@ -21,7 +21,7 @@ function useScrollValue({ scrollValue=80 }: {
 
         return () => window.removeEventListener('scroll', handleScroll);
 
- }, [])
+ }, [scrollValue])
     
     return { isScrolled };
 }
