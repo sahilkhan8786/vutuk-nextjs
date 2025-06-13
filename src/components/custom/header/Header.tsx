@@ -46,7 +46,7 @@ const Header = () => {
                 <nav className='flex items-center justify-end gap-4'>
                     <Link href={'/cart'} className='relative '>
 
-                        <ShoppingCart className='border rounded-sm p-1' />
+                        <ShoppingCart className='border rounded-sm p-1 hover:bg-light hover:text-dark' />
                         <p className='absolute -top-3 -right-3 bg-light text-dark rounded-full size-5 inline-flex items-center justify-center'> {state.totalItem}
 
                         </p>
