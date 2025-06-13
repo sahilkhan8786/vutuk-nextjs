@@ -52,7 +52,7 @@ const CartsPage = () => {
                         <p className='flex-1'>₹999</p>
                         <div className='flex-1'>
 
-                            <div className='flex items-start gap-2  justify-start border border-primary rounded-md py-1 px-2 w-fit'>
+                            <div className='flex items-center gap-2  justify-center border border-primary rounded-md py-1 px-2 w-fit'>
                                 <button
                                     onClick={() => updateQuantity(item.sku, -1)}
                                     className='px-1 text-lg font-bold hover:text-red-500'
