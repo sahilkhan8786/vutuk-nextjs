@@ -1,5 +1,4 @@
 import ShopLayout from '@/components/custom/shop/ShopLayout';
-import Title from '@/components/ui/Title';
 import React from 'react'
 
 const HomePage = () => {
@@ -11,9 +10,9 @@ const HomePage = () => {
     //   <ClientsContainer />
     // </div>
     <div className='mt-24'>
-      <Title heading='Vutuk Shop'
+      {/* <Title heading='Vutuk Shop'
         description='Best Designer vases available'>
-      </Title>
+      </Title> */}
 
       <ShopLayout />
 
