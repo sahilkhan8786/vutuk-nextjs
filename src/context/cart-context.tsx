@@ -11,6 +11,7 @@ import React, {
 interface CartItem {
     sku: string;
     quantity: number;
+
 }
 
 // Define state structure
