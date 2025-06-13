@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import React, { useEffect } from 'react'
+import React from 'react'
 import NavLinks from './NavLinks'
 import { navLinks } from '@/constants/header'
 import HeaderMobile from './HeaderMobile'
