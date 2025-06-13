@@ -1,4 +1,6 @@
 'use client';
+
+import { useCart } from '@/context/cart-context';
 import Image from 'next/image';
 import React, { useState } from 'react';
 
@@ -8,9 +10,9 @@ const whiteImageSKU = 'WHITE_IMAGE_SKU';
 const blackImageSKU = 'BLACK_IMAGE_SKU';
 
 export const FirstDiv = () => {
+    const { state, dispatch } = useCart();
     const [activePotImage, setActivePotImage] = useState<string>(whiteImage);
     const [activeSKU, setActiveSKU] = useState<string>(whiteImageSKU);
-    const [cart, setCart] = useState<{ sku: string; quantity: number }[]>([]);
 
     const handleVariantChange = (variant: 'white' | 'black') => {
         if (variant === 'white') {
@@ -22,25 +24,20 @@ export const FirstDiv = () => {
         }
     };
 
-    const getCartItem = () => cart.find((item) => item.sku === activeSKU);
+    const cartItem = state.products.find((item) => item.sku === activeSKU);
 
     const addToCart = () => {
-        setCart((prev) => [...prev, { sku: activeSKU, quantity: 1 }]);
+        dispatch({ type: 'ADD_TO_CART', payload: { sku: activeSKU } });
     };
 
     const updateQuantity = (delta: number) => {
-        setCart((prev) =>
-            prev
-                .map((item) =>
-                    item.sku === activeSKU
-                        ? { ...item, quantity: item.quantity + delta }
-                        : item
-                )
-                .filter((item) => item.quantity > 0)
-        );
+        const newQty = (cartItem?.quantity || 0) + delta;
+        if (newQty <= 0) {
+            dispatch({ type: 'REMOVE_FROM_CART', payload: { sku: activeSKU } });
+        } else {
+            dispatch({ type: 'UPDATE_QUANTITY', payload: { sku: activeSKU, quantity: newQty } });
+        }
     };
-
-    const cartItem = getCartItem();
 
     return (
         <div className='w-full h-full border border-primary rounded-xl col-span-1 row-span-3'>
@@ -63,7 +60,6 @@ export const FirstDiv = () => {
 
             <div className='mb-2.5'>
                 <div className='gap-4 rounded-bl-xl rounded-br-xl px-4 pb-[3px] flex items-center justify-between'>
-
                     <div className='flex items-center gap-4'>
                         <h4>Available Colors</h4>
                         <p
@@ -84,7 +80,7 @@ export const FirstDiv = () => {
                             Add To Cart
                         </div>
                     ) : (
-                        <div className='flex items-center gap-2 border border-primary rounded-md  py-1'>
+                        <div className='flex items-center gap-2 border border-primary rounded-md py-1 px-2'>
                             <button
                                 onClick={() => updateQuantity(-1)}
                                 className='px-1 text-lg font-bold hover:text-red-500'

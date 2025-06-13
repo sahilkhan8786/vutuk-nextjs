@@ -3,6 +3,7 @@ import { Bebas_Neue, Rubik } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/custom/header/Header";
 import Footer from "@/components/custom/Footer";
+import { CartContextProvider } from "@/context/cart-context";
 
 const bebas = Bebas_Neue({
   variable: "--font-bebas",
@@ -31,9 +32,11 @@ export default function RootLayout({
       <body
         className={`${bebas.variable} ${rubik.variable} antialiased`}
       >
-        <Header />
-        {children}
-        <Footer />
+        <CartContextProvider>
+          <Header />
+          {children}
+          <Footer />
+        </CartContextProvider>
       </body>
     </html>
   );
