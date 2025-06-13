@@ -11,28 +11,20 @@ import { FormProvider, useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
+import { createTeamMember } from '@/actions/team'
+import { formSchemaTeamMember } from '@/schemas/teamMember'
 
 
 
-const formSchema = z.object({
-    username: z.string().min(2).max(50),
-    position: z.string().min(2).max(50),
-    description: z.string().min(5),
-    freelancerLink: z.string().url(),
-    facebookLink: z.string().url(),
-    instagramLink: z.string().url(),
-    twitterLink: z.string().url(),
-    image: z.any().refine(file => file?.length === 1, "Image is required").optional()
 
-})
 
 const TeamMemberForm = ({ isEditing = false }: {
     isEditing?: boolean
 }) => {
     const [preview, setPreview] = useState<string | null>(null)
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof formSchemaTeamMember>>({
+        resolver: zodResolver(formSchemaTeamMember),
         defaultValues: {
             username: "",
             position: "",
@@ -45,11 +37,12 @@ const TeamMemberForm = ({ isEditing = false }: {
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchemaTeamMember>) {
         console.log(values)
         if (values.image && values.image.length > 0) {
             console.log("Uploaded file:", values.image[0])
         }
+        createTeamMember(values);
     }
 
 

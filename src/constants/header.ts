@@ -12,10 +12,16 @@ export const navLinks :NavLinkProps[]= [
         href:'/about-us'
     },
     {
+        id: 'services',
+        label: 'Services',
+        href:'/services'
+    },
+    {
         id: 'projects',
         label: 'Projects',
         href:'/projects'
     },
+    
     {
         id: 'contact-us',
         label: 'Contact Us',

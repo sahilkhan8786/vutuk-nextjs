@@ -1,4 +1,4 @@
-import { BookCopy, Home, PlusSquare, ProjectorIcon, Settings, Users } from "lucide-react"
+import { BookCopy, Home, Newspaper, PlusSquare, ProjectorIcon, Settings, Users } from "lucide-react"
 
 import {
     Sidebar,
@@ -33,6 +33,11 @@ const items = [
         title: "Projects",
         url: "/admin/projects",
         icon: ProjectorIcon,
+    },
+    {
+        title: "Blogs",
+        url: "/admin/blogs",
+        icon: Newspaper,
     },
     {
         title: "Additonal Data",

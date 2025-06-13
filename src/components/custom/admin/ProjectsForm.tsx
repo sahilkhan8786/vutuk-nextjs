@@ -20,7 +20,9 @@ const formSchema = z.object({
     image: z.any().refine(file => file?.length === 1, "Image is required").optional(),
     stream: z.enum(["media", "design", "web"]),
     contentType: z.enum(["video", "images", "web"]),
-    videoURL: z.string().url().optional()
+    videoURL: z.string().url().optional().or(z.literal("")),
+    projectImages: z.any().refine((files) => !files || files.length > 0, "Please Upload at-least one iamge").optional(),
+    projectUrl: z.string().url().optional().or(z.literal(""))
 
 })
 
@@ -30,7 +32,9 @@ const ProjectsForm = ({ isEditing = false }: {
 }) => {
 
 
-    const [preview, setPreview] = useState<string | null>(null)
+    const [preview, setPreview] = useState<string | null>(null);
+    const [projectImagePreviews, setProjectImagePreviews] = useState<string[]>([])
+
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -40,7 +44,9 @@ const ProjectsForm = ({ isEditing = false }: {
             image: null,
             stream: "media",
             contentType: "video",
-            videoURL: ""
+            videoURL: "",
+            projectImages: null,
+            projectUrl: ""
 
 
         },
@@ -202,6 +208,69 @@ const ProjectsForm = ({ isEditing = false }: {
                                         </FormItem>
                                     )}
                                 />)}
+
+                            {form.watch('contentType') === 'web' && (
+                                <FormField
+                                    control={form.control}
+                                    name="projectUrl"
+                                    render={({ field }) => (
+                                        <FormItem >
+                                            <FormLabel>Enter Website URL</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Enter Website URL" {...field} />
+                                            </FormControl>
+
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />)}
+
+                            {form.watch("contentType") === 'images' && <FormField
+                                control={form.control}
+                                name="projectImages"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Upload Project Images</FormLabel>
+                                        <FormControl>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                multiple
+                                                onChange={(e) => {
+                                                    const fileList = e.target.files
+                                                    field.onChange(fileList)
+
+                                                    if (fileList && fileList.length > 0) {
+                                                        const previews = Array.from(fileList).map((file) =>
+                                                            URL.createObjectURL(file)
+                                                        )
+                                                        setProjectImagePreviews(previews)
+                                                    } else {
+                                                        setProjectImagePreviews([])
+                                                    }
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                        {projectImagePreviews.length > 0 && (
+                                            <div className="flex gap-2 flex-wrap mt-2">
+                                                {projectImagePreviews.map((src, idx) => (
+                                                    <Image
+                                                        key={idx}
+                                                        src={src}
+                                                        alt={`Preview ${idx}`}
+                                                        width={30}
+                                                        height={10}
+                                                        className="rounded border"
+                                                        onLoad={() => URL.revokeObjectURL(src)}
+                                                    />
+                                                ))}
+                                            </div>
+                                        )}
+                                    </FormItem>
+                                )}
+                            />
+                            }
 
                             <SheetFooter>
                                 <Button type="submit">{isEditing ? "Save changes" : "Add Service"}</Button>
