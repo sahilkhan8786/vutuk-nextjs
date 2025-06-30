@@ -14,6 +14,7 @@ export type Product = {
     price: number
     sku: string
     slug: string
+    hasConfigurations: boolean
 }
 
 export const columns: ColumnDef<Product>[] = [
@@ -60,6 +61,11 @@ export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "sku",
         header: "SKUs",
+
+    },
+    {
+        accessorKey: "hasConfigurations",
+        header: "Is Configured",
 
     },
     {
