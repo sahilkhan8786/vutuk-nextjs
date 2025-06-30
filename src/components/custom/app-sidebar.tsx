@@ -1,4 +1,4 @@
-import { BookCopy, Home, Newspaper, PlusSquare, ProjectorIcon, Settings, Users } from "lucide-react"
+import { BookCopy, Home, Newspaper, PlusSquare, ProjectorIcon, Settings, ShoppingBasket, Users } from "lucide-react"
 
 import {
     Sidebar,
@@ -40,6 +40,11 @@ const items = [
         icon: Newspaper,
     },
     {
+        title: "Products",
+        url: "/admin/products",
+        icon: ShoppingBasket,
+    },
+    {
         title: "Additonal Data",
         url: "/admin/additional-data",
         icon: PlusSquare,
@@ -53,7 +58,7 @@ const items = [
 
 export function AppSidebar() {
     return (
-        <Sidebar className="mt-16">
+        <Sidebar className="">
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel>Application</SidebarGroupLabel>

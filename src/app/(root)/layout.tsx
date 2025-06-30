@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Rubik } from "next/font/google";
-import "./globals.css";
+import "./../globals.css";
 import Header from "@/components/custom/header/Header";
 import Footer from "@/components/custom/Footer";
 import { CartContextProvider } from "@/context/cart-context";
