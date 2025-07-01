@@ -99,6 +99,8 @@ export async function createproductsFromCSV(formData: FormData) {
 
 export async function createProductConfigurator(values: z.infer<typeof editProductSchema>) {
   try {
+    await connectToDB();
+
     const alreadyExists = await AdditionalProductData.findOne({
       configKey: values.configKey,
     });
@@ -126,7 +128,7 @@ export async function createProductConfigurator(values: z.infer<typeof editProdu
 export async function mergeAdditionalData() {
 try {
   
-  
+  await connectToDB();
   const products = await Product.find({});
   const additionalProductData = await AdditionalProductData.find({});
   
