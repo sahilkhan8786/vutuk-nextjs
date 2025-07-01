@@ -56,39 +56,45 @@ function transformProduct(raw: Record<string, string>) {
 
 
 
-export async function createproductsFromCSV(formData:FormData) {
+export async function createproductsFromCSV(formData: FormData) {
+  try {
+    
     const file = formData.get('file') as File;
     if (!file) throw new Error("No File Uploaded");
     await connectToDB();
-
+    
     const arrayBuffer = await file.arrayBuffer();
     const text = Buffer.from(arrayBuffer).toString('utf-8');
-
+    
     const products = parse(text, {
-        columns: true,
-        relax_column_count: true,
-        relax_quotes: true,
-        trim: true,
-    skip_empty_lines:true
+      columns: true,
+      relax_column_count: true,
+      relax_quotes: true,
+      trim: true,
+      skip_empty_lines:true
     });
     const finalProducts = [];
-
+    
     for (const rawProduct  of products) {
-        const product = transformProduct(rawProduct);
-        finalProducts.push(product);
-
-
+      const product = transformProduct(rawProduct);
+      finalProducts.push(product);
+      
+      
     };
-
+    
     await Product.deleteMany({});
     await Product.insertMany(finalProducts);
-
-
-console.log('Parsed and Transformed Products:', finalProducts);
-
-
+    
+    
+    console.log('Parsed and Transformed Products:', finalProducts);
+    
+    
     console.log(products);
     revalidatePath('/admin/products');
+  } catch (error) {
+    console.error("❌ Error in Uplaoding daa from CSV:", error);
+    throw error;
+  }
 }
 
 export async function createProductConfigurator(values: z.infer<typeof editProductSchema>) {
@@ -118,19 +124,22 @@ export async function createProductConfigurator(values: z.infer<typeof editProdu
 
 
 export async function mergeAdditionalData() {
+try {
+  
+  
   const products = await Product.find({});
   const additionalProductData = await AdditionalProductData.find({});
-
+  
   for (const product of products) {
     const sku = Array.isArray(product.sku) ? product.sku[0] : null;
     const configKey = sku?.split('_')[1];
-
+    
     if (!configKey) continue;
-
+    
     const matchedData = additionalProductData.find(
       (data) => data.configKey === configKey
     );
-
+    
     if (matchedData && matchedData.variantMappings) {
       await Product.findByIdAndUpdate(product._id, {
         hasConfigurations: true,
@@ -138,5 +147,9 @@ export async function mergeAdditionalData() {
       });
     }
   }
+} catch (error) {
+  console.log(error)
+ throw error 
+}
   revalidatePath('/admin/products');
 }
