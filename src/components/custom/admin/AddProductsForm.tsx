@@ -22,7 +22,19 @@ const AddProductsForm = ({ onClose }: Props) => {
 
         try {
             await createproductsFromCSV(formData);
-            toast.success('Products uploaded successfully');
+            toast.success('Products uploaded successfully', {
+                description: `All products added successfully on ${new Date().toLocaleString('en-IN', {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                })}`,
+                position: "top-center",
+            });
             onClose(); // programmatically close the drawer
         } catch (err) {
             console.error(err);

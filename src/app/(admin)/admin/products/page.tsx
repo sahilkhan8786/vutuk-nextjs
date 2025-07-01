@@ -3,13 +3,16 @@ import React from 'react'
 import { columns, Product } from './columns';
 import { DataTable } from './data-table';
 import { mergeAdditionalData } from '@/actions/products';
-import { Button } from '@/components/ui/button';
-import { Link } from 'lucide-react';
+import MergeActionToast from '@/components/custom/toasts/SuccessToast';
+import { MergeSubmitButton } from '@/components/custom/toasts/MergeSubmitButton';
+
 
 
 async function getData(): Promise<Product[]> {
     // Fetch data from your API here.
-    const productRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`)
+    const productRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`, {
+        cache: 'force-cache'
+    })
     const res = await productRes.json();
 
     return res.data.products;
@@ -27,11 +30,8 @@ const AdminProductsPage = async () => {
                 <h1 className=''>Our Products</h1>
                 <div className='flex gap-2 items-center justify-center'>
                     <form action={mergeAdditionalData}>
-                        <Button variant={'outline'} className='text-dark inline-flex items-center justify-center hover hover:border border-light hover:bg-dark hover:text-light'
-                        >
-                            <Link />
-                            Merge the Data
-                        </Button>
+                        <MergeSubmitButton />
+                        <MergeActionToast />
                     </form>
                     <AddProductsFormWrapper />
                 </div>
@@ -40,6 +40,7 @@ const AdminProductsPage = async () => {
 
 
             </div>
+
             <div className="mx-auto py-10">
                 <DataTable columns={columns} data={data} />
             </div>

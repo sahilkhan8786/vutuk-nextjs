@@ -14,6 +14,9 @@ import {
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { createProductConfigurator } from '@/actions/products';
+import { toast } from 'sonner';
+import { SkeletonCard } from '../skeletons/SkeletonCard';
+
 
 type Product = {
     title: string;
@@ -124,20 +127,29 @@ const EditProductForm = ({ slug, onClose }: {
                 configKey,
             });
 
+            toast.success(`Product Successfully Updated! - ${product?.title}`,)
             onClose();
         } catch (error) {
+            toast.error(`Error While Updating Product - ${product?.title} \n Try Again! later.`,)
             console.error(error);
         } finally {
             setLoading(false);
         }
     };
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) {
+        return <>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard isLinesShowing={false} />
+        </>
+    };
     if (!product) return <p>Product not found</p>;
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-6">
+
                 {fields.map((field, index) => (
                     <div key={field.id} className="flex flex-col gap-3 border p-3 rounded-md">
                         <FormLabel className="text-lg capitalize">{field.key}</FormLabel>

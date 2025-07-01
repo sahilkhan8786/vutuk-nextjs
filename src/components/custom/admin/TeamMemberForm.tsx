@@ -48,7 +48,6 @@ const TeamMemberForm = ({ isEditing = false }: {
 
     return (
         <SheetContent className='overflow-y-scroll'>
-
             <FormProvider {...form}>
                 <SheetHeader >
 

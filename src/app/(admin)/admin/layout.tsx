@@ -4,6 +4,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { cookies } from "next/headers"
 import './../../globals.css'
 import { Bebas_Neue, Rubik } from "next/font/google";
+import { Toaster } from "sonner";
 
 const bebas = Bebas_Neue({
     variable: "--font-bebas",
@@ -26,7 +27,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
             <body
                 className={`${bebas.variable} ${rubik.variable} antialiased`}
             >
-
+                <Toaster richColors position="top-center" />
 
                 <SidebarProvider defaultOpen={defaultOpen}>
                     <AppSidebar />

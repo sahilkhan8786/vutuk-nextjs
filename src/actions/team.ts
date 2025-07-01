@@ -8,7 +8,5 @@ export const createTeamMember = async (formData:z.infer<typeof formSchemaTeamMem
     
     const data = formSchemaTeamMember.parse(formData);
 
-
-
     console.log(data);
 }
