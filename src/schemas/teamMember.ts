@@ -4,10 +4,10 @@ export const formSchemaTeamMember = z.object({
     username: z.string().min(2).max(50),
     position: z.string().min(2).max(50),
     description: z.string().min(5),
-    freelancerLink: z.string().url(),
-    facebookLink: z.string().url(),
-    instagramLink: z.string().url(),
-    twitterLink: z.string().url(),
-    image: z.any().refine(file => file?.length === 1, "Image is required").optional()
+    freelancerLink: z.string().url().optional(),
+    facebookLink: z.string().url().optional(),
+    instagramLink: z.string().url().optional(),
+    twitterLink: z.string().url().optional(),
+    image: z.any().optional()
 
 })

@@ -16,6 +16,7 @@ import Image from 'next/image';
 import { createProductConfigurator } from '@/actions/products';
 import { toast } from 'sonner';
 import { SkeletonCard } from '../skeletons/SkeletonCard';
+import { Link, Loader2 } from 'lucide-react';
 
 
 type Product = {
@@ -136,8 +137,8 @@ const EditProductForm = ({ slug, onClose }: {
 
     if (loading) {
         return <>
-            <SkeletonCard />
-            <SkeletonCard />
+            <SkeletonCard height={150} />
+            <SkeletonCard height={150} />
             <SkeletonCard isLinesShowing={false} />
         </>
     };
@@ -252,29 +253,23 @@ const EditProductForm = ({ slug, onClose }: {
                 <Button type="submit" className="mt-6"
                     disabled={form.formState.isSubmitting}
                 >
-                    {form.formState.isSubmitting && (
-                        <svg
-                            className="animate-spin h-4 w-4 text-white"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                            />
-                            <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                            />
-                        </svg>
-                    )}
-                    Update the Product
+                    {form.formState.isSubmitting ? (
+
+                        <>
+                            <Loader2 className="animate-spin h-4 w-4" />
+                            Updating...
+                        </>
+                    ) :
+                        (
+                            <>
+                                <Link className="h-4 w-4" />
+                                Update the Product
+                            </>
+                        )
+
+                    }
+
+
                 </Button>
             </form>
         </Form>
