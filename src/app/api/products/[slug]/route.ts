@@ -1,9 +1,11 @@
+import { connectToDB } from "@/lib/mongodb";
 import Product from "@/models/product.model";
 import { NextRequest, NextResponse } from "next/server";
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  await connectToDB();
   const slug =(await params).slug;
 
   if (!slug) {
