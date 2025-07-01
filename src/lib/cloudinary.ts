@@ -21,7 +21,7 @@ async function fileToBuffer(file: File): Promise<Buffer> {
   
     const optimized = await sharp(buffer)
       .resize({ width: 768, withoutEnlargement: true })
-      .webp({ quality: 75 }) // You can adjust quality here
+      .webp({ quality: 75 })
       .toBuffer();
   
     if (optimized.length > 5 * 1024 * 1024) {

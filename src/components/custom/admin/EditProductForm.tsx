@@ -17,6 +17,7 @@ import { createProductConfigurator } from '@/actions/products';
 import { toast } from 'sonner';
 import { SkeletonCard } from '../skeletons/SkeletonCard';
 import { Link, Loader2 } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
 
 
 type Product = {
@@ -25,6 +26,7 @@ type Product = {
     sku: string[];
     hasConfigurations: boolean;
     configurations?: { key: string; image: string; sku: string }[];
+    tags: string[],
     variations: {
         type: string;
         name: string;
@@ -147,6 +149,9 @@ const EditProductForm = ({ slug, onClose }: {
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-6">
+                <h1>Product Name:- <br />
+                    {product.title}
+                </h1>
 
                 {fields.map((field, index) => (
                     <div key={field.id} className="flex flex-col gap-3 border p-3 rounded-md">
@@ -249,6 +254,22 @@ const EditProductForm = ({ slug, onClose }: {
                         </div>
                     </div>
                 )}
+                <FormField
+                    control={form.control}
+                    name="tags"
+                    render={() => (
+                        <FormItem>
+                            <FormLabel >Product Tags</FormLabel>
+                            <FormControl>
+                                <Textarea placeholder="Type your message here."
+                                    defaultValue={product.tags}
+                                />
+                            </FormControl>
+
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
                 <Button type="submit" className="mt-6"
                     disabled={form.formState.isSubmitting}
