@@ -91,26 +91,30 @@ console.log('Parsed and Transformed Products:', finalProducts);
     revalidatePath('/admin/products');
 }
 
-
 export async function createProductConfigurator(values: z.infer<typeof editProductSchema>) {
+  try {
+    const alreadyExists = await AdditionalProductData.findOne({
+      configKey: values.configKey,
+    });
 
-  
+    if (!alreadyExists) {
+      await AdditionalProductData.create(values);
+    } else {
+      // ✅ Provide update payload here!
+      await AdditionalProductData.findOneAndUpdate(
+        { configKey: values.configKey },
+        values,
+        { new: true } // optional: returns updated doc
+      );
+    }
 
- const alreadyExists =  await AdditionalProductData.findOne({
-    configKey:values.configKey
-  })
-
-  if (!alreadyExists) {
-    await AdditionalProductData.create(values);
+    revalidatePath('/admin/products');
+  } catch (error) {
+    console.error("❌ Error in createProductConfigurator:", error);
+    throw error;
   }
-
-  await AdditionalProductData.findOneAndUpdate({
-    configKey:values.configKey
-  })
-
-  revalidatePath('/admin/products');
-
 }
+
 
 
 export async function mergeAdditionalData() {
