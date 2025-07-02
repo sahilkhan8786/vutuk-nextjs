@@ -15,7 +15,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { createTeamMember } from '@/actions/team';
-import { formSchemaTeamMember } from '@/schemas/teamMember';
+import { formSchemaTeamMember } from '@/schemas/teamMemberSchema';
 import { toast } from 'sonner';
 import { SkeletonCard } from '../skeletons/SkeletonCard';
 
@@ -52,7 +52,7 @@ const TeamMemberForm = ({
             const fetchData = async () => {
                 setIsLoading(true);
                 try {
-                    const res = await fetch(`/api/team/${id}`);
+                    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/team/${id}`);
                     const data = await res.json();
 
                     if (data?.teamMember) {

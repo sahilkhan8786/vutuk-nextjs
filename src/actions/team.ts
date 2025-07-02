@@ -3,7 +3,7 @@
 import { optimizeImage, uploadToCloudinary } from '@/lib/cloudinary';
 import { connectToDB } from '@/lib/mongodb';
 import TeamMember from '@/models/team.model';
-import { formSchemaTeamMember } from '@/schemas/teamMember';
+import { formSchemaTeamMember } from '@/schemas/teamMemberSchema';
 import { revalidatePath } from 'next/cache';
 import * as z from 'zod';
 

@@ -32,12 +32,23 @@ async function fileToBuffer(file: File): Promise<Buffer> {
   }
   
 
+  function slugifyFilename(name: string) {
+    return name
+      .toLowerCase()
+      .replace(/\.[^/.]+$/, '') // remove extension
+      .replace(/[^a-z0-9-_]/g, '-') // replace invalid chars with hyphen
+      .replace(/-+/g, '-') // collapse multiple hyphens
+      .replace(/^-+|-+$/g, ''); // trim hyphens from ends
+  }
+
 export  async function uploadToCloudinary(buffer: Buffer, filename: string): Promise<string> {
-    return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
+      
+    const safeName = slugifyFilename(filename);
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           folder: 'your_folder_name', // optional
-          public_id: filename.split('.')[0],
+          public_id: safeName,
           resource_type: 'image',
           format: 'webp',
         },
@@ -50,4 +61,18 @@ export  async function uploadToCloudinary(buffer: Buffer, filename: string): Pro
       Readable.from(buffer).pipe(uploadStream);
     });
   }
+  
+
+  export async function deleteFromCloudinary(publicId: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      cloudinary.uploader.destroy(publicId, { resource_type: 'image' }, (error, result) => {
+        if (error) return reject(error);
+        if (result?.result !== 'ok' && result?.result !== 'not_found') {
+          return reject(new Error(`Failed to delete image: ${result?.result}`));
+        }
+        resolve();
+      });
+    });
+  }
+  
   
