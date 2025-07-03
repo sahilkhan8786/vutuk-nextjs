@@ -1,5 +1,7 @@
 'use client'
 
+
+
 import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
@@ -15,6 +17,7 @@ import { formSchemaProjects } from '@/schemas/projectsSchema'
 import { SkeletonCard } from '../skeletons/SkeletonCard'
 import { toast } from 'sonner'
 import { createProject } from '@/actions/projects'
+import { useRouter } from 'next/navigation'
 
 const ProjectsForm = ({ isEditing = false, id, onClose }: {
     isEditing?: boolean,
@@ -22,9 +25,11 @@ const ProjectsForm = ({ isEditing = false, id, onClose }: {
     onClose?: () => void
 }) => {
     const [preview, setPreview] = useState<string | null>(null)
-    const [isLoading, setIsLoading] = useState(false)
-    const [showFileInput, setShowFileInput] = useState(false)
-    const [projectImagesPreview, setProjectImagesPreview] = useState<string[]>([])
+    const [loading, setLoading] = useState(false)
+    const [projectImagePreviews, setProjectImagePreviews] = useState<string[]>([])
+    const [showFileInput, setShowFileInput] = useState<boolean>(false)
+    const [deletedImages, setDeletedImages] = useState<string[]>([])
+    const router = useRouter()
 
     const form = useForm<z.infer<typeof formSchemaProjects>>({
         resolver: zodResolver(formSchemaProjects),
@@ -38,120 +43,106 @@ const ProjectsForm = ({ isEditing = false, id, onClose }: {
             websiteUrl: '',
             projectDataImages: [],
             projectDataYoutubeUrls: '',
+            existingImages: [],
+            deletedImages: [],
         },
     })
 
+    const { handleSubmit, watch, formState, setValue, reset } = form
+    const { isSubmitting } = formState
+    const contentType = watch('contentType')
+    const existingImages = watch('existingImages') ?? []
+
+    // Clean up object URLs
     useEffect(() => {
-        return () => {
-            projectImagesPreview.forEach((url) => URL.revokeObjectURL(url))
-        }
-    }, [projectImagesPreview])
+        return () => projectImagePreviews.forEach(URL.revokeObjectURL)
+    }, [projectImagePreviews])
 
+    // Fetch data for editing
     useEffect(() => {
-        if (isEditing && id) {
-            const fetchData = async () => {
-                setIsLoading(true)
-                try {
-                    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/projects/${id}`)
-                    const data = await res.json()
+        if (!isEditing || !id) return
+        setLoading(true)
+        fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/projects/${id}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.project) {
+                    console.log(data.project)
 
-                    if (data?.project) {
-                        const {
-                            projectName,
-                            description,
-                            image,
-                            stream,
-                            contentType,
-                            relatedToService,
-                            websiteUrl,
-                            projectData,
-                        } = data.project
-
-                        const youtubeLinks = projectData?.filter((item: string) => typeof item === 'string' && item.startsWith('http'))?.join(', ') || ''
-
-                        form.reset({
-                            projectName,
-                            description,
-                            image,
-                            stream,
-                            contentType: contentType || 'data',
-                            relatedToService: relatedToService || '',
-                            websiteUrl: websiteUrl || '',
-                            projectDataImages: [], // clear new uploads
-                            existingImages: data.project.projectData?.filter((item: string) => item.includes('cloudinary.com')) || [],
-                            projectDataYoutubeUrls: youtubeLinks,
-                        })
-
-                        if (image) setPreview(image)
-                    }
-                } catch (err) {
-                    console.error('Failed to fetch project', err)
-                } finally {
-                    setIsLoading(false)
+                    const pd: string[] = data.project.projectData
+                    const images = pd.filter(i => i.includes('cloudinary.com'))
+                    const youtube = pd.filter(i => !i.includes('cloudinary.com')).join(', ')
+                    reset({
+                        projectName: data.project.projectName,
+                        description: data.project.description,
+                        image: data.project.image,
+                        stream: data.project.stream,
+                        contentType: data.project.contentType,
+                        relatedToService: data.project.relatedToService,
+                        websiteUrl: data.project.websiteUrl,
+                        projectDataImages: [],
+                        projectDataYoutubeUrls: youtube,
+                        existingImages: images,
+                        deletedImages: [],
+                    })
+                    setPreview(data.project.image)
                 }
-            }
+            })
+            .catch(e => console.error(e))
+            .finally(() => setLoading(false))
+    }, [id, isEditing, reset])
 
-            fetchData()
-        }
-    }, [isEditing, id, form])
+    const onImageUpload = (files: FileList | null) => {
+        if (!files) return
+        const arr = Array.from(files)
+        setValue('projectDataImages', arr)
+        const previews = arr.map(f => URL.createObjectURL(f))
+        setProjectImagePreviews(previews)
+    }
 
-    const {
-        handleSubmit,
-        watch,
-        formState: { isSubmitting },
-    } = form
-
-    const contentType = watch("contentType")
 
     const onSubmit = async (values: z.infer<typeof formSchemaProjects>) => {
         try {
             const images = values.projectDataImages || []
             const urls = values.projectDataYoutubeUrls
-                ? values.projectDataYoutubeUrls.split(',').map((url) => url.trim())
+                ? values.projectDataYoutubeUrls.split(',').map(url => url.trim()).filter(Boolean)
                 : []
 
-            const projectData: (string | File)[] = [...images, ...urls]
+            const projectData: (string | File)[] = [
+                ...(values.existingImages || []),
+                ...images,
+                ...urls,
+            ]
 
             const payload = {
                 ...values,
                 projectData,
+                deletedImages,
             }
 
             await createProject(payload, isEditing, id)
             toast.success(`Project ${isEditing ? 'updated' : 'added'} successfully`)
 
-            form.reset({
-                projectName: '',
-                description: '',
-                image: null,
-                stream: 'media',
-                contentType: 'data',
-                relatedToService: '',
-                websiteUrl: '',
-                projectDataImages: [],
-                projectDataYoutubeUrls: '',
-            })
-
+            form.reset()
             setPreview(null)
+            setProjectImagePreviews([])
             setShowFileInput(false)
-            setProjectImagesPreview([])
-
+            setDeletedImages([])
+            router.refresh()
         } catch (error) {
             toast.error('Something went wrong. Please try again.')
-            console.error('Error while creating project:', error)
+            console.error('Error while submitting:', error)
         } finally {
             onClose?.()
         }
     }
 
-    if (isEditing && isLoading) {
+
+    if (loading) {
         return (
             <SheetContent>
-                <div className="p-6">
-                    {[...Array(6)].map((_, i) => (
-                        <SkeletonCard key={i} isLinesShowing={true} height={25} />
-                    ))}
-                </div>
+                {Array.from({ length: 6 }).map((_, i) => (
+                    <SkeletonCard key={i} isLinesShowing height={25} />
+                ))}
             </SheetContent>
         )
     }
@@ -331,53 +322,61 @@ const ProjectsForm = ({ isEditing = false, id, onClose }: {
                             {/* When contentType is 'data' show image + youtube URL input */}
                             {contentType === 'data' && (
                                 <>
-                                    <FormField
-                                        control={form.control}
-                                        name="projectDataImages"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Upload Images</FormLabel>
-                                                <FormControl>
-                                                    <input
-                                                        type="file"
-                                                        accept="image/*"
-                                                        multiple
-                                                        onChange={(e) => {
-                                                            const files = e.target.files
-                                                            if (files) {
-                                                                const fileArray = Array.from(files)
-                                                                field.onChange(fileArray)
-                                                                const previews = fileArray.map((file) => URL.createObjectURL(file))
-                                                                setProjectImagesPreview(previews)
-                                                            }
-                                                        }}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                                {projectImagesPreview.length > 0 && (
-                                                    <div className="flex gap-2 flex-wrap mt-2">
-                                                        {projectImagesPreview.map((src, idx) => (
-                                                            <Image key={idx} src={src} alt={`Preview ${idx}`} width={100} height={100} className="rounded border" />
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </FormItem>
-                                        )}
-                                    />
+                                    {/* Upload Images */}
+                                    <FormField control={form.control} name="projectDataImages" render={() => (
+                                        <FormItem>
+                                            <FormLabel>Upload Images</FormLabel>
+                                            <FormControl>
+                                                <input type="file" accept="image/*" multiple disabled={isSubmitting}
+                                                    onChange={e => onImageUpload(e.target.files)} />
+                                            </FormControl>
+                                            <FormMessage />
+                                            <div className="flex flex-wrap gap-2 mt-2">
+                                                {projectImagePreviews.map((src, i) => (
+                                                    <Image key={i} src={src} alt="" width={100} height={100} className="rounded border" />
+                                                ))}
+                                            </div>
+                                        </FormItem>
+                                    )} />
+                                    <FormField control={form.control} name="projectDataYoutubeUrls" render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>YouTube URLs</FormLabel>
+                                            <FormControl><Input {...field} /></FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )} />
+
+                                    {/* Existing images */}
 
                                     <FormField
                                         control={form.control}
-                                        name="projectDataYoutubeUrls"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>YouTube URLs (comma-separated)</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="https://youtube.com/..., https://youtu.be/..." {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
+                                        name="existingImages"
+                                        render={() => (
+                                            <>
+                                                {existingImages?.length > 0 && (
+                                                    <div className="flex flex-wrap gap-2 mt-2">
+                                                        {form.watch('existingImages')!.map((src, idx) => (
+                                                            <div key={idx} className="relative group">
+                                                                <Image src={src} alt={`Existing ${idx}`} width={100} height={100} className="rounded border" />
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        const updated = form.getValues('existingImages')?.filter((img) => img !== src)
+                                                                        form.setValue('existingImages', updated)
+                                                                        setDeletedImages((prev) => [...prev, src])
+                                                                    }}
+                                                                    className="absolute top-0 right-0 bg-red-600 text-white text-xs px-1 rounded-bl hidden group-hover:block"
+                                                                >
+                                                                    ✕
+                                                                </button>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </>
                                         )}
                                     />
+
                                 </>
                             )}
 

@@ -9,6 +9,8 @@ import Image from 'next/image'
 import { ShoppingCart } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useCart } from '@/context/cart-context'
+import { Button } from '@/components/ui/button'
+import { logout } from '@/actions/auth'
 
 const Header = () => {
 
@@ -17,7 +19,7 @@ const Header = () => {
 
 
     return (
-        <header className='w-full bg-dark text-light fixed top-0 left-0 z-50'>
+        <header className='w-full bg-dark text-light fixed top-0 left-0 z-50 '>
             <WidthCard className=' flex items-center justify-between px-4 py-4 h-[65px]'>
 
                 <div>
@@ -55,6 +57,9 @@ const Header = () => {
                         <AvatarImage src="https://github.com/shadcn.png" />
                         <AvatarFallback>User</AvatarFallback>
                     </Avatar>
+                    <form action={logout}>
+                        <Button type='submit'>Logout</Button>
+                    </form>
                 </nav>
 
             </WidthCard>

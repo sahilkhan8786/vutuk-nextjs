@@ -5,6 +5,8 @@ import { cookies } from "next/headers"
 import './../../globals.css'
 import { Bebas_Neue, Rubik } from "next/font/google";
 import { Toaster } from "sonner";
+import Header from "@/components/custom/header/Header";
+import { CartContextProvider } from "@/context/cart-context";
 
 const bebas = Bebas_Neue({
     variable: "--font-bebas",
@@ -27,6 +29,9 @@ export default async function Layout({ children }: { children: React.ReactNode }
             <body
                 className={`${bebas.variable} ${rubik.variable} antialiased`}
             >
+                <CartContextProvider>
+                    <Header />
+                </CartContextProvider>
                 <Toaster richColors position="top-center" />
 
                 <SidebarProvider defaultOpen={defaultOpen}>

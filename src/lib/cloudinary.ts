@@ -64,15 +64,25 @@ export  async function uploadToCloudinary(buffer: Buffer, filename: string): Pro
   
 
   export async function deleteFromCloudinary(publicId: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      cloudinary.uploader.destroy(publicId, { resource_type: 'image' }, (error, result) => {
-        if (error) return reject(error);
-        if (result?.result !== 'ok' && result?.result !== 'not_found') {
-          return reject(new Error(`Failed to delete image: ${result?.result}`));
-        }
-        resolve();
-      });
-    });
+    try {
+      const result = await cloudinary.uploader.destroy(publicId, { resource_type: 'image' });
+  
+      if (result.result !== 'ok' && result.result !== 'not_found') {
+        throw new Error(`Failed to delete image: ${result.result}`);
+      }
+    } catch (error) {
+      console.error('Cloudinary deletion error:', error);
+      throw error;
+    }
   }
   
+  
+
+  export function extractPublicIdFromUrl(url: string): string {
+    const parts = url.split('/');
+    const fileWithExt = parts.pop()!;
+    const publicId = fileWithExt.split('.')[0];
+    const folder = parts.slice(parts.indexOf('upload') + 1).join('/');
+    return `${folder}/${publicId}`;
+  }
   

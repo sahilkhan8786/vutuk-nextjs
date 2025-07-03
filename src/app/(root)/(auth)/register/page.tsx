@@ -1,41 +1,40 @@
 'use client';
 
-import { login } from '@/actions/auth';
+import { register } from '@/actions/auth';
 import FormError from '@/components/custom/auth/form-error';
 import FormSuccess from '@/components/custom/auth/form-success';
-import SignInWithGoogle from '@/components/custom/auth/sign-in-with-google';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { loginSchema } from '@/schemas/authSchema';
+import { registerSchema } from '@/schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const LogInPage = () => {
+const RegisterPage = () => {
     const [isPending, startTransition] = useTransition();
     const [error, setError] = useState<string>('');
     const [success, setSuccess] = useState<string>('');
 
-    const form = useForm<z.infer<typeof loginSchema>>({
-        resolver: zodResolver(loginSchema),
+    const form = useForm<z.infer<typeof registerSchema>>({
+        resolver: zodResolver(registerSchema),
         defaultValues: {
             email: '',
             password: ''
         }
     })
 
-    const onSumbit = (values: z.infer<typeof loginSchema>) => {
+    const onSumbit = (values: z.infer<typeof registerSchema>) => {
         setError('');
         setSuccess('');
 
         console.log(values)
         startTransition(() => {
-            login(values)
+            register(values)
                 .then((data) => {
-                    setSuccess(data?.success || '');
-                    setError(data?.error || '');
+                    setSuccess(data.success || '');
+                    setError(data.error || '');
                 })
         })
 
@@ -45,7 +44,7 @@ const LogInPage = () => {
 
     return (
         <div className='mt-24'>
-            <h1>Login</h1>
+            <h1>Register</h1>
 
 
             <Form {...form}>
@@ -54,6 +53,24 @@ const LogInPage = () => {
                 >
                     <div className='space-y-4'>
 
+                        <FormField
+                            control={form.control}
+                            name='name'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Name</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            disabled={isPending}
+                                            {...field}
+                                            type='text'
+                                            placeholder='vutuk'
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <FormField
                             control={form.control}
                             name='email'
@@ -100,15 +117,13 @@ const LogInPage = () => {
                         type='submit'
                         size={'lg'}
                         className='w-full'
-                    >Log In</Button>
+                    >Create an Account</Button>
 
 
                 </form>
             </Form>
-
-            <SignInWithGoogle />
         </div>
     )
 }
 
-export default LogInPage
+export default RegisterPage

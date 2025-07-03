@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner'; // or your preferred toast library
 
 type Props = {
-    onClose: () => void; // pass from parent to close drawer manually
+    onClose: () => void;
 };
 
 const AddProductsForm = ({ onClose }: Props) => {

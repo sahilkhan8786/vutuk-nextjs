@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${bebas.variable} ${rubik.variable} antialiased`}
+        className={`${bebas.variable} ${rubik.variable} antialiased `}
       >
         <CartContextProvider>
           <Header />
