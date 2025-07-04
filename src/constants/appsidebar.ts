@@ -42,6 +42,26 @@ export const adminSidebarNav: AppSidebarProps[] = [
         url: "/admin/settings",
         icon: Settings,
     },
+    {
+        title: "Orders",
+        url: "/admin/orders",
+        icon: Settings,
+    },
+    {
+        title: "Completed Orders",
+        url: "/admin/completed-orders",
+        icon: Settings,
+    },
+    {
+        title: "Users",
+        url: "/admin/users",
+        icon: Settings,
+    },
+    {
+        title: "3D Print On Demand",
+        url: "/admin/users",
+        icon: Settings,
+    },
 ]
 
 export const userSidebarNav: AppSidebarProps[] = [
@@ -63,6 +83,16 @@ export const userSidebarNav: AppSidebarProps[] = [
     {
         title: "Profile",
         url: "/dashboard/profile",
+        icon: UserIcon,
+    },
+    {
+        title: "3D Prints On Demand",
+        url: "/dashboard/order-in-process",
+        icon: Settings,
+    },
+    {
+        title: "Support",
+        url: "/dashboard/support",
         icon: UserIcon,
     },
 ]

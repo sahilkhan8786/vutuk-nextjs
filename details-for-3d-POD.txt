@@ -12,5 +12,7 @@ Data for the Model for the 3D POD
 
 After Submission:-
 status:- (Upload Model->Analysing Model->Quotation Approved->Payment->In Production (approx. time- watch live)->Shiping Done)
+->ADMIN CAN UPLOAD THUMBNAIL OF THE PRODUCT
+
 Update the status for the products
 
