@@ -1,5 +1,5 @@
 // routes.ts
-export const publicRoutes = ["/", "/log-in", "/register"];
+export const publicRoutes = ["/", "/log-in", "/register","/about-us","/projects","/services","/contact-us", "/cart"];
 export const authRoutes = ["/log-in", "/register"];
 export const DEFAULT_LOGIN_REDIRECT = "/dashboard";
 export const apiAuthPrefix = "/api/auth";

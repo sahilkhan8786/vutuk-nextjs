@@ -59,7 +59,7 @@ export const adminSidebarNav: AppSidebarProps[] = [
     },
     {
         title: "3D Print On Demand",
-        url: "/admin/users",
+        url: "/admin/3d-print-on-demand",
         icon: Settings,
     },
 ]

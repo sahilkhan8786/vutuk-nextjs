@@ -2,6 +2,7 @@ import { logout } from '@/actions/auth';
 import { auth } from '@/auth';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { authHeaderAdminLinks, authHeaderUserLinks } from '@/constants/headerAuth';
 import { getInitials } from '@/utils/helpers';
 import Image from 'next/image'
 import Link from 'next/link';
@@ -9,6 +10,8 @@ import React from 'react'
 
 const HeaderAuth = async () => {
     const session = await auth();
+    const isAdmin = session?.user.role === 'admin';
+    const links = isAdmin ? authHeaderAdminLinks : authHeaderUserLinks
 
 
     const userIntials = !session?.user.image && getInitials(session?.user.name as string)
@@ -38,23 +41,17 @@ const HeaderAuth = async () => {
                             <DropdownMenuContent className='mr-4 w-24'>
                                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem className='cursor-pointer'>
-                                    <Link href={'/dashboard/profile'}>
-                                        Profile
 
-                                    </Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className='cursor-pointer'>
-                                    <Link href={'/dashboard/orders'}>
-                                        Orders
+                                {links.map(link => (
 
-                                    </Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className='cursor-pointer'>
-                                    <Link href={'/dashboard/favourites'}>
-                                        Favourites
-                                    </Link>
-                                </DropdownMenuItem>
+                                    <DropdownMenuItem key={link.link} className='cursor-pointer'>
+                                        <Link href={link.href}>
+                                            {link.link}
+
+                                        </Link>
+                                    </DropdownMenuItem>
+                                ))}
+
                                 <DropdownMenuItem asChild>
                                     <form action={logout}>
                                         <Button type='submit'>Logout</Button>

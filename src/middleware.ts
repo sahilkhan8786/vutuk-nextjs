@@ -20,6 +20,10 @@ export async function middleware(req: Request) {
 
   // ✅ Always allow /api/auth/*
   if (isApiAuthRoute) return NextResponse.next();
+  
+  if (pathname.startsWith('/api') && req.method === 'GET') {
+    return NextResponse.next();
+  }
 
   // ✅ If already logged in and accessing /log-in etc., redirect based on role
   if (isAuthRoute && isLoggedIn) {
