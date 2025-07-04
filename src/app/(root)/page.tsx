@@ -8,12 +8,12 @@ export const metadata: Metadata = {
   keywords: ['ecommerce', 'online shopping', 'cheap gadgets', 'fashion', 'electronics'],
   authors: [{ name: 'Vutuk Team' }],
   creator: 'Vutuk',
-  metadataBase: new URL('https://www.vutuk.com'),
+  metadataBase: new URL('https://vutuk-nextjs.vercel.app'),
   openGraph: {
     title: 'Vutuk – Affordable & Trendy Products Online',
     description:
       'Explore thousands of products at low prices. Clothing, electronics, home essentials & more. Free returns. Shop now!',
-    url: 'https://www.vutuk.com',
+    url: 'https://vutuk-nextjs.vercel.app',
     siteName: 'Vutuk',
     images: [
       {
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://www.vutuk.com',
+    canonical: 'https://vutuk-nextjs.vercel.app',
   },
 };
 
