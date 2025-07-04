@@ -17,6 +17,7 @@ export async function middleware(req: Request) {
   const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(pathname);
   const isAuthRoute = authRoutes.includes(pathname);
+console.log("TOKEN FROM THE MIDDLEWARE",token)
 
   // ✅ Always allow /api/auth/*
   if (isApiAuthRoute) return NextResponse.next();
