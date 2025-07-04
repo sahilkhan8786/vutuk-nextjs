@@ -6,21 +6,21 @@ export const metadata: Metadata = {
   title: 'Vutuk – Affordable & Trendy Products Online',
   description: 'Shop the latest collections of clothing, gadgets, and accessories at unbeatable prices. Fast shipping & secure checkout!',
   keywords: ['ecommerce', 'online shopping', 'cheap gadgets', 'fashion', 'electronics'],
-  authors: [{ name: 'ShopSmart Team' }],
-  creator: 'ShopSmart',
+  authors: [{ name: 'Vutuk Team' }],
+  creator: 'Vutuk',
   metadataBase: new URL('https://www.vutuk.com'),
   openGraph: {
-    title: 'ShopSmart – Affordable & Trendy Products Online',
+    title: 'Vutuk – Affordable & Trendy Products Online',
     description:
       'Explore thousands of products at low prices. Clothing, electronics, home essentials & more. Free returns. Shop now!',
-    url: 'https://www.shopsmart.com',
+    url: 'https://www.vutuk.com',
     siteName: 'Vutuk',
     images: [
       {
         url: 'https://res.cloudinary.com/dyupdbnls/image/upload/v1751514331/your_folder_name/adorable-kid-s-dance-a-heartwarming-performance-video-editing-by-vutuk-media.webp',
         width: 1200,
         height: 630,
-        alt: 'ShopSmart OG Banner',
+        alt: 'Vutuk OG Banner',
       },
     ],
     locale: 'en_US',
@@ -28,11 +28,12 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ShopSmart – Affordable & Trendy Products Online',
-    description:
-      'Get the latest deals on fashion, electronics, and more. Secure payment & fast delivery.',
-    images: ['https://res.cloudinary.com/dyupdbnls/image/upload/v1751514331/your_folder_name/adorable-kid-s-dance-a-heartwarming-performance-video-editing-by-vutuk-media.webp'],
-    site: '@shopsmart',
+    title: 'Vutuk – Affordable & Trendy Products Online',
+    description: 'Get the latest deals on fashion, electronics, and more. Secure payment & fast delivery.',
+    images: [
+      'https://res.cloudinary.com/dyupdbnls/image/upload/v1751514331/your_folder_name/adorable-kid-s-dance-a-heartwarming-performance-video-editing-by-vutuk-media.webp',
+    ],
+    site: '@vutukmedia', // Replace with your actual Twitter handle if you have one
   },
   robots: {
     index: true,
@@ -43,9 +44,10 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://www.shopsmart.com',
+    canonical: 'https://www.vutuk.com',
   },
 };
+
 
 
 
