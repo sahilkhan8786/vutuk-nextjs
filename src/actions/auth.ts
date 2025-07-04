@@ -25,10 +25,12 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
         await signIn('credentials', {
             email,
             password,
-            redirectTo: DEFAULT_LOGIN_REDIRECT
+            redirect: true,
+            callbackUrl:DEFAULT_LOGIN_REDIRECT
         });
         
     } catch (error) {
+        console.log(error)
         if (error instanceof AuthError) {
             switch (error.type) {
                 case "CredentialsSignin":
@@ -40,13 +42,13 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
                         error: "Something went wrong"
                     }
             }
-            throw error;
         }
+        throw error;
 
-        return {
-            success: "Email sent successfully!"
-        }
-    
+        
+    }
+    return {
+        success: "Logged In successfully!"
     }
 }
     
@@ -66,6 +68,11 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
         const hashedPassword = await bcrypt.hash(password, 10); // Here you would hash the password
 
         const existingUser = await getUserByEmail(email);
+        if (existingUser && existingUser.provider === 'google') {
+            return {
+              error: 'This email is already registered via Google. Please sign in with Google.',
+            };
+          }
 
 
         if (existingUser) {
@@ -79,6 +86,7 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
             name,
             email,
             password: hashedPassword,
+            provider:'credentials'
         });
 
 

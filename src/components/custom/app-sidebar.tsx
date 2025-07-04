@@ -1,4 +1,8 @@
-import { BookCopy, Home, Newspaper, PlusSquare, ProjectorIcon, Settings, ShoppingBasket, Users } from "lucide-react"
+export interface AppSidebarProps {
+    title: string;
+    url: string;
+    icon: LucideIcon;
+}
 
 import {
     Sidebar,
@@ -10,53 +14,13 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { LucideIcon } from "lucide-react";
 import Link from "next/link"
 
 // Menu items.
-const items = [
-    {
-        title: "Home",
-        url: "/admin",
-        icon: Home,
-    },
-    {
-        title: "Team",
-        url: "/admin/team",
-        icon: Users,
-    },
-    {
-        title: "Services",
-        url: "/admin/services",
-        icon: BookCopy,
-    },
-    {
-        title: "Projects",
-        url: "/admin/projects",
-        icon: ProjectorIcon,
-    },
-    {
-        title: "Blogs",
-        url: "/admin/blogs",
-        icon: Newspaper,
-    },
-    {
-        title: "Products",
-        url: "/admin/products",
-        icon: ShoppingBasket,
-    },
-    {
-        title: "Additonal Data",
-        url: "/admin/additional-data",
-        icon: PlusSquare,
-    },
-    {
-        title: "Settings",
-        url: "/admin/settings",
-        icon: Settings,
-    },
-]
 
-export function AppSidebar() {
+
+export function AppSidebar({ items }: { items: AppSidebarProps[] }) {
     return (
         <Sidebar className="mt-16">
             <SidebarContent>

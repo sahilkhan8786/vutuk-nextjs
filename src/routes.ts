@@ -1,41 +1,21 @@
-/**
- * An array of routes that are accessible to the public without authentication.
- * These routes do not require any authentication checks.
- * @type {string[]}
- */
-export const publicRoutes = [
-    '/',
-    '/about-us',
-    '/services',
-    '/contact-us',
-    '/log-in',
-    '/register',
-    '/forgot-password',
-    '/reset-password',
-    '/terms-of-service',
-    '/privacy-policy',
-];
-
-
-/**
- * An array of routes that are used for  authentication.
- * THese routes will redirect logged in Users to the dashboard page 
- * @type {string[]}
- */
-export const authRoutes = [
-    "/log-in", "/register",
-]
-
-/**
- * The prefix for api authentication routes.
- * Routes that start with this prefix are used for authentication-related API calls. 
- * @type {string}
- */
+// routes.ts
+export const publicRoutes = ["/", "/log-in", "/register"];
+export const authRoutes = ["/log-in", "/register"];
+export const DEFAULT_LOGIN_REDIRECT = "/dashboard";
 export const apiAuthPrefix = "/api/auth";
 
-/**
- * The default redirect path after a successful login.
- * @type {string}
- */
-
-export const DEFAULT_LOGIN_REDIRECT = "/admin";
+// 🔐 Role-based protected routes
+export const roleProtectedRoutes: Record<string, string[]> = {
+  "/admin": ["admin"],
+  "/admin/team": ["admin"],
+  "/admin/services": ["admin"],
+  "/admin/projects": ["admin"],
+  "/admin/blogs": ["admin"],
+  "/admin/products": ["admin"],
+  "/admin/additional-data": ["admin"],
+  "/admin/settings": ["admin"],
+  "/dashboard": [ "user"],
+  "/dashboard/profile": [ "user"],
+  "/dashboard/orders": [ "user"],
+  "/dashboard/favourites": [ "user"],
+};

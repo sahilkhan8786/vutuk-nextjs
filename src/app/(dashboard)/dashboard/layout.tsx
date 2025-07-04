@@ -7,7 +7,7 @@ import { Bebas_Neue, Rubik } from "next/font/google";
 import { Toaster } from "sonner";
 import Header from "@/components/custom/header/Header";
 import { CartContextProvider } from "@/context/cart-context";
-import { adminSidebarNav } from "@/constants/appsidebar";
+import { userSidebarNav } from "@/constants/appsidebar";
 
 const bebas = Bebas_Neue({
     variable: "--font-bebas",
@@ -21,7 +21,7 @@ const rubik = Rubik({
     weight: ['300', '400', '500', '600', '700', '800', '900']
 });
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
 
     const cookieStore = await cookies()
     const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
@@ -36,7 +36,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                 <Toaster richColors position="top-center" />
 
                 <SidebarProvider defaultOpen={defaultOpen}>
-                    <AppSidebar items={adminSidebarNav} />
+                    <AppSidebar items={userSidebarNav} />
                     <main className="w-full overflow-hidden p-4">
                         <SidebarTrigger className="cursor-pointer" />
                         {children}

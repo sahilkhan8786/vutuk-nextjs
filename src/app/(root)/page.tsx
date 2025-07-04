@@ -16,6 +16,7 @@ const HomePage = () => {
 
       <ShopLayout />
 
+
     </div>
   )
 }

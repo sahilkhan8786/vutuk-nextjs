@@ -38,6 +38,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token
     },
   },
+  
+  pages: {
+    signIn: '/log-in',
+    
+  },
   adapter: MongoDBAdapter(client),
   session:{strategy: "jwt"},
  ...authConfig

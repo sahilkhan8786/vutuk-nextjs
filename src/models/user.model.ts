@@ -4,7 +4,15 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
   password: String,
-  emailVerified : { type: Boolean, default: false },
+  emailVerified: { type: Boolean, default: false },
+  image: {
+    type: String,
+    default:null
+  },
+  provider: {
+    enum: ['google', 'credentials'],
+    
+  },
   phone: Number,
   phoneVerified: { type: Boolean, default: false },
   role: {

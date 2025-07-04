@@ -1,4 +1,3 @@
-'use client'
 import Link from 'next/link'
 import React from 'react'
 import NavLinks from './NavLinks'
@@ -6,15 +5,15 @@ import { navLinks } from '@/constants/header'
 import HeaderMobile from './HeaderMobile'
 import WidthCard from '@/components/ui/WidthCard'
 import Image from 'next/image'
-import { ShoppingCart } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useCart } from '@/context/cart-context'
-import { Button } from '@/components/ui/button'
-import { logout } from '@/actions/auth'
 
-const Header = () => {
+import CartIcon from './CartIcon'
+import HeaderAuth from './HeaderAuth'
 
-    const { state } = useCart();
+
+const Header = async () => {
+
+
+
 
 
 
@@ -46,20 +45,10 @@ const Header = () => {
                     {/* MOBILE NAVIGATION */}
                 </nav>
                 <nav className='flex items-center justify-end gap-4'>
-                    <Link href={'/cart'} className='relative '>
+                    <CartIcon />
 
-                        <ShoppingCart className='border rounded-sm p-1 hover:bg-light hover:text-dark' />
-                        <p className='absolute -top-3 -right-3 bg-light text-dark rounded-full size-5 inline-flex items-center justify-center'> {state.totalItem}
+                    <HeaderAuth />
 
-                        </p>
-                    </Link>
-                    <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png" />
-                        <AvatarFallback>User</AvatarFallback>
-                    </Avatar>
-                    <form action={logout}>
-                        <Button type='submit'>Logout</Button>
-                    </form>
                 </nav>
 
             </WidthCard>
