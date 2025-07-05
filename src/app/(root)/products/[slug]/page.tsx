@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         return {
             title: `${product.title} – Buy Now | Vutuk`,
             description: `Shop ${product.title} for just ₹${product.price}. High-quality, fast shipping.`,
-            keywords: ['ecommerce', 'online shopping', 'cheap gadgets', 'fashion', 'electronics', product.title],
+            keywords: [product.title, ...(product.tags || [])],
             authors: [{ name: 'Vutuk Team' }],
             creator: 'Vutuk',
             metadataBase: new URL(metadataBaseURL),
