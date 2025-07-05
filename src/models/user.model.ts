@@ -9,9 +9,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     default:null
   },
-  provider: {
+  provider: { 
+    type: String,
     enum: ['google', 'credentials'],
-    
+    default: 'credentials' 
   },
   phone: Number,
   phoneVerified: { type: Boolean, default: false },

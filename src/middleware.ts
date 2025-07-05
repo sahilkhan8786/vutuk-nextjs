@@ -9,9 +9,12 @@ import {
 } from "./routes";
 
 export async function middleware(req: Request) {
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
-
-  console.log(process.env.AUTH_SECRET)
+  console.log('🔍 Request headers:', Object.fromEntries(req.headers.entries()));
+  const token = await getToken({ req,secret:process.env.AUTH_SECRET });
+  
+  
+  // const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+  console.log('🔐 Token:', token?.role);
   const url = new URL(req.url);
   const pathname = url.pathname;
 

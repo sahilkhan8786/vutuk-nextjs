@@ -1,7 +1,9 @@
+import { connectToDB } from "@/lib/mongodb";
 import { User } from "@/models/user.model"
 
 export const getUserByEmail = async (email: string) => {
     try {
+        await connectToDB();
         const user = await User.findOne({ email });
         return user;
     } catch (error) {
@@ -11,6 +13,7 @@ export const getUserByEmail = async (email: string) => {
 }
 export const getUserById = async (id: string) => {
     try {
+        await connectToDB();
         const user = await User.findById(id);
         return user;
     } catch (error) {
