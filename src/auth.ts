@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
 import { MongoDBAdapter } from "@auth/mongodb-adapter"
-import client from "@/lib/db"
-import authConfig from "@/auth.config"
+import client from "./lib/db"
+import authConfig from "./auth.config"
 import { getUserById } from "./data/user.data"
 import { connectToDB } from "./lib/mongodb"
 
@@ -17,7 +17,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.id = token.sub;
       }
       if (token.role && session.user) { 
-        session.user.role  = token.role as 'admin' |'user';
+        session.user.role  = token.role;
       }
 
 
@@ -38,19 +38,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token
     },
   },
-  cookies: {
-    sessionToken: {
-      name: process.env.NODE_ENV === "production"
-      ? "__Secure-next-auth.session-token"
-      : "next-auth.session-token",
-    options: {
-      httpOnly: true,
-      sameSite: "lax",
-      path: "/",
-      secure: process.env.NODE_ENV === "production",
-    },
-    }
-  },
+
   pages: {
     signIn: '/log-in',
     

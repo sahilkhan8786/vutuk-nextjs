@@ -10,9 +10,10 @@ import {
 
 export async function middleware(req: Request) {
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+
+  console.log(process.env.AUTH_SECRET)
   const url = new URL(req.url);
   const pathname = url.pathname;
-  console.log("TOKEN FROM MIDDLEWARE",token)
 
   const isLoggedIn = !!token;
   const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
@@ -20,6 +21,7 @@ export async function middleware(req: Request) {
   const isAuthRoute = authRoutes.includes(pathname);
 console.log("TOKEN FROM THE MIDDLEWARE",token)
 
+  // ✅ Always allow /api/auth/*
   if (isApiAuthRoute) return NextResponse.next();
   
   if (pathname.startsWith('/api') && req.method === 'GET') {
