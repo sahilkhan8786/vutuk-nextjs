@@ -1,5 +1,6 @@
-import WidthCard from '@/components/ui/WidthCard';
+import ProductClient from '@/components/custom/products/ProductClient';
 import { metadataBaseURL } from '@/utils/seo';
+
 import React from 'react';
 
 
@@ -84,17 +85,7 @@ const SingleProductPage = async ({ params }: { params: Promise<{ slug: string }>
     const slug = (await params).slug
     const product = await getProduct(slug);
     console.log(product)
-    return (
-        <div className='mt-24 space-y-8'>
-            <WidthCard>
-                <div>
-                    <h1 className='text-2xl font-bold'>{product.title}</h1>
-                    <p className='text-muted-foreground'>₹{product.price}</p>
-                    {/* Add image, description, etc */}
-                </div>
-            </WidthCard>
-        </div>
-    )
+    return <ProductClient product={product} />
 }
 
 export default SingleProductPage
