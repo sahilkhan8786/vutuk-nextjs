@@ -1,12 +1,24 @@
+
 import { connectToDB } from "@/lib/mongodb";
 import Product from "@/models/product.model";
-import { NextResponse } from "next/server";
+import { APIFeatures } from "@/utils/ApiFeatures";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    await connectToDB();
+   
 
-    const products = await Product.find({});
+
+    await connectToDB();
+    const queryParams = Object.fromEntries(req.nextUrl.searchParams.entries())
+
+    const features = new APIFeatures(Product.find(), queryParams)
+    .filter()
+    .sort()
+      .limitFields()
+    .paginate()
+
+  const products = await features.query
 
     return NextResponse.json({
       status: "success",

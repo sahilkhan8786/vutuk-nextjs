@@ -9,15 +9,7 @@ import {
 } from "./routes";
 
 export async function middleware(req: Request) {
-  console.log('🔍 Request headers:', Object.fromEntries(req.headers.entries()));
-  const token = await getToken({
-    req, secret: process.env.AUTH_SECRET,
-    secureCookie: process.env.NODE_ENV === 'production'
-   });
-  
-  
-  // const token = await getToken({ req, secret: process.env.AUTH_SECRET });
-  console.log('🔐 Token:', token?.role);
+  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
   const url = new URL(req.url);
   const pathname = url.pathname;
 
@@ -25,7 +17,6 @@ export async function middleware(req: Request) {
   const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(pathname);
   const isAuthRoute = authRoutes.includes(pathname);
-console.log("TOKEN FROM THE MIDDLEWARE",token)
 
   // ✅ Always allow /api/auth/*
   if (isApiAuthRoute) return NextResponse.next();
