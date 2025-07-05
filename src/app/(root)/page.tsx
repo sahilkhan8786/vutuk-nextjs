@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     siteName: 'Vutuk',
     images: [
       {
-        url: 'https://res.cloudinary.com/dyupdbnls/image/upload/v1751514331/your_folder_name/adorable-kid-s-dance-a-heartwarming-performance-video-editing-by-vutuk-media.webp',
+        url: 'https://i.etsystatic.com/59876780/r/isbl/735c55/77928882/isbl_3360x840.77928882_kwpe7hzn.jpg',
         width: 1200,
         height: 630,
         alt: 'Vutuk OG Banner',
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     title: 'Vutuk – Affordable & Trendy Products Online',
     description: 'Get the latest deals on fashion, electronics, and more. Secure payment & fast delivery.',
     images: [
-      'https://res.cloudinary.com/dyupdbnls/image/upload/v1751514331/your_folder_name/adorable-kid-s-dance-a-heartwarming-performance-video-editing-by-vutuk-media.webp',
+      'https://i.etsystatic.com/59876780/r/isbl/735c55/77928882/isbl_3360x840.77928882_kwpe7hzn.jpg',
     ],
     site: '@vutukmedia', // Replace with your actual Twitter handle if you have one
   },

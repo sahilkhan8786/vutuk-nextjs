@@ -239,7 +239,7 @@ const EditProductForm = ({ slug, onClose }: {
                 {/* Just preview default (unused) images */}
                 {defaultImages.length > 0 && (
                     <div className="mt-6">
-                        <FormLabel className="text-sm font-semibold">Unmapped Product Images</FormLabel>
+                        <FormLabel className="text-sm font-semibold">Product Size Images</FormLabel>
                         <div className="flex gap-2 flex-wrap mt-2">
                             {defaultImages.map((img, i) => (
                                 <Image

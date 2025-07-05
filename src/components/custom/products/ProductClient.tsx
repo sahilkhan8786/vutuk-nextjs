@@ -4,6 +4,8 @@ import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import WidthCard from '@/components/ui/WidthCard'
 import ProductImageGallery from './ProductImageGallery'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import ProductCarusalContainer from './ProductCarusalContainer'
 
 interface Configuration {
     key: string
@@ -46,7 +48,7 @@ const ProductClient = ({ product }: { product: Product }) => {
                         configurations={product.configurations}
                         selectedImage={selectedImage}
                         onImageSelect={handleThumbnailClick}
-                        selectedKey={selectedKey}
+
                     />
 
                     {/* Info */}
@@ -58,22 +60,20 @@ const ProductClient = ({ product }: { product: Product }) => {
                         {/* Color Configurations */}
                         <div className="space-y-2">
                             <label className="font-medium block">Select Color:</label>
-                            <div className="flex gap-2 flex-wrap">
-                                {product.configurations.map((config) => (
-                                    <button
-                                        key={config.key}
-                                        type="button"
-                                        onClick={() => handleColorSelect(config.key)}
-                                        className={`px-4 py-1 border rounded transition ${selectedKey === config.key
-                                            ? 'bg-primary text-white'
-                                            : 'hover:bg-accent'
-                                            }`}
-                                    >
-                                        {config.key}
-                                    </button>
-                                ))}
-                            </div>
+                            <Select value={selectedKey} onValueChange={(value) => handleColorSelect(value)}>
+                                <SelectTrigger className="w-[200px]">
+                                    <SelectValue placeholder="Choose a color" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {product.configurations.map((config) => (
+                                        <SelectItem key={config.key} value={config.key}>
+                                            {config.key}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
+
 
                         {/* Quantity & Add to Cart */}
                         <div className="flex items-center gap-4 mt-6">
@@ -92,6 +92,17 @@ const ProductClient = ({ product }: { product: Product }) => {
                     </div>
                 </div>
             </WidthCard>
+
+            <ProductCarusalContainer
+                title='Featured Products'
+            />
+            <ProductCarusalContainer
+                title='Similar Products'
+            />
+            <ProductCarusalContainer
+                title='Similar Categories'
+            />
+
         </div>
     )
 }

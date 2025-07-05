@@ -13,7 +13,6 @@ interface ProductImageGalleryProps {
     configurations: Configuration[]
     selectedImage: string
     onImageSelect: (img: string) => void
-    selectedKey: string | null
 }
 
 const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
@@ -22,26 +21,15 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
     onImageSelect
 }) => {
     return (
-        <div className="space-y-4">
-            {/* Main Image */}
-            <div className="relative w-full h-96 rounded-lg overflow-hidden border">
-                <Image
-                    src={selectedImage}
-                    alt="Selected product"
-                    fill
-                    className="object-contain p-4"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                />
-            </div>
-
-            {/* Thumbnails */}
-            <div className="flex gap-3 overflow-x-auto">
+        <div className="flex flex-col md:flex-row gap-4">
+            {/* Thumbnails on the left */}
+            <div className="flex md:flex-col gap-3 ">
                 {configurations.map((config) => {
                     const isActive = config.image === selectedImage
                     return (
                         <div
                             key={config.key}
-                            className={`relative w-20 h-20 rounded-lg overflow-hidden cursor-pointer border ${isActive ? 'ring-2 ring-primary' : ''
+                            className={`relative size-16 rounded-md overflow-hidden cursor-pointer border transition-all duration-200 ${isActive ? 'ring-2 ring-primary' : ''
                                 }`}
                             onClick={() => onImageSelect(config.image)}
                         >
@@ -54,6 +42,17 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                         </div>
                     )
                 })}
+            </div>
+
+            {/* Main Image */}
+            <div className="relative w-full aspect-square overflow-hidden border rounded-lg group">
+                <Image
+                    src={selectedImage}
+                    alt="Selected product"
+                    fill
+                    className="object-contain transition-transform duration-300 ease-in-out group-hover:scale-110"
+                    sizes="(max-width: 768px) 100vw, 80vw"
+                />
             </div>
         </div>
     )

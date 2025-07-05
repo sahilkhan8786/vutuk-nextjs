@@ -8,7 +8,7 @@ import { FaInstagram, FaLinkedin, FaTwitter, FaFacebookF } from 'react-icons/fa'
 const Footer = () => {
     return (
         <footer className='bg-dark'>
-            <WidthCard className='px-2 py-16 grid grid-cols-4 '>
+            <WidthCard className='px-2 py-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4'>
                 <div>
                     <Image src={'/main-logo-white.png'}
                         alt='Vutuk Logo'
