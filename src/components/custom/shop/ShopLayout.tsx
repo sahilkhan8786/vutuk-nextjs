@@ -4,11 +4,11 @@ import { FirstDiv } from './LayoutDivs';
 
 const ShopLayout = async () => {
 
-    const productsRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`);
-    const json = await productsRes.json();
-    const { products } = json.data
+    // const productsRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`);
+    // const json = await productsRes.json();
+    // const { products } = json.data
 
-    console.log(products);
+    // console.log(products);
 
 
 
