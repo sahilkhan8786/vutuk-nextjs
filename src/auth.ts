@@ -12,9 +12,8 @@ import { connectToDB } from "./lib/mongodb"
 export const { handlers, signIn, signOut, auth } = NextAuth({
 
 
-  
   callbacks: {
-
+    
     async session({ session, token }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;
@@ -22,24 +21,37 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (token.role && session.user) { 
         session.user.role = token.role as 'admin' | 'user';
       }
-
-
-
+      
+      
+      
       return session;  
     },
     async jwt({ token }) {
       if(!token.sub) return token
       await connectToDB();
       const existingUser = await getUserById(token?.sub);
-
+      
       if (!existingUser) return token;
       token.role = existingUser.role;
-
       
-
-
+      
+      
+      
       return token
     },
+  },
+  trustHost:true,
+  cookies: {
+    sessionToken: {
+      name: `__Secure-next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        domain: process.env.NODE_ENV==='production'?".vutuk-nextjs.vercel.app":undefined
+      }
+    }
   },
 
   pages: {

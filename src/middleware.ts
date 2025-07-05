@@ -10,7 +10,10 @@ import {
 
 export async function middleware(req: Request) {
   console.log('🔍 Request headers:', Object.fromEntries(req.headers.entries()));
-  const token = await getToken({ req,secret:process.env.AUTH_SECRET });
+  const token = await getToken({
+    req, secret: process.env.AUTH_SECRET,
+    secureCookie: process.env.NODE_ENV === 'production'
+   });
   
   
   // const token = await getToken({ req, secret: process.env.AUTH_SECRET });

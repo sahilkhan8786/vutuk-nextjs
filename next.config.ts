@@ -1,6 +1,21 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'x-middleware-rewrite',
+            value: 'https://vutuk-nextjs.vercel.app/api/auth'
+          }
+        ]
+      }
+    ]
+},
+
+
   images: {
     remotePatterns: [
       {
