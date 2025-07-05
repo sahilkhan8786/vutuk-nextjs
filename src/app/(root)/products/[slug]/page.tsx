@@ -1,5 +1,8 @@
 import WidthCard from '@/components/ui/WidthCard';
+import { metadataBaseURL } from '@/utils/seo';
 import React from 'react';
+
+
 
 
 // Dummy fetch function — replace with your API
@@ -18,22 +21,58 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     try {
         const slug = (await params).slug
         const product = await getProduct(slug);
+        const productUrl = `${metadataBaseURL}/products/${slug}`
+        const productImage = product.images?.[0] || 'https://vutuk-nextjs.vercel.app/default-image.jpg'
+
 
         return {
             title: `${product.title} – Buy Now | Vutuk`,
             description: `Shop ${product.title} for just ₹${product.price}. High-quality, fast shipping.`,
+            keywords: ['ecommerce', 'online shopping', 'cheap gadgets', 'fashion', 'electronics', product.title],
+            authors: [{ name: 'Vutuk Team' }],
+            creator: 'Vutuk',
+            metadataBase: new URL(metadataBaseURL),
             openGraph: {
-                title: product.title,
-                images: product.images?.[0] ? [product.images[0]] : [],
+                title: `${product.title} – Buy Now | Vutuk`,
+                description: `Shop ${product.title} for just ₹${product.price}. High-quality, fast shipping.`,
+                url: productUrl,
+                siteName: 'Vutuk',
+                images: [
+                    {
+                        url: productImage,
+                        width: 1200,
+                        height: 630,
+                        alt: `${product.title} Image`,
+                    },
+                ],
+                locale: 'en_US',
+                type: 'product',
+            },
+            twitter: {
+                card: 'summary_large_image',
+                title: `${product.title} – Buy Now | Vutuk`,
+                description: `Get ${product.title} at ₹${product.price}. Fast delivery and easy returns.`,
+                images: [productImage],
+                site: '@vutukmedia',
+            },
+            robots: {
+                index: true,
+                follow: true,
+                googleBot: {
+                    index: true,
+                    follow: true,
+                },
+            },
+            alternates: {
+                canonical: productUrl,
             },
         }
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return {
             title: 'Product Not Found – Vutuk',
             description: 'The requested product could not be found.',
         }
-
     }
 
 

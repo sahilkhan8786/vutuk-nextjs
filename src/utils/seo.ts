@@ -1,0 +1,1 @@
+export const metadataBaseURL = process.env.NODE_ENV==='production'? 'https://vutuk-nextjs.vercel.app':"http://localhost:300"
