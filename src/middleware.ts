@@ -15,13 +15,17 @@ export async function middleware(req: Request) {
 
   const isLoggedIn = !!token;
   const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
-  const isPublicRoute = publicRoutes.includes(pathname) || pathname.startsWith(`/${pathname}/`);
+
+  // ✅ UPDATED: includes dynamic `/products/[slug]`
+  const isPublicRoute =
+    publicRoutes.includes(pathname) || pathname.startsWith("/products/");
+
   const isAuthRoute = authRoutes.includes(pathname);
 
   // ✅ Always allow /api/auth/*
   if (isApiAuthRoute) return NextResponse.next();
-  
-  if (pathname.startsWith('/api') && req.method === 'GET') {
+
+  if (pathname.startsWith("/api") && req.method === "GET") {
     return NextResponse.next();
   }
 
@@ -60,4 +64,4 @@ export const config = {
     // Always run for API routes
     '/(api|trpc)(.*)',
   ],
-}
+};
