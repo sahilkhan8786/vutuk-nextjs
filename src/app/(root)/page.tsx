@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     siteName: 'Vutuk',
     images: [
       {
-        url: 'https://res-console.cloudinary.com/dyupdbnls/thumbnails/v1/image/upload/v1751713660/VnV0dWtfUHJvZmlsZV90bm9hY2E=/drilldown',
+        url: 'https://res.cloudinary.com/dyupdbnls/image/upload/v1751713660/Vutuk_Profile_tnoaca.jpg',
         width: 1200,
         height: 630,
         alt: 'Vutuk OG Banner',
@@ -31,9 +31,9 @@ export const metadata: Metadata = {
     title: 'Vutuk – Affordable & Trendy Products Online',
     description: 'Get the latest deals on fashion, electronics, and more. Secure payment & fast delivery.',
     images: [
-      'https://res-console.cloudinary.com/dyupdbnls/thumbnails/v1/image/upload/v1751713660/VnV0dWtfUHJvZmlsZV90bm9hY2E=/drilldown',
+      'https://res.cloudinary.com/dyupdbnls/image/upload/v1751713660/Vutuk_Profile_tnoaca.jpg',
     ],
-    site: '@vutukmedia', // Replace with your actual Twitter handle if you have one
+    site: '@iamvutuk', // Replace with your actual Twitter handle if you have one
   },
   robots: {
     index: true,
