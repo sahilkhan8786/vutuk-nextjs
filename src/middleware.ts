@@ -7,9 +7,15 @@ import {
   publicRoutes,
   roleProtectedRoutes,
 } from "./routes";
+import { cookieName } from "./utils/values";
 
 export async function middleware(req: Request) {
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+  const token = await getToken({
+    req,
+    secret: process.env.AUTH_SECRET,
+    cookieName:cookieName
+  });
+  console.log("TOKEN FROM THE MIDDLEWARE", token)
   const url = new URL(req.url);
   const pathname = url.pathname;
 
