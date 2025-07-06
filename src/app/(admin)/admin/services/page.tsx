@@ -17,7 +17,9 @@ type ServicesProps = {
 
 
 async function getServices() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/services`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/services`, {
+        credentials: 'include'
+    });
 
     if (!res.ok) throw new Error('Failed to fetch services');
 

@@ -10,7 +10,9 @@ import { MergeSubmitButton } from '@/components/custom/toasts/MergeSubmitButton'
 
 async function getData(): Promise<Product[]> {
     // Fetch data from your API here.
-    const productRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`)
+    const productRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`, {
+        credentials: 'include'
+    })
     const res = await productRes.json();
 
     return res.data.products;
@@ -18,6 +20,8 @@ async function getData(): Promise<Product[]> {
 
 const AdminProductsPage = async () => {
     const data = await getData();
+
+
 
 
 

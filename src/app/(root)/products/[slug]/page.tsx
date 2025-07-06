@@ -8,7 +8,9 @@ import React from 'react';
 
 // Dummy fetch function — replace with your API
 async function getProduct(slug: string) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products/${slug}`)
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products/${slug}`, {
+        credentials: 'include'
+    })
 
     if (!res.ok) throw new Error('Product not found')
 

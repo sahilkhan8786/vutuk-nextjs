@@ -15,7 +15,8 @@ export async function middleware(req: Request) {
     secret: process.env.AUTH_SECRET,
     cookieName:cookieName
   });
-  console.log("TOKEN FROM THE MIDDLEWARE", token)
+
+  
   const url = new URL(req.url);
   const pathname = url.pathname;
 

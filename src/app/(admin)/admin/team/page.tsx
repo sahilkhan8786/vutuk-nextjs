@@ -27,7 +27,9 @@ type TeamMemberProps = {
 
 
 async function getTeamMembers() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/team`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/team`, {
+        credentials: 'include'
+    });
 
     if (!res.ok) throw new Error('Failed to fetch team members');
 
