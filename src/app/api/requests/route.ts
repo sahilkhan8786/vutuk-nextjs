@@ -9,7 +9,13 @@ export  async function GET(req:Request) {
         secret: process.env.AUTH_SECRET,
         cookieName:cookieName
     })
-const requests = await Custom3dPrintRequest.find({userId:token?.sub})
+    let requests;
+
+    if (token?.role === 'user') {
+        requests = await Custom3dPrintRequest.find({userId:token?.sub})
+    } else {
+        requests = await Custom3dPrintRequest.find({});
+    }
 
 
     return NextResponse.json({
