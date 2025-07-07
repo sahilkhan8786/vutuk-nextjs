@@ -86,3 +86,38 @@ export  async function uploadToCloudinary(buffer: Buffer, filename: string): Pro
     return `${folder}/${publicId}`;
   }
   
+  export async function uploadRawFileToCloudinary(file: File): Promise<string | null> {
+    try {
+      // Convert browser File to Buffer
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+  
+      // Upload via stream
+      const uploadedUrl = await new Promise<string>((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "custom-3d-models",
+            resource_type: "raw", // For STL, OBJ, STEP files
+            upload_preset: "vutuk.dm", // Optional if using unsigned uploads
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else if (result?.secure_url) {
+              resolve(result.secure_url);
+            } else {
+              reject("No secure_url returned.");
+            }
+          }
+        );
+  
+        Readable.from(buffer).pipe(uploadStream);
+      });
+  
+      return uploadedUrl;
+    } catch (error) {
+      console.error("Server-side Cloudinary upload failed:", error);
+      return null;
+    }
+  }
+  

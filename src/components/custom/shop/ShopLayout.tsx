@@ -3,15 +3,29 @@ import React from 'react'
 import { CarousalDivHomePage, ProductOnDemand3DDiv } from './LayoutDivs'
 import Image from 'next/image'
 
+
+// const headersList = await headers();
+// const cookieHeader = headersList?.get("cookie") ?? "";
+
+// const res = await fetch('http://localhost:3000/api/products', {
+//     headers: {
+//         cookie: cookieHeader, // ✅ manually send cookies to preserve session
+//     },
+
+// });
+
 const ShopLayout = async () => {
-    const productsRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`)
+    const productsRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`, {
+        method: "GET",
+        credentials: "include"
+    })
     const json = await productsRes.json()
     const { products } = json.data
 
     return (
         <WidthCard className='mb-6  grid grid-cols-1 sm:grid-cols-2   gap-2 min-h-[74vh] lg:grid-cols-4'>
             {/* NEW ARRIVALS DIV */}
-            <CarousalDivHomePage className='col-span-1 row-span-3' title='New Arrivals' products={products} innerDivHeight=' min-h-120' delay={4000} />
+            <CarousalDivHomePage className='col-span-1 row-span-3' title='New Arrivals' products={products} innerDivHeight='min-h-120' delay={4000} />
 
             <ProductOnDemand3DDiv />
 

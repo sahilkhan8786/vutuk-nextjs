@@ -1,8 +1,17 @@
+import { auth } from '@/auth'
 import React from 'react'
 
-const UserDashboardPage = () => {
+const UserDashboardPage = async () => {
+    const session = await auth()
     return (
-        <div>UserDashboardPage</div>
+        <div>UserDashboardPage
+            <div>
+                {
+                    JSON.stringify(session, null, 2)
+                }
+            </div>
+
+        </div>
     )
 }
 

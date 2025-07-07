@@ -7,6 +7,7 @@ import { getInitials } from '@/utils/helpers';
 import Image from 'next/image'
 import Link from 'next/link';
 import React from 'react'
+import AuthFormWrapper from '../auth/AuthFormWrapper';
 
 const HeaderAuth = async () => {
     const session = await auth();
@@ -68,9 +69,10 @@ const HeaderAuth = async () => {
 
             {
                 !session &&
-                <Link href={'/log-in'}>
-                    Login
-                </Link>
+                <AuthFormWrapper trigger={
+                    <Button>Login</Button>
+                } />
+
             }
         </>
     )

@@ -21,19 +21,23 @@ const Header = async () => {
         <header className='w-full bg-dark text-light fixed top-0 left-0 z-50 '>
             <WidthCard className=' flex items-center justify-between px-4 py-4 h-[65px]'>
 
-                <div>
-                    <Link href={'/'}                    >
-                        <div className='relative h-[60px] w-[120px]'>
 
-                            <Image
-                                fill
-                                src={'/main-logo-white.png'}
-                                alt='logo'
-                                className='absolute top-0 left-0'
-                            />
-                        </div>
-                    </Link>
-                </div>
+                <Link href="/">
+                    <div className="relative w-[100px] h-[100px]">
+                        <Image
+                            src="/main-logo-white.png"
+                            alt="logo"
+                            priority
+                            fill
+                            sizes="100px"
+                            className="object-contain transition-all duration-500"
+                        />
+                    </div>
+                </Link>
+
+
+
+
 
                 <nav>
                     {/* DESKTOP-NAVIGATION */}

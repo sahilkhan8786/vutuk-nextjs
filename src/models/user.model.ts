@@ -20,7 +20,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ["admin", "user"],
     default: "user"
-  }
+  },
+  addressCount:{type:Number,default:0}
 }, { timestamps: true });
 
 export const User = mongoose.models.User || mongoose.model("User", userSchema);

@@ -54,11 +54,12 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
                             className={`transition-all duration-500 ease-in-out flex flex-col items-center justify-start gap-2 ${carousalBasis}`}
                         >
                             <Link href={`/products/${product.slug}`} className="w-full">
-                                <div className={`relative w-full rounded-xl overflow-hidden shadow-md ${innerDivHeight}`}>
+                                <div className={`w-full rounded-xl overflow-hidden shadow-md ${innerDivHeight}`}>
                                     <Image
                                         src={product.images?.[0]}
                                         alt={product.title}
-                                        fill
+                                        width={500}
+                                        height={400}
                                         className="object-cover rounded-xl transition-all duration-500"
                                     />
                                 </div>
@@ -101,15 +102,15 @@ export const ProductOnDemand3DDiv = () => {
                 <li>Get it printed and delivered to your doorstep</li>
             </ul>
 
-            <p className='text-slate-700 text-center max-w-4 xl mx-auto'>
+            <p className='text-slate-700 text-center max-w-4xl mx-auto'>
                 Ideal for <em>engineers, students, designers, or hobbyists</em>—we print everything from miniature models, gadget parts, custom keychains, mechanical components to artistic sculptures. Quality guaranteed.
             </p>
 
-            <div className="text-center">
+            <Link href={'/request/custom-3d-print-on-demand'} className="text-center">
                 <Button size="lg" className="mt-2">
                     Request a Custom 3D Print
                 </Button>
-            </div>
+            </Link>
         </div>
     )
 }

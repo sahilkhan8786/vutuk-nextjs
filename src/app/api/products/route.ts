@@ -1,4 +1,5 @@
 
+
 import { connectToDB } from "@/lib/mongodb";
 import Product from "@/models/product.model";
 import { APIFeatures } from "@/utils/ApiFeatures";
@@ -6,6 +7,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
+
+
    
     await connectToDB();
     const queryParams = Object.fromEntries(req.nextUrl.searchParams.entries())

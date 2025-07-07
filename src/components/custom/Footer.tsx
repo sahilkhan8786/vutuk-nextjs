@@ -10,11 +10,17 @@ const Footer = () => {
         <footer className='bg-dark'>
             <WidthCard className='px-2 py-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4'>
                 <div>
-                    <Image src={'/main-logo-white.png'}
-                        alt='Vutuk Logo'
-                        width={250}
-                        height={45}
-                    />
+                    <div className='relative w-40 h-24'>
+
+                        <Image
+                            src="/main-logo-white.png"
+                            alt="logo"
+                            priority
+                            fill
+                            sizes="100px"
+                            className="object-contain transition-all duration-500"
+                        />
+                    </div>
                     <p className='text-white  mt-4'>Your Vision Our Execution</p>
                 </div>
                 <div className='flex flex-col text-white space-y-2'>
