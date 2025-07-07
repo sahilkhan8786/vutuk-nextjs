@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
 import React from 'react'
-import { OrderStatusTracker } from './OrderStatusTracker';
+import { OrderStatusTracker } from '../../../../components/custom/requests/OrderStatusTracker';
 
 
 type Order = {
