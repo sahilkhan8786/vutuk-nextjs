@@ -37,7 +37,7 @@ function isValidStatus(status: string): status is StatusStep {
 }
 
 
-export async function getOrders() {
+async function getOrders() {
     const headersList = await headers();
     const cookieHeader = headersList.get("cookie") ?? ""; // ✅ correct and safe
 
