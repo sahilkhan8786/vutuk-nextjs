@@ -83,9 +83,11 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
     )
 }
 
-export const ProductOnDemand3DDiv = () => {
+export const ProductOnDemand3DDiv = ({ className }: {
+    className?: string
+}) => {
     return (
-        <div className='w-full bg-white border-primary rounded-xl p-4 flex flex-col gap-6 overflow-hidden sm:col-span-1 lg:col-span-3 row-span-2 shadow'>
+        <div className={`w-full bg-white border-primary rounded-xl p-4 flex flex-col gap-6 overflow-hidden  shadow ${className}`}>
             <h2 className="text-center font-semibold text-4xl font-bebas">
                 3D Product On Demand
             </h2>

@@ -22,14 +22,16 @@ const ShopLayout = async () => {
     const { products } = json.data
 
     return (
-        <WidthCard className='mb-6  grid grid-cols-1 sm:grid-cols-2   gap-2 min-h-[74vh] lg:grid-cols-4'>
+        <WidthCard className='mb-6  grid grid-cols-1 md:grid-cols-2   gap-6 min-h-[90vh] lg:grid-cols-4'>
             {/* NEW ARRIVALS DIV */}
-            <CarousalDivHomePage className='sm:col-span-1 row-span-2' title='New Arrivals' products={products} innerDivHeight='min-h-80' delay={4000} />
+            <CarousalDivHomePage className='col-span-4 lg:col-span-1' title='New Arrivals' products={products} innerDivHeight='min-h-80' delay={4000}
+                carousalBasis=' sm:basis-1/3 lg:basis-1/1'
+            />
 
-            <ProductOnDemand3DDiv />
+            <ProductOnDemand3DDiv className=' col-span-4 lg:col-span-3 ' />
 
             {/* BEST SELLER DIV */}
-            <CarousalDivHomePage className='col-span-4 row-span-2' title='Best Sellers' products={products} innerDivHeight='min-h-64' carousalBasis='sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 2xl:basis-1/6' delay={10000} />
+            <CarousalDivHomePage className='col-span-4 ' title='Best Sellers' products={products} innerDivHeight='min-h-64' carousalBasis='sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 2xl:basis-1/6' delay={10000} />
 
         </WidthCard>
     )
