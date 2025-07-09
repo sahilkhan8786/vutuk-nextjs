@@ -44,11 +44,11 @@ const ProductsCatalogue = async () => {
                         width={250} height={250}
                         className='rounded-xl'
                     />
-                    <Link href={`/products/${product.slug}`} className="w-full">
-                        <h3 className="text-center text-sm font-semibold line-clamp-2 hover:underline capitalize">
-                            {product.title}
-                        </h3>
-                    </Link>
+
+                    <h3 className="text-center text-sm font-semibold line-clamp-2 hover:underline capitalize">
+                        {product.title}
+                    </h3>
+
                     <p className="text-sm text-muted-foreground">₹{product.price}</p>
                     <Button>Add To Cart</Button>
                 </Link>
