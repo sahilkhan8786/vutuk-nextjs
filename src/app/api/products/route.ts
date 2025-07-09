@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
     let features = new APIFeatures(Product.find(), queryParams)
       .filter()
       .sort()
-      .limitFields();
+      .limitFields()
 
     // ✅ Only apply pagination if user is NOT admin
     const isAdmin = token?.role === "admin";
