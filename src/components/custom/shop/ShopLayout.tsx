@@ -25,19 +25,31 @@ const ShopLayout = async () => {
     return (
         <WidthCard className='mb-6  grid grid-cols-1 sm:grid-cols-2   gap-2 min-h-[74vh] lg:grid-cols-4'>
             {/* NEW ARRIVALS DIV */}
-            <CarousalDivHomePage className='col-span-1 row-span-3' title='New Arrivals' products={products} innerDivHeight='min-h-120' delay={4000} />
+            <CarousalDivHomePage className='col-span-1 row-span-2' title='New Arrivals' products={products} innerDivHeight='min-h-80' delay={4000} />
 
             <ProductOnDemand3DDiv />
 
             {/* BEST SELLER DIV */}
-            <CarousalDivHomePage className='sm:col-span-1 lg:col-span-3 row-span-2' title='Best Sellers' products={products} innerDivHeight='h-48' carousalBasis='lg:basis-1/2 xl:basis-1/3 2xl:basis-1/4' delay={10000} />
+            <CarousalDivHomePage className='sm:col-span-1 lg:col-span-3 row-span-2' title='Best Sellers' products={products} innerDivHeight='min-h-64' carousalBasis='lg:basis-1/2 xl:basis-1/3 2xl:basis-1/4' delay={10000} />
 
 
-            <div className='bg-dark text-light text-center hover:shadow hover:-translate-y-1 transition-all rounded-xl' >
+            <div className='bg-dark text-light text-center hover:shadow hover:-translate-y-1 transition-all rounded-xl row-span-2' >
                 <h2 className='font-bebas text-4xl sm:text-6xl  mt-4'>
                     Our Catalogues
                 </h2>
                 <p className='text-sm sm:text-base'>View All the Products</p>
+
+                <div className='flex items-center justify-center '>
+                    <h2>Gifts</h2>
+                </div>
+
+                <div>
+                    <h2>DECORS</h2>
+                </div>
+                <div>
+                    <h2>UTILITS</h2>
+                </div>
+
                 <div className='flex items-center justify-center'>
                     <Image
                         width={80}

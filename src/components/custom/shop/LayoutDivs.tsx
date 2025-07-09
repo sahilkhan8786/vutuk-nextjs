@@ -54,13 +54,12 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
                             className={`transition-all duration-500 ease-in-out flex flex-col items-center justify-start gap-2 ${carousalBasis}`}
                         >
                             <Link href={`/products/${product.slug}`} className="w-full">
-                                <div className={`w-full rounded-xl overflow-hidden shadow-md ${innerDivHeight}`}>
+                                <div className={`w-full rounded-xl overflow-hidden shadow-md ${innerDivHeight} relative`}>
                                     <Image
                                         src={product.images?.[0]}
                                         alt={product.title}
-                                        width={500}
-                                        height={400}
-                                        className="object-cover rounded-xl transition-all duration-500"
+                                        fill
+                                        className="absolute  object-center object-cover rounded-xl transition-all duration-500 aspect-video"
                                     />
                                 </div>
                             </Link>
