@@ -182,7 +182,7 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-6">
-                <h1>Product Name: <br />{product.title}</h1>
+                <h1 className='capitalize'>Product Name: <br />{product.title}</h1>
 
                 <Image src={product.images[0]}
                     width={200}

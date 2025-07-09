@@ -1,5 +1,8 @@
+import ProductsCatalogue from '@/components/custom/home/ProductsCatalogue';
 import ShopLayout from '@/components/custom/shop/ShopLayout';
+import WidthCard from '@/components/ui/WidthCard';
 import { Metadata } from 'next';
+import Image from 'next/image';
 import React from 'react'
 
 export const metadata: Metadata = {
@@ -53,21 +56,60 @@ export const metadata: Metadata = {
 
 const HomePage = () => {
   return (
-    // <div className='relative'>
-    //   {/* <CarouselComponent /> */}
-    //   <HomeHero />
-    //   <Services />
-    //   <ClientsContainer />
-    // </div>
-    <div className='mt-24'>
-      {/* <Title heading='Vutuk Shop'
+    <>
+      <div className='mt-24'>
+        {/* <Title heading='Vutuk Shop'
         description='Best Designer vases available'>
-      </Title> */}
+        </Title> */}
 
-      <ShopLayout />
+        <ShopLayout />
 
 
-    </div>
+      </div>
+      {/* BANNERS */}
+      <WidthCard className='grid grid-cols-3 gap-6 text-light mb-6 h-[450px]'>
+        <div className=' bg-dark w-full rounded-xl p-4  relative overflow-hidden'>
+          <h2 className='text-xl mb-4 z-40  absolute w-full bg-dark/60 left-0 -bottom-4 p-4 text-center'>Gifts for Him</h2>
+
+
+          <Image
+            src={'/banner-1.jpg'}
+            alt='IMAGE'
+            fill
+            className='absolute object-cover object-center rounded-xl z-20 hover:scale-125 transition-all'
+          />
+
+        </div>
+        <div className=' bg-dark w-full rounded-xl p-4  relative overflow-hidden'>
+          <h2 className='text-xl mb-4 z-40  absolute w-full bg-dark/60 left-0 -bottom-4 p-4 text-center'>Gifts for Him</h2>
+
+
+          <Image
+            src={'/banner-2.jpg'}
+            alt='IMAGE'
+            fill
+            className='absolute object-cover object-center rounded-xl z-20 hover:scale-125 transition-all'
+          />
+
+        </div>
+        <div className=' bg-dark w-full rounded-xl p-4  relative overflow-hidden'>
+          <h2 className='text-xl mb-4 z-40  absolute w-full bg-dark/60 left-0 -bottom-4 p-4 text-center'>CountDown HERE</h2>
+
+
+          <Image
+            src={'/banner-4.jpg'}
+            alt='IMAGE'
+            fill
+            className='absolute object-cover object-center rounded-xl z-20 hover:scale-125 transition-all'
+          />
+
+        </div>
+
+      </WidthCard>
+      <ProductsCatalogue />
+
+
+    </>
   )
 }
 

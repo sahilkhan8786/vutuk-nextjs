@@ -32,8 +32,8 @@ interface CarousalDivHomePageProps {
 
 export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ products, title, className, innerDivHeight, carousalBasis = "", delay }) => {
     return (
-        <div className={`w-full border border-primary rounded-xl  p-4 flex flex-col overflow-hidden ${className}`}>
-            <h2 className="text-center font-semibold text-4xl mb-4 font-bebas">{title}</h2>
+        <div className={`w-full  border-primary rounded-xl  p-4 flex flex-col overflow-hidden ${className} bg-white shadow`}>
+            <h2 className="text-left font-thin text-2xl mb-4 font-rubik">{title}</h2>
 
             <Carousel
                 orientation="horizontal"
@@ -64,7 +64,7 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
                                 </div>
                             </Link>
                             <Link href={`/products/${product.slug}`} className="w-full">
-                                <h3 className="text-center text-sm font-semibold line-clamp-2 hover:underline">
+                                <h3 className="text-center text-sm font-semibold line-clamp-2 hover:underline capitalize">
                                     {product.title}
                                 </h3>
                             </Link>
@@ -85,7 +85,7 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
 
 export const ProductOnDemand3DDiv = () => {
     return (
-        <div className='w-full border border-primary rounded-xl p-4 flex flex-col gap-6 overflow-hidden sm:col-span-1 lg:col-span-3 row-span-2'>
+        <div className='w-full bg-white border-primary rounded-xl p-4 flex flex-col gap-6 overflow-hidden sm:col-span-1 lg:col-span-3 row-span-2 shadow'>
             <h2 className="text-center font-semibold text-4xl font-bebas">
                 3D Product On Demand
             </h2>
