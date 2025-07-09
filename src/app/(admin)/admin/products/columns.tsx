@@ -24,11 +24,11 @@ export const columns: ColumnDef<Product>[] = [
         cell: ({ row }) => {
             const images = row.getValue('images') as string[];
             const title = row.getValue('title') as string;
-            const image = images[0]
+            const image = images[0];
 
 
-            return <div className="text-right font-medium">
-                <Image src={image} alt={title} width={50} height={50} className="rounded-xl" />
+            return <div className=" h-[120px] w-[120px]">
+                <Image src={image} alt={title} width={120} height={120} className="rounded-xl" />
             </div>
         }
     },
