@@ -14,6 +14,17 @@ export interface ICustom3DPrintRequest extends Document {
   isBusiness: boolean;
   gstOrFirm?: string;
   status: Custom3DPrintStatus;
+  image?: string;
+  price?: number;
+  trackingId?: string;
+  youtubeLink?: string;
+  customRequest: boolean;
+
+  // ✅ New Fields for Dimensions
+  length?: number;
+  breadth?: number;
+  height?: number;
+  dimensionUnit?: string;
 
   createdAt: Date;
   updatedAt: Date;
@@ -37,6 +48,22 @@ const Custom3dPrintSchema = new Schema<ICustom3DPrintRequest>(
       ref: 'User',
       default: null,
     },
+    image: {
+      type: String,
+      default: '',
+    },
+    price: {
+      type: Number,
+      default: 0,
+    },
+    youtubeLink: {
+      type: String,
+      default: '',
+    },
+    trackingId: {
+      type: String,
+      default: '',
+    },
     modelFileUrl: String,
     material: { type: String, required: true },
     otherMaterial: String,
@@ -49,7 +76,18 @@ const Custom3dPrintSchema = new Schema<ICustom3DPrintRequest>(
     isBusiness: { type: Boolean, required: true },
     gstOrFirm: String,
 
-    // ✅ NEW STATUS FIELD
+    // ✅ Dimensions
+    length: { type: Number, default: 0 },
+    breadth: { type: Number, default: 0 },
+    height: { type: Number, default: 0 },
+    dimensionUnit: { type: String, default: 'mm' },
+
+    customRequest: {
+      type:Boolean,
+      default:true
+      
+    },
+
     status: {
       type: String,
       enum: STATUS_ENUM,

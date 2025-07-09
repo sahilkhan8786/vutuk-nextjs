@@ -1,25 +1,15 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-import { Loader2 } from 'lucide-react'
-
-const VALID_STATUSES = [
-    "Request Submitted",
-    "Under Verification",
-    "Quotation Generated",
-    "In Production",
-    "Out for Delivery",
-    "Delivered",
-] as const;
-
-type StatusStep = typeof VALID_STATUSES[number];
+import { Button } from '@/components/ui/button';
+import { headers } from 'next/headers'
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react'
 
 type Order = {
     _id: string;
-    status: StatusStep;
+    status: string;
     userId: string;
     color: string;
-    createdAt: string;
+    createdAt: Date;
     isBusiness: boolean;
     material: string;
     modelFileUrl: string;
@@ -28,143 +18,88 @@ type Order = {
     otherMaterial: string;
     otherPriority: string;
     priority: string;
-    quantity: number;
-    gstOrFirm?: string;
+    quantity: string;
+    image: string;
+    price: number;
+    youtubeLink: string;
+    trackingId: string;
+
+    // ✅ New fields for dimensions
+    length?: number;
+    breadth?: number;
+    height?: number;
+    dimensionUnit?: string;
+    customRequest?: boolean;
 };
 
-const Admin3dPrintOnDemandPage = () => {
-    const [orders, setOrders] = useState<Order[]>([]);
-    const [loading, setLoading] = useState(true);
+async function getOrders() {
+    const headersList = await headers();
+    const cookieHeader = headersList.get("cookie") ?? '';
 
-    useEffect(() => {
-        const fetchOrders = async () => {
-
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/requests`, {
-                credentials: 'include'
-            });
-            const data = await res.json();
-            setOrders(data.data.requests);
-            setLoading(false);
-        };
-
-        fetchOrders();
-    }, []);
-
-    const handleUpdate = async (orderId: string, updatedData: Partial<Order>) => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/requests/${orderId}`, {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedData),
-        });
-
-        if (res.ok) {
-            setOrders(prev =>
-                prev.map(order =>
-                    order._id === orderId ? { ...order, ...updatedData } : order
-                )
-            );
-        } else {
-            alert('Failed to update order');
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/requests`, {
+        headers: {
+            cookie: cookieHeader,
         }
-    };
+    });
 
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center py-20">
-                <Loader2 className="animate-spin" />
-            </div>
-        );
-    }
+    const json = await res.json();
+    return json.data.requests as Order[];
+}
+
+const Admin3DPrintOnDeamandOrdersPage = async () => {
+    const orders = await getOrders();
+
 
     return (
-        <div className="p-6 space-y-8">
-            <h1 className="text-2xl font-bold">Manage 3D Print Orders</h1>
-            {orders.map(order => (
-                <div key={order._id} className="border p-4 rounded-md shadow-sm space-y-4">
-                    <h2 className="text-xl font-semibold">Order ID: {order._id}</h2>
+        <>
+            <h1 className='text-4xl font-semibold uppercase bg-white rounded-xl p-4'>My Orders</h1>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block font-medium">Material</label>
-                            <input
-                                type="text"
-                                defaultValue={order.material}
-                                onBlur={(e) =>
-                                    handleUpdate(order._id, { material: e.target.value })
-                                }
-                                className="border px-2 py-1 w-full rounded"
-                            />
+
+            <div className='grid grid-cols-1 gap-4 my-6 '>
+                {
+                    orders.map(order => (
+
+                        <div key={order._id} className='bg-white rounded-xl p-4'>
+                            <div className='flex justify-between'>
+
+                                <span> <strong>Order Id:&nbsp;</strong>{order._id}</span>
+                                {order.customRequest && (
+                                    <span className='bg-green-400 text-green-900 rounded-xl px-3'>Custom Request</span>
+                                )}
+                            </div>
+
+                            <div className='flex items-center justify-between mt-4'>
+                                <Image
+                                    src={'https://i.etsystatic.com/59876780/r/il/d0a4be/6918944986/il_794xN.6918944986_bfnz.jpg'}
+                                    alt='Product Image'
+                                    width={80}
+                                    height={80}
+                                    className='rounded-xl'
+                                />
+
+                                <p>PRODUCT NAME</p>
+
+                                <p>PRICE</p>
+
+
+                                <Link href={`/admin/3d-print-on-demand/${order._id}`}>
+                                    <Button>Track Order</Button>
+                                </Link>
+
+
+
+                            </div>
+
                         </div>
 
-                        <div>
-                            <label className="block font-medium">Color</label>
-                            <input
-                                type="text"
-                                defaultValue={order.color}
-                                onBlur={(e) =>
-                                    handleUpdate(order._id, { color: e.target.value })
-                                }
-                                className="border px-2 py-1 w-full rounded"
-                            />
-                        </div>
 
-                        <div>
-                            <label className="block font-medium">Priority</label>
-                            <input
-                                type="text"
-                                defaultValue={order.priority}
-                                onBlur={(e) =>
-                                    handleUpdate(order._id, { priority: e.target.value })
-                                }
-                                className="border px-2 py-1 w-full rounded"
-                            />
-                        </div>
 
-                        <div>
-                            <label className="block font-medium">Notes</label>
-                            <textarea
-                                defaultValue={order.notes}
-                                onBlur={(e) =>
-                                    handleUpdate(order._id, { notes: e.target.value })
-                                }
-                                className="border px-2 py-1 w-full rounded"
-                            />
-                        </div>
+                    ))
+                }
 
-                        <div>
-                            <label className="block font-medium">Quantity</label>
-                            <input
-                                type="number"
-                                defaultValue={order.quantity}
-                                onBlur={(e) =>
-                                    handleUpdate(order._id, { quantity: parseInt(e.target.value) })
-                                }
-                                className="border px-2 py-1 w-full rounded"
-                            />
-                        </div>
+            </div>
+        </>
+    )
+}
 
-                        <div>
-                            <label className="block font-medium">Status</label>
-                            <select
-                                defaultValue={order.status}
-                                onChange={(e) =>
-                                    handleUpdate(order._id, { status: e.target.value as StatusStep })
-                                }
-                                className="border px-2 py-1 w-full rounded"
-                            >
-                                {VALID_STATUSES.map(status => (
-                                    <option key={status} value={status}>
-                                        {status}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            ))}
-        </div>
-    );
-};
-
-export default Admin3dPrintOnDemandPage;
+export default Admin3DPrintOnDeamandOrdersPage

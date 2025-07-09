@@ -2,6 +2,7 @@ import mongoose, { Schema, model, Document } from 'mongoose'
 
 export interface IAddress extends Document {
   userId: mongoose.Types.ObjectId | null;
+  requestId: mongoose.Types.ObjectId | null;
   firstName: string
   lastName: string
   email: string
@@ -23,6 +24,11 @@ const AddressSchema = new Schema<IAddress>({
     ref: 'User',
     required: true,
   },
+  requestId: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Custom3dPrintRequest',
+  },
+  
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true },

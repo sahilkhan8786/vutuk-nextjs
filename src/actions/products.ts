@@ -101,8 +101,11 @@ export async function createProductConfigurator(values: z.infer<typeof editProdu
   try {
     await connectToDB();
 
+    console.log(values)
+
     const alreadyExists = await AdditionalProductData.findOne({
       configKey: values.configKey,
+
     });
 
     if (!alreadyExists) {
@@ -143,9 +146,13 @@ try {
     );
     
     if (matchedData && matchedData.variantMappings) {
+      console.log(matchedData)
       await Product.findByIdAndUpdate(product._id, {
         hasConfigurations: true,
         configurations: matchedData.variantMappings,
+        mainCategories: matchedData.mainCategories,
+        productType: matchedData.productType,
+        subCategories:  matchedData.subCategories
       });
     }
   }

@@ -5,13 +5,20 @@ import { DataTable } from './data-table';
 import { mergeAdditionalData } from '@/actions/products';
 import MergeActionToast from '@/components/custom/toasts/SuccessToast';
 import { MergeSubmitButton } from '@/components/custom/toasts/MergeSubmitButton';
+import { headers } from 'next/headers';
 
 
 
 async function getData(): Promise<Product[]> {
+    const headersList = await headers();
+
+    const cookieHeader = headersList.get("cookie") ?? '';
+
     // Fetch data from your API here.
     const productRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`, {
-        credentials: 'include'
+        headers: {
+            cookie: cookieHeader
+        }
     })
     const res = await productRes.json();
 

@@ -54,7 +54,8 @@ export async function custom3dProductRequest(values:z.infer<typeof custom3dProdu
         status:"Request Submitted"
     })
 
- const address =    await Address.create({
+  const address = await Address.create({
+   requestId:request._id,
         userId: session.user.id,
         firstName:data.firstName,
         lastName: data.lastName,

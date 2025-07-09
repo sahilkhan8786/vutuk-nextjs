@@ -14,7 +14,8 @@ export  async function GET(req:Request) {
     if (token?.role === 'user') {
         requests = await Custom3dPrintRequest.find({userId:token?.sub})
     } else {
-        requests = await Custom3dPrintRequest.find({});
+        requests = await Custom3dPrintRequest.find({})
+        .populate('userId');
     }
 
 

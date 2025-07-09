@@ -1,8 +1,9 @@
 import { headers } from 'next/headers';
 import React from 'react'
-import { OrderStatusTracker } from '../../../../components/custom/requests/OrderStatusTracker';
+
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import { OrderStatusTracker } from '@/components/custom/requests/OrderStatusTracker';
 
 type Order = {
     _id: string;
@@ -49,30 +50,34 @@ function isValidStatus(status: string): status is StatusStep {
 }
 
 
-async function getOrders() {
+async function getOrders(id: string) {
     const headersList = await headers();
     const cookieHeader = headersList.get("cookie") ?? ""; // ✅ correct and safe
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/requests`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/requests/${id}`, {
         headers: {
             cookie: cookieHeader,
         }
     });
 
     const json = await res.json();
-    return json.data.requests as Order[];
+    console.log(json)
+    return json.data.orders as Order;
 }
 
-const UserOrderInProcessPage = async () => {
+const DashboardSingleOrderPage = async (
+    { params }: { params: Promise<{ id: string }> }
+) => {
+    const id = (await params).id
 
-    const requests = await getOrders()
-    console.log(requests);
+    const order = await getOrders(id);
+    console.log(order);
 
 
     return (
         <>
-            {requests?.map((order) => (
-                <div key={order._id} className="p-4 border rounded-md mb-6">
+            {
+                <div className="p-4 border rounded-md mb-6">
                     {isValidStatus(order.status) ? (
                         <OrderStatusTracker currentStatus={order.status} />
                     ) : (
@@ -233,9 +238,9 @@ const UserOrderInProcessPage = async () => {
                         </>
                     )}
                 </div>
-            ))}
+            }
         </>
     )
 }
 
-export default UserOrderInProcessPage
+export default DashboardSingleOrderPage

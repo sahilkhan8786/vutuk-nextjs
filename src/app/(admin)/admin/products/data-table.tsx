@@ -1,11 +1,13 @@
 "use client"
 
+import React, { useState } from "react"
 import {
     ColumnDef,
     flexRender,
     getCoreRowModel,
     getPaginationRowModel,
     useReactTable,
+    PaginationState,
 } from "@tanstack/react-table"
 
 import {
@@ -21,17 +23,31 @@ import { Button } from "@/components/ui/button"
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    pageCount?: number // optional, in case you implement server-side pagination later
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    pageCount = -1, // -1 means not using server pagination
 }: DataTableProps<TData, TValue>) {
+    const [pagination, setPagination] = useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 10,
+    })
+
     const table = useReactTable({
         data,
         columns,
+        state: {
+            pagination,
+        },
+        onPaginationChange: setPagination,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
+        manualPagination: false, // Set true if using server-side pagination
+        autoResetPageIndex: false, // ✅ This keeps current page on data change
+        pageCount: pageCount > 0 ? pageCount : undefined, // only needed for server-side
     })
 
     return (
@@ -40,23 +56,21 @@ export function DataTable<TData, TValue>({
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
-                                return (
-                                    <TableHead key={header.id}>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
-                                            )}
-                                    </TableHead>
-                                )
-                            })}
+                            {headerGroup.headers.map((header) => (
+                                <TableHead key={header.id}>
+                                    {header.isPlaceholder
+                                        ? null
+                                        : flexRender(
+                                            header.column.columnDef.header,
+                                            header.getContext()
+                                        )}
+                                </TableHead>
+                            ))}
                         </TableRow>
                     ))}
                 </TableHeader>
                 <TableBody>
-                    {table.getRowModel().rows?.length ? (
+                    {table.getRowModel().rows.length ? (
                         table.getRowModel().rows.map((row) => (
                             <TableRow
                                 key={row.id}
@@ -88,6 +102,9 @@ export function DataTable<TData, TValue>({
                 >
                     Previous
                 </Button>
+                <span className="text-sm text-muted-foreground">
+                    Page {pagination.pageIndex + 1}
+                </span>
                 <Button
                     variant="outline"
                     size="sm"
@@ -97,7 +114,6 @@ export function DataTable<TData, TValue>({
                     Next
                 </Button>
             </div>
-
         </div>
     )
 }
