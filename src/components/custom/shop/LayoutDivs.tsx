@@ -49,9 +49,10 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
 
             <Carousel
                 orientation="horizontal"
-                className="w-full relative"
+                className="w-full relative  flex"
                 opts={{
                     align: 'center',
+
                 }}
 
                 plugins={[
@@ -63,7 +64,7 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
                     }),
                 ]}
             >
-                <CarouselContent className='w-full '>
+                <CarouselContent className='w-full  '>
                     {products?.map((product) => {
                         const selectedConfig = product.configurations?.[0];
 
@@ -72,10 +73,10 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
                         return (
                             <CarouselItem
                                 key={product._id}
-                                className={`transition-all duration-500 ease-in-out flex flex-col items-center justify-start gap-2 relative ${carousalBasis}`}
+                                className={` transition-all duration-500 ease-in-out flex flex-col items-center justify-start gap-2 relative ${carousalBasis}`}
                             >
-                                <Link href={`/products/${product.slug}`} className="w-full">
-                                    <div className={`w-full rounded-xl overflow-hidden shadow-md ${innerDivHeight} relative`}>
+                                <Link href={`/products/${product.slug}`} className="w-full" >
+                                    <div className={`w-full rounded-xl  shadow-md ${innerDivHeight} relative `}>
                                         <Image
                                             src={product.images?.[0]}
                                             alt={product.title}
@@ -114,8 +115,8 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
                     })}
                 </CarouselContent>
 
-                <div className="w-full flex items-center justify-between -mt-4 absolute top-1/2 -translate-y-1/2 gap-8  px-2">
-                    <CarouselPrevious className="bg-light text-primary hover:border border-light" />
+                <div className="w-full flex items-center justify-between  absolute top-1/2 -translate-y-1/2 gap-8  ">
+                    <CarouselPrevious className="bg-light text-primary hover:border border-light  " />
                     <CarouselNext className="bg-light text-primary hover:border border-light" />
                 </div>
             </Carousel>
