@@ -5,20 +5,10 @@ import React, {
     useReducer,
     useContext,
     useEffect,
-    useRef,
     ReactNode,
 } from 'react';
 import { useSession } from 'next-auth/react';
-
-interface CartItem {
-    productId: string | {
-        _id: string,
-        images?: string[];
-    };
-    sku: string;
-    quantity: number;
-    price: number;
-}
+import type { CartItem } from '@/types/carts';
 
 interface CartState {
     totalItem: number;
@@ -46,16 +36,16 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
                     ...state,
                     products: state.products.map(p =>
                         p.sku === action.payload.sku
-                            ? { ...p, quantity: p.quantity + 1 }
+                            ? { ...p, quantity: p.quantity + action.payload.quantity }
                             : p
                     ),
-                    totalItem: state.totalItem + 1,
+                    totalItem: state.totalItem + action.payload.quantity,
                 };
             }
             return {
                 ...state,
-                products: [...state.products, { ...action.payload, quantity: 1 }],
-                totalItem: state.totalItem + 1,
+                products: [...state.products, action.payload],
+                totalItem: state.totalItem + action.payload.quantity,
             };
         }
 
@@ -70,21 +60,27 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
         }
 
         case 'UPDATE_QUANTITY': {
-            const updatedProducts = state.products.map(p =>
-                p.sku === action.payload.sku
-                    ? { ...p, quantity: action.payload.quantity }
-                    : p
-            ).filter(p => p.quantity > 0);
-            const totalItem = updatedProducts.reduce((acc, p) => acc + p.quantity, 0);
-            return { products: updatedProducts, totalItem };
+            return {
+                ...state,
+                products: state.products
+                    .map(p =>
+                        p.sku === action.payload.sku
+                            ? { ...p, quantity: action.payload.quantity }
+                            : p
+                    )
+                    .filter(p => p.quantity > 0),
+                totalItem: state.products.reduce((total, p) =>
+                    p.sku === action.payload.sku
+                        ? total + action.payload.quantity
+                        : total + p.quantity, 0),
+            };
         }
 
-        case 'SET_CART': {
+        case 'SET_CART':
             return {
                 totalItem: action.payload.reduce((sum, p) => sum + p.quantity, 0),
                 products: action.payload,
             };
-        }
 
         case 'CLEAR_CART':
             return initialCart;
@@ -104,52 +100,19 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartContextProvider = ({ children }: { children: ReactNode }) => {
     const { data: session } = useSession();
     const [state, dispatch] = useReducer(cartReducer, initialCart);
-    const hasSynced = useRef(false);
 
     useEffect(() => {
         const loadCart = async () => {
             if (session?.user) {
-                try {
-                    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/cart`, { credentials: 'include' });
-                    const json = await res.json();
-                    const dbCart: CartItem[] = json?.data?.products || [];
-
-                    const localCart = localStorage.getItem('cart');
-                    const mergedCart = [...dbCart];
-
-                    if (localCart) {
-                        try {
-                            const localItems: CartItem[] = JSON.parse(localCart);
-                            localItems.forEach(localItem => {
-                                const existing = mergedCart.find(p => p.sku === localItem.sku);
-                                if (existing) {
-                                    existing.quantity += localItem.quantity;
-                                } else {
-                                    mergedCart.push(localItem);
-                                }
-                            });
-                        } catch (error) {
-                            console.error('Invalid local cart data');
-                            throw error
-                        }
-                    }
-
-                    dispatch({ type: 'SET_CART', payload: mergedCart });
-                    localStorage.removeItem('cart');
-                    hasSynced.current = true;
-                } catch (err) {
-                    console.error('Failed to load cart from DB:', err);
-                }
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/cart`, {
+                    credentials: 'include',
+                });
+                const json = await res.json();
+                dispatch({ type: 'SET_CART', payload: json?.data?.products || [] });
             } else {
                 const localCart = localStorage.getItem('cart');
                 if (localCart) {
-                    try {
-                        const parsed = JSON.parse(localCart);
-                        dispatch({ type: 'SET_CART', payload: parsed });
-                    } catch (error) {
-                        console.error('Invalid localStorage cart data');
-                        throw error
-                    }
+                    dispatch({ type: 'SET_CART', payload: JSON.parse(localCart) });
                 }
             }
         };
@@ -162,33 +125,19 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [state.products, session]);
 
-    // Sync cart with backend on login
     useEffect(() => {
         const syncCart = async () => {
             if (session?.user && state.products.length > 0) {
-                try {
-                    const payload = state.products.map(p => ({
-                        ...p,
-                        productId: typeof p.productId === 'object' ? p.productId._id : p.productId
-                    }));
-
-                    await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/cart`, {
-                        credentials: 'include',
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(payload),
-                    });
-                } catch (err) {
-                    console.error('Failed to sync cart to DB:', err);
-                }
+                await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/cart`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(state.products),
+                });
             }
         };
-
         syncCart();
     }, [session?.user, state.products]);
-
 
     return (
         <CartContext.Provider value={{ state, dispatch }}>
@@ -198,7 +147,7 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useCart = () => {
-    const ctx = useContext(CartContext);
-    if (!ctx) throw new Error('useCart must be used inside CartContextProvider');
-    return ctx;
+    const context = useContext(CartContext);
+    if (!context) throw new Error('useCart must be used inside CartContextProvider');
+    return context;
 };

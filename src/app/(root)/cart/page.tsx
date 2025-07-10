@@ -1,35 +1,15 @@
 'use client';
 
 import { useCart } from '@/context/cart-context';
+import type { CartItem } from '@/types/carts';
 import Image from 'next/image';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import Title from '@/components/ui/Title';
 import WidthCard from '@/components/ui/WidthCard';
 import { Button } from '@/components/ui/button';
-import React from 'react';
 
-// Import CartItem type if it's exported from your context
-
-
-interface CartItem {
-    productId: string | {
-        _id: string;
-        images?: string[];
-        // Add other fields if needed (e.g. title, slug, etc.)
-    };
-    sku: string;
-    quantity: number;
-    price: number;
-}
-function isPopulatedProduct(
-    product: string | { _id: string; images?: string[] }
-): product is { _id: string; images?: string[] } {
-    return typeof product === 'object' && '_id' in product;
-}
-
-
-const CartsPage: React.FC = () => {
+const CartsPage = () => {
     const { state, dispatch } = useCart();
 
     const updateQuantity = (sku: string, delta: number): void => {
@@ -56,19 +36,16 @@ const CartsPage: React.FC = () => {
             action: {
                 label: 'Undo',
                 onClick: () => {
-                    dispatch({ type: 'ADD_TO_CART', payload: removedItem }); // ✅ send full object back
+                    dispatch({ type: 'ADD_TO_CART', payload: removedItem });
                 },
             },
         });
-
     };
-
 
     const totalPrice: number = state.products.reduce(
         (sum, item) => sum + item.price * item.quantity,
         0
     );
-    console.log(state)
 
     return (
         <div className="mt-24 min-h-[85vh]">
@@ -86,16 +63,20 @@ const CartsPage: React.FC = () => {
                     </WidthCard>
 
                     {state.products.map((item) => {
-                        const imageSrc = isPopulatedProduct(item.productId)
-                            ? item.productId.images?.[0] ?? 'https://i.etsystatic.com/59876780/r/il/9955b8/6976353560/il_fullxfull.6976353560_1bb4.jpg'
-                            : 'https://i.etsystatic.com/59876780/r/il/9955b8/6976353560/il_fullxfull.6976353560_1bb4.jpg';
+                        const config =
+                            typeof item.productId === 'object' && 'configurations' in item.productId
+                                ? item.productId.configurations?.find((c) => c.sku === item.sku)
+                                : undefined;
+
+                        const imageSrc = config?.image ?? '/fallback.jpg';
+
                         return (
                             <WidthCard key={item.sku} className="grid gap-2 overflow-hidden mb-2">
                                 <div className="border border-dark rounded-md p-2 flex items-center justify-between px-4">
                                     <div className="flex-1">
                                         <Image
                                             src={imageSrc}
-                                            alt={'Product'}
+                                            alt="Product"
                                             width={80}
                                             height={80}
                                             className="rounded-md object-cover"
@@ -107,7 +88,6 @@ const CartsPage: React.FC = () => {
                                             <button
                                                 onClick={() => updateQuantity(item.sku, -1)}
                                                 className="px-1 text-lg font-bold hover:text-red-500"
-                                                aria-label="Decrease quantity"
                                             >
                                                 −
                                             </button>
@@ -115,7 +95,6 @@ const CartsPage: React.FC = () => {
                                             <button
                                                 onClick={() => updateQuantity(item.sku, 1)}
                                                 className="px-1 text-lg font-bold hover:text-green-600"
-                                                aria-label="Increase quantity"
                                             >
                                                 +
                                             </button>
@@ -124,7 +103,7 @@ const CartsPage: React.FC = () => {
                                     <p className="flex-1">₹{item.price * item.quantity}</p>
                                 </div>
                             </WidthCard>
-                        )
+                        );
                     })}
 
                     <div className="text-center mt-6">

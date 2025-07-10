@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import Header from "@/components/custom/header/Header";
 import { CartContextProvider } from "@/context/cart-context";
 import { adminSidebarNav } from "@/constants/appsidebar";
+import { SessionProvider } from "next-auth/react";
 
 const bebas = Bebas_Neue({
     variable: "--font-bebas",
@@ -29,19 +30,24 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <html lang="en">
             <body
                 className={`${bebas.variable} ${rubik.variable} antialiased mt-14`}
-            >
-                <CartContextProvider>
-                    <Header />
-                </CartContextProvider>
-                <Toaster richColors position="top-center" />
 
-                <SidebarProvider defaultOpen={defaultOpen}>
-                    <AppSidebar items={adminSidebarNav} />
-                    <main className="w-full overflow-hidden p-4">
-                        <SidebarTrigger className="cursor-pointer" />
-                        {children}
-                    </main>
-                </SidebarProvider>
+            >
+
+                <SessionProvider>
+
+                    <CartContextProvider>
+                        <Header />
+                    </CartContextProvider>
+                    <Toaster richColors position="top-center" />
+
+                    <SidebarProvider defaultOpen={defaultOpen}>
+                        <AppSidebar items={adminSidebarNav} />
+                        <main className="w-full overflow-hidden p-4">
+                            <SidebarTrigger className="cursor-pointer" />
+                            {children}
+                        </main>
+                    </SidebarProvider>
+                </SessionProvider>
             </body>
         </html>
     )

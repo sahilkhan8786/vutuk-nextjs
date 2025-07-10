@@ -22,6 +22,11 @@ interface Product {
     price: number
     images: string[]
     sku: string
+    configurations: {
+        key: string
+        image: string
+        sku: string
+    }[],
 }
 
 interface CarousalDivHomePageProps {
@@ -59,40 +64,54 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
                 ]}
             >
                 <CarouselContent className='w-full '>
-                    {products?.map((product) => (
-                        <CarouselItem
-                            key={product._id}
-                            className={`transition-all duration-500 ease-in-out flex flex-col items-center justify-start gap-2 relative ${carousalBasis}`}
-                        >
-                            <Link href={`/products/${product.slug}`} className="w-full">
-                                <div className={`w-full rounded-xl overflow-hidden shadow-md ${innerDivHeight} relative`}>
-                                    <Image
-                                        src={product.images?.[0]}
-                                        alt={product.title}
-                                        fill
-                                        className="absolute  object-center object-cover rounded-xl transition-all duration-500 aspect-video"
-                                    />
-                                </div>
-                            </Link>
-                            <Link href={`/products/${product.slug}`} className="w-full">
-                                <h3 className="text-center text-sm font-semibold line-clamp-2 hover:underline capitalize">
-                                    {product.title}
-                                </h3>
-                            </Link>
-                            <HeartButton
-                                className='absolute right-2 top-2'
-                                itemId={product._id}
-                                title={product.title}
-                            />
-                            <p className="text-sm text-muted-foreground">₹{product.price}</p>
-                            <AddToCartButton
-                                productId={product._id}
-                                sku={product.sku?.[0] || ''} // if configurable, default to first
-                                price={product.price}
-                            />
+                    {products?.map((product) => {
+                        const selectedConfig = product.configurations?.[0];
 
-                        </CarouselItem>
-                    ))}
+                        if (!selectedConfig) return null;
+
+                        return (
+                            <CarouselItem
+                                key={product._id}
+                                className={`transition-all duration-500 ease-in-out flex flex-col items-center justify-start gap-2 relative ${carousalBasis}`}
+                            >
+                                <Link href={`/products/${product.slug}`} className="w-full">
+                                    <div className={`w-full rounded-xl overflow-hidden shadow-md ${innerDivHeight} relative`}>
+                                        <Image
+                                            src={product.images?.[0]}
+                                            alt={product.title}
+                                            fill
+                                            className="absolute  object-center object-cover rounded-xl transition-all duration-500 aspect-video"
+                                        />
+                                    </div>
+                                </Link>
+                                <Link href={`/products/${product.slug}`} className="w-full">
+                                    <h3 className="text-center text-sm font-semibold line-clamp-2 hover:underline capitalize">
+                                        {product.title}
+                                    </h3>
+                                </Link>
+                                <HeartButton
+                                    className='absolute right-2 top-2'
+                                    itemId={product._id}
+                                    title={product.title}
+                                />
+                                <p className="text-sm text-muted-foreground">₹{product.price}</p>
+                                <AddToCartButton
+                                    product={{
+                                        _id: product._id,
+                                        title: product.title,
+                                        price: product.price,
+                                        images: product.images,
+                                        configurations: product.configurations,
+                                    }}
+                                    selectedConfig={selectedConfig} // ✅ Safe
+                                    quantity={1}
+                                />
+
+
+
+                            </CarouselItem>
+                        )
+                    })}
                 </CarouselContent>
 
                 <div className="w-full flex items-center justify-between -mt-4 relative gap-8">
