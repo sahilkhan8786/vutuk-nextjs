@@ -49,7 +49,7 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
 
             <Carousel
                 orientation="horizontal"
-                className="w-full"
+                className="w-full relative"
                 opts={{
                     align: 'center',
                 }}
@@ -114,9 +114,9 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
                     })}
                 </CarouselContent>
 
-                <div className="w-full flex items-center justify-between -mt-4 relative gap-8">
-                    <CarouselPrevious className="bg-primary text-light hover:border border-primary" />
-                    <CarouselNext className="bg-primary text-light hover:border border-primary" />
+                <div className="w-full flex items-center justify-between -mt-4 absolute top-1/2 -translate-y-1/2 gap-8  px-2">
+                    <CarouselPrevious className="bg-light text-primary hover:border border-light" />
+                    <CarouselNext className="bg-light text-primary hover:border border-light" />
                 </div>
             </Carousel>
         </div>
