@@ -13,6 +13,7 @@ import Autoplay from 'embla-carousel-autoplay'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import HeartButton from './HeartButton'
+import AddToCartButton from './AddToCartButton'
 
 interface Product {
     _id: string
@@ -20,6 +21,7 @@ interface Product {
     title: string
     price: number
     images: string[]
+    sku: string
 }
 
 interface CarousalDivHomePageProps {
@@ -83,7 +85,12 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
                                 title={product.title}
                             />
                             <p className="text-sm text-muted-foreground">₹{product.price}</p>
-                            <Button>Add To Cart</Button>
+                            <AddToCartButton
+                                productId={product._id}
+                                sku={product.sku?.[0] || ''} // if configurable, default to first
+                                price={product.price}
+                            />
+
                         </CarouselItem>
                     ))}
                 </CarouselContent>

@@ -4,9 +4,9 @@ import React, { useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Button } from '@/components/ui/button'
 import WidthCard from '@/components/ui/WidthCard'
 import HeartButton from '../shop/HeartButton'
+import AddToCartButton from '../shop/AddToCartButton'
 
 interface Product {
     _id: string
@@ -14,6 +14,7 @@ interface Product {
     title: string
     price: number
     images: string[]
+    sku: string
 }
 
 const LIMIT = 25
@@ -48,9 +49,9 @@ export default function InfiniteProducts({ initialProducts }: { initialProducts:
         >
             <WidthCard className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
                 {products.map(product => (
-                    <div key={product._id} className='relative'>
+                    <div key={product._id} className='relative flex flex-col border rounded-xl p-4'>
 
-                        <Link href={`/products/${product.slug}`} className="flex flex-col border rounded-xl p-4 ">
+                        <Link href={`/products/${product.slug}`} className=" ">
                             <div className='relative w-full h-[300px]'>
 
                                 <Image
@@ -60,11 +61,16 @@ export default function InfiniteProducts({ initialProducts }: { initialProducts:
                                     className="rounded-xl absolute object-center object-cover"
                                 />
                             </div>
-                            <h3 className="text-sm font-semibold line-clamp-2 capitalize mt-2">{product.title}</h3>
+                            <h3 className="text-sm font-semibold line-clamp-2 capitalize mt-2 hover:underline">{product.title}</h3>
                             <p className="text-sm text-muted-foreground mb-4">₹{product.price}</p>
 
-                            <Button>Add To Cart</Button>
+
                         </Link>
+                        <AddToCartButton
+                            productId={product._id}
+                            sku={product.sku?.[0] || ''} // if configurable, default to first
+                            price={product.price}
+                        />
                         <HeartButton
                             className='absolute right-6 top-6 z-50 '
                             itemId={product._id}

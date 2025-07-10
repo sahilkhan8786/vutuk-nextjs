@@ -36,16 +36,16 @@ export default function RootLayout({
       <body
         className={`${bebas.variable} ${rubik.variable} antialiased `}
       >
-        <CartContextProvider>
-          <SessionProvider>
+        <SessionProvider>
+          <CartContextProvider>
             <FavouriteContextProvider>
               <Header />
               <Toaster />
               {children}
               <Footer />
             </FavouriteContextProvider>
-          </SessionProvider>
-        </CartContextProvider>
+          </CartContextProvider>
+        </SessionProvider>
       </body>
     </html>
   );
