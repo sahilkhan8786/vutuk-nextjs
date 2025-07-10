@@ -47,7 +47,7 @@ const AddToCartButton = ({ product, selectedConfig, quantity = 1 }: Props) => {
     };
 
     return (
-        <Button onClick={handleAdd}>
+        <Button onClick={handleAdd} className='w-full'>
             Add to Cart
         </Button>
     );
