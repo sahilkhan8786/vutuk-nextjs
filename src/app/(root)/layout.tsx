@@ -4,6 +4,10 @@ import "./../globals.css";
 import Header from "@/components/custom/header/Header";
 import Footer from "@/components/custom/Footer";
 import { CartContextProvider } from "@/context/cart-context";
+import { FavouriteContextProvider } from "@/context/favourite-context";
+import { SessionProvider } from "next-auth/react";
+import { Toaster } from "sonner";
+
 
 const bebas = Bebas_Neue({
   variable: "--font-bebas",
@@ -33,9 +37,14 @@ export default function RootLayout({
         className={`${bebas.variable} ${rubik.variable} antialiased `}
       >
         <CartContextProvider>
-          <Header />
-          {children}
-          <Footer />
+          <SessionProvider>
+            <FavouriteContextProvider>
+              <Header />
+              <Toaster />
+              {children}
+              <Footer />
+            </FavouriteContextProvider>
+          </SessionProvider>
         </CartContextProvider>
       </body>
     </html>

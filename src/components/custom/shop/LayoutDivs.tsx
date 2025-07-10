@@ -12,6 +12,7 @@ import React from 'react'
 import Autoplay from 'embla-carousel-autoplay'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import HeartButton from './HeartButton'
 
 interface Product {
     _id: string
@@ -31,6 +32,10 @@ interface CarousalDivHomePageProps {
 }
 
 export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ products, title, className, innerDivHeight, carousalBasis = "", delay }) => {
+
+
+
+
     return (
         <div className={`w-full  border-primary rounded-xl  p-4 flex flex-col overflow-hidden ${className} bg-white shadow`}>
             <h2 className="text-left font-thin text-2xl mb-4 font-rubik">{title}</h2>
@@ -41,9 +46,13 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
                 opts={{
                     align: 'center',
                 }}
+
                 plugins={[
                     Autoplay({
                         delay: delay,
+                        stopOnMouseEnter: true,
+                        stopOnFocusIn: true,
+                        stopOnInteraction: true
                     }),
                 ]}
             >
@@ -51,7 +60,7 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
                     {products?.map((product) => (
                         <CarouselItem
                             key={product._id}
-                            className={`transition-all duration-500 ease-in-out flex flex-col items-center justify-start gap-2 ${carousalBasis}`}
+                            className={`transition-all duration-500 ease-in-out flex flex-col items-center justify-start gap-2 relative ${carousalBasis}`}
                         >
                             <Link href={`/products/${product.slug}`} className="w-full">
                                 <div className={`w-full rounded-xl overflow-hidden shadow-md ${innerDivHeight} relative`}>
@@ -68,6 +77,11 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
                                     {product.title}
                                 </h3>
                             </Link>
+                            <HeartButton
+                                className='absolute right-2 top-2'
+                                itemId={product._id}
+                                title={product.title}
+                            />
                             <p className="text-sm text-muted-foreground">₹{product.price}</p>
                             <Button>Add To Cart</Button>
                         </CarouselItem>
@@ -112,6 +126,8 @@ export const ProductOnDemand3DDiv = ({ className }: {
                     Request a Custom 3D Print
                 </Button>
             </Link>
+
+            {/* <AnimatedImageSequence /> */}
         </div>
     )
 }

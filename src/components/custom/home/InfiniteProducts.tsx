@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import WidthCard from '@/components/ui/WidthCard'
+import HeartButton from '../shop/HeartButton'
 
 interface Product {
     _id: string
@@ -47,20 +48,29 @@ export default function InfiniteProducts({ initialProducts }: { initialProducts:
         >
             <WidthCard className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
                 {products.map(product => (
-                    <Link key={product._id} href={`/products/${product.slug}`} className="flex flex-col border rounded-xl p-4 ">
-                        <div className='relative w-full h-[300px]'>
+                    <div key={product._id} className='relative'>
 
-                            <Image
-                                src={product.images[0]}
-                                alt={product.title}
-                                fill
-                                className="rounded-xl absolute object-center object-cover"
-                            />
-                        </div>
-                        <h3 className="text-sm font-semibold line-clamp-2 capitalize mt-2">{product.title}</h3>
-                        <p className="text-sm text-muted-foreground mb-4">₹{product.price}</p>
-                        <Button>Add To Cart</Button>
-                    </Link>
+                        <Link href={`/products/${product.slug}`} className="flex flex-col border rounded-xl p-4 ">
+                            <div className='relative w-full h-[300px]'>
+
+                                <Image
+                                    src={product.images[0]}
+                                    alt={product.title}
+                                    fill
+                                    className="rounded-xl absolute object-center object-cover"
+                                />
+                            </div>
+                            <h3 className="text-sm font-semibold line-clamp-2 capitalize mt-2">{product.title}</h3>
+                            <p className="text-sm text-muted-foreground mb-4">₹{product.price}</p>
+
+                            <Button>Add To Cart</Button>
+                        </Link>
+                        <HeartButton
+                            className='absolute right-6 top-6 z-50 '
+                            itemId={product._id}
+                            title={product.title}
+                        />
+                    </div>
                 ))}
             </WidthCard>
         </InfiniteScroll>
