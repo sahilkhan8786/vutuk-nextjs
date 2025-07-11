@@ -80,7 +80,6 @@ export const columns: ColumnDef<User>[] = [
                         trigger={<Button>Edit</Button>
                         }
                         id={id}
-                        isEditing={true}
                     />
                     <Button>Block</Button>
                 </div>

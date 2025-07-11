@@ -11,9 +11,8 @@ import AdminUserForm from '../AdminUserForm';
 
 
 
-const AdminUsersFormWrapper = ({ trigger, isEditing, id }: {
+const AdminUsersFormWrapper = ({ trigger, id }: {
     trigger?: ReactNode
-    isEditing?: boolean
     id?: string
 }) => {
     const [open, setOpen] = useState<boolean>(false)
@@ -28,7 +27,6 @@ const AdminUsersFormWrapper = ({ trigger, isEditing, id }: {
             </SheetTrigger>
             {open && <AdminUserForm
                 id={id}
-                isEditing={isEditing}
                 onClose={() => setOpen(false)}
             />}
         </Sheet>

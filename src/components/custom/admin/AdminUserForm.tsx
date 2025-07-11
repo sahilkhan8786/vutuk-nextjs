@@ -29,9 +29,8 @@ type User = {
     createdAt: string;
 };
 
-const AdminUserForm = ({ id, isEditing, onClose }: {
+const AdminUserForm = ({ id, onClose }: {
     id?: string;
-    isEditing?: boolean;
     onClose?: () => void;
 }) => {
     const [user, setUser] = useState<User | null>(null);
@@ -69,7 +68,7 @@ const AdminUserForm = ({ id, isEditing, onClose }: {
     }, [id, form]);
 
     const onSubmit = async (values: z.infer<typeof UserUpdateformSchema>) => {
-        if (!id || isEditing) return;
+        if (!id) return;
         try {
 
             await updateUser(id, values);
