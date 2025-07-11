@@ -67,7 +67,7 @@ const HomePage = () => {
 
       </div>
       {/* BANNERS */}
-      <WidthCard className='grid grid-cols-3 gap-6 text-light mb-6 h-[450px]'>
+      <WidthCard className='grid grid-cols-1 sm:grid-cols-2 sm:grid-rows-2 lg:grid-cols-3 lg:grid-rows-1 gap-6 text-light mb-6 h-[450px]'>
         <div className=' bg-dark w-full rounded-xl p-4  relative overflow-hidden'>
           <h2 className='text-xl mb-4 z-40  absolute w-full bg-dark/60 left-0 -bottom-4 p-4 text-center'>Gifts for Him</h2>
 
@@ -92,7 +92,7 @@ const HomePage = () => {
           />
 
         </div>
-        <div className=' bg-dark w-full rounded-xl p-4  relative overflow-hidden'>
+        <div className=' bg-dark w-full rounded-xl p-4  relative overflow-hidden sm:row-span-2 sm:col-span-2 lg:row-span-1 lg:col-span-1'>
           <h2 className='text-xl mb-4 z-40  absolute w-full bg-dark/60 left-0 -bottom-4 p-4 text-center'>CountDown HERE</h2>
 
 
