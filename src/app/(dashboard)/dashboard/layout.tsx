@@ -35,16 +35,16 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
                     <CartContextProvider>
                         <Header />
-                    </CartContextProvider>
-                    <Toaster richColors position="top-center" />
+                        <Toaster richColors position="top-center" />
 
-                    <SidebarProvider defaultOpen={defaultOpen}>
-                        <AppSidebar items={userSidebarNav} />
-                        <main className="w-full overflow-hidden p-4">
-                            <SidebarTrigger className="cursor-pointer" />
-                            {children}
-                        </main>
-                    </SidebarProvider>
+                        <SidebarProvider defaultOpen={defaultOpen}>
+                            <AppSidebar items={userSidebarNav} />
+                            <main className="w-full overflow-hidden p-4">
+                                <SidebarTrigger className="cursor-pointer" />
+                                {children}
+                            </main>
+                        </SidebarProvider>
+                    </CartContextProvider>
                 </SessionProvider>
             </body>
         </html>

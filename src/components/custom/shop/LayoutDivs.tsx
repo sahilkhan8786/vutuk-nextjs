@@ -8,7 +8,7 @@ import {
     CarouselPrevious,
 } from '@/components/ui/carousel'
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
 import Autoplay from 'embla-carousel-autoplay'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
@@ -38,23 +38,31 @@ interface CarousalDivHomePageProps {
     delay?: number
 }
 
-export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ products, title, className, innerDivHeight, carousalBasis = "", delay }) => {
+export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({
+    products,
+    title,
+    className,
+    innerDivHeight,
+    carousalBasis = "",
+    delay
+}) => {
+    const [selectedConfigs, setSelectedConfigs] = useState<{ [key: string]: string }>({})
 
-
-
+    const handleConfigSelect = (productId: string, configKey: string) => {
+        setSelectedConfigs((prev) => ({
+            ...prev,
+            [productId]: configKey,
+        }))
+    }
 
     return (
-        <div className={`w-full  border-primary rounded-xl  p-4 flex flex-col overflow-hidden ${className} bg-white shadow`}>
+        <div className={`w-full border-primary rounded-xl p-4 flex flex-col overflow-hidden ${className} bg-white shadow`}>
             <h2 className="text-left font-thin text-2xl mb-4 font-rubik">{title}</h2>
 
             <Carousel
                 orientation="horizontal"
-                className="w-full relative  flex"
-                opts={{
-                    align: 'center',
-
-                }}
-
+                className="w-full relative flex"
+                opts={{ align: 'center' }}
                 plugins={[
                     Autoplay({
                         delay: delay,
@@ -64,66 +72,83 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({ produc
                     }),
                 ]}
             >
-                <CarouselContent className='w-full  '>
+                <CarouselContent className="w-full">
                     {products?.map((product) => {
-                        const selectedConfig = product.configurations?.[0];
+                        if (!product.configurations?.length) return null
 
-                        if (!selectedConfig) return null;
+                        const productId = product._id
+                        const configOptions = product.configurations.map(conf => conf.key)
+                        const selectedKey = selectedConfigs[productId] || configOptions[0]
+                        const selectedConfig = product.configurations.find(conf => conf.key === selectedKey)
+
+                        // Optional: show matching image if available in config, fallback to main
+                        const displayedImage = selectedConfig?.image || product.images?.[0]
 
                         return (
                             <CarouselItem
-                                key={product._id}
-                                className={` transition-all duration-500 ease-in-out flex flex-col items-center justify-start gap-2 relative ${carousalBasis}`}
+                                key={productId}
+                                className={`transition-all duration-500 ease-in-out flex flex-col items-center justify-start gap-2 relative ${carousalBasis}`}
                             >
-                                <Link href={`/products/${product.slug}`} className="w-full" >
-                                    <div className={`w-full rounded-xl  shadow-md ${innerDivHeight} relative `}>
+                                <Link href={`/products/${product.slug}`} className="w-full">
+                                    <div className={`w-full rounded-xl shadow-md ${innerDivHeight} relative`}>
                                         <Image
-                                            src={product.images?.[0]}
+                                            src={displayedImage}
                                             alt={product.title}
                                             fill
-                                            className="absolute  object-center object-cover rounded-xl transition-all duration-500 aspect-video"
+                                            className="absolute object-center object-cover rounded-xl transition-all duration-500 aspect-video"
                                         />
                                     </div>
                                 </Link>
+
                                 <Link href={`/products/${product.slug}`} className="w-full">
                                     <h3 className="text-center text-sm font-semibold line-clamp-2 hover:underline capitalize">
                                         {product.title}
                                     </h3>
                                 </Link>
-                                <HeartButton
-                                    className='absolute right-2 top-2'
-                                    itemId={product._id}
-                                    title={product.title}
-                                />
+
+                                <HeartButton className="absolute right-2 top-2" itemId={productId} title={product.title} />
                                 <p className="text-sm text-muted-foreground">₹{product.price}</p>
-                                <AddToCartButton
-                                    product={{
-                                        _id: product._id,
-                                        title: product.title,
-                                        price: product.price,
-                                        images: product.images,
-                                        configurations: product.configurations,
-                                    }}
-                                    selectedConfig={selectedConfig} // ✅ Safe
-                                    quantity={1}
-                                />
 
+                                {/* Color Dots */}
+                                <div className="flex gap-2 mb-2">
+                                    {product.configurations.map((conf) => (
+                                        <button
+                                            key={conf.key}
+                                            onClick={() => handleConfigSelect(productId, conf.key)}
+                                            className={`w-5 h-5 rounded-full border-2 transition-all duration-200 cursor-pointer ${selectedKey === conf.key ? 'border-black scale-110' : 'border-gray-300'
+                                                }`}
+                                            style={{ backgroundColor: conf.key.toLowerCase() }} // assumes conf.key is color name
+                                            aria-label={conf.key}
+                                        />
+                                    ))}
+                                </div>
 
-
+                                {selectedConfig && (
+                                    <AddToCartButton
+                                        product={{
+                                            _id: product._id,
+                                            title: product.title,
+                                            price: product.price,
+                                            images: product.images,
+                                            configurations: product.configurations || [],
+                                        }}
+                                        selectedConfig={selectedConfig}
+                                        quantity={1}
+                                    />
+                                )}
                             </CarouselItem>
                         )
                     })}
                 </CarouselContent>
 
-                <div className="w-full flex items-center justify-between  absolute top-1/2 -translate-y-1/2 gap-8  ">
-                    <CarouselPrevious className="bg-light text-primary hover:border border-light  " />
+                <div className="w-full flex items-center justify-between absolute top-1/2 -translate-y-1/2 gap-8">
+                    <CarouselPrevious className="bg-light text-primary hover:border border-light" />
                     <CarouselNext className="bg-light text-primary hover:border border-light" />
                 </div>
             </Carousel>
         </div>
     )
 }
-
 export const ProductOnDemand3DDiv = ({ className }: {
     className?: string
 }) => {

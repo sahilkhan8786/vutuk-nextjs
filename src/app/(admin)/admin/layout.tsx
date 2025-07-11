@@ -37,18 +37,18 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
                     <CartContextProvider>
                         <Header />
-                    </CartContextProvider>
-                    <Toaster richColors position="top-center" />
+                        <Toaster richColors position="top-center" />
 
-                    <SidebarProvider defaultOpen={defaultOpen}>
-                        <AppSidebar items={adminSidebarNav} />
-                        <main className="w-full overflow-hidden p-4">
-                            <SidebarTrigger className="cursor-pointer" />
-                            {children}
-                        </main>
-                    </SidebarProvider>
+                        <SidebarProvider defaultOpen={defaultOpen}>
+                            <AppSidebar items={adminSidebarNav} />
+                            <main className="w-full overflow-hidden p-4">
+                                <SidebarTrigger className="cursor-pointer" />
+                                {children}
+                            </main>
+                        </SidebarProvider>
+                    </CartContextProvider>
                 </SessionProvider>
             </body>
-        </html>
+        </html >
     )
 }
