@@ -21,11 +21,11 @@ const AddServicesFormWrapper = ({ isEditing, id, trigger }: {
 
             </SheetTrigger >
 
-            <ServicesForm
+            {open && <ServicesForm
                 id={id}
                 isEditing={isEditing}
                 onClose={() => setOpen(false)}
-            />
+            />}
 
         </Sheet>
     )

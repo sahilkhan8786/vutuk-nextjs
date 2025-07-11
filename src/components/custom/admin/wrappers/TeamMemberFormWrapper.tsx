@@ -24,10 +24,10 @@ const TeamMemberFormWrapper = ({ trigger, isEditing, id }: {
 
             </SheetTrigger>
 
-            <TeamMemberForm
+            {open && <TeamMemberForm
                 isEditing={isEditing}
                 id={id}
-                onClose={() => setOpen(false)} />
+                onClose={() => setOpen(false)} />}
 
         </Sheet>
     )

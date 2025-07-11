@@ -16,3 +16,13 @@ export function getInitials(name: string): string {
 
   return initials.join('');
 }
+
+export function formatReadableDateTime(isoDate: string): string {
+  const date = new Date(isoDate);
+
+  return date.toLocaleString('en-IN', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    hour12: true,
+  });
+}

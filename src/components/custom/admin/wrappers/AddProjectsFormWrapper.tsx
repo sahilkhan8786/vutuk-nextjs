@@ -21,10 +21,10 @@ const AddProjectsFormWrapper = ({ isEditing, id, trigger }: {
                 </Button>}
             </SheetTrigger>
 
-            <ProjectsForm
+            {open && < ProjectsForm
                 isEditing={isEditing}
                 id={id}
-                onClose={() => setOpen(false)} />
+                onClose={() => setOpen(false)} />}
         </Sheet>
     )
 }

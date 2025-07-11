@@ -25,7 +25,7 @@ const EditProductFormWrapper = ({ slug }: {
                 </Button>
 
             </SheetTrigger>
-            <SheetContent side='right' className='overflow-y-scroll'
+            {open && <SheetContent side='right' className='overflow-y-scroll'
 
             >
                 <SheetHeader>
@@ -37,7 +37,7 @@ const EditProductFormWrapper = ({ slug }: {
                         Create the Product configurator Carefully because It can break website functionality
                     </SheetDescription>
                 </SheetHeader>
-            </SheetContent>
+            </SheetContent>}
         </Sheet>
     )
 }

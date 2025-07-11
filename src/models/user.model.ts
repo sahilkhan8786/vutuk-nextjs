@@ -14,7 +14,10 @@ const userSchema = new mongoose.Schema({
     enum: ['google', 'credentials'],
     default: 'credentials' 
   },
-  phone: Number,
+  phone: {
+    type: Number,
+    default:0
+  },
   phoneVerified: { type: Boolean, default: false },
   role: {
     type: String,

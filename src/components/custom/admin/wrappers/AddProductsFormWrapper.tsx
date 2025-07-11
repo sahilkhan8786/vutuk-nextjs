@@ -32,8 +32,8 @@ const AddProductsFormWrapper = () => {
                     <DrawerDescription>Please be carefull while uploading , It can casue the errors in website functionality.</DrawerDescription>
                 </DrawerHeader>
 
-                <AddProductsForm onClose={() => setOpen(false)} />
-
+                {open && <AddProductsForm onClose={() => setOpen(false)} />
+                }
             </DrawerContent>
         </Drawer>
     )
