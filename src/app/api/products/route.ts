@@ -16,14 +16,27 @@ export async function GET(req: NextRequest) {
     await connectToDB();
 
     const queryParams = Object.fromEntries(req.nextUrl.searchParams.entries());
+    const isAdmin = token?.role === "admin";
 
+    // ✅ Check for `random=true` query param
+    if (queryParams.random === 'true') {
+     
+      const products = await Product.aggregate([
+        { $sample: { size: 100 } }
+      ]);
+
+      return NextResponse.json({
+        status: "success",
+        data: { products },
+      });
+    }
+
+    // ⚙️ Normal query
     let features = new APIFeatures(Product.find(), queryParams)
       .filter()
       .sort()
-      .limitFields()
+      .limitFields();
 
-    // ✅ Only apply pagination if user is NOT admin
-    const isAdmin = token?.role === "admin";
     if (!isAdmin) {
       features = features.paginate();
     }

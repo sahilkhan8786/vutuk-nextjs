@@ -3,7 +3,7 @@ import ShopLayout from '@/components/custom/shop/ShopLayout';
 import WidthCard from '@/components/ui/WidthCard';
 import { Metadata } from 'next';
 import Image from 'next/image';
-import React from 'react'
+import React, { Suspense } from 'react'
 
 export const metadata: Metadata = {
   title: 'Vutuk – Affordable & Trendy Products Online',
@@ -62,7 +62,9 @@ const HomePage = () => {
         description='Best Designer vases available'>
         </Title> */}
 
-        <ShopLayout />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ShopLayout />
+        </Suspense>
 
 
       </div>

@@ -14,13 +14,12 @@ import { CarousalDivHomePage, ProductOnDemand3DDiv } from './LayoutDivs'
 // });
 
 const ShopLayout = async () => {
-    const productsRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`, {
+    const productsRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products?random=true`, {
         method: "GET",
         credentials: "include"
     })
     const json = await productsRes.json()
     const { products } = json.data
-    console.log(products)
 
     return (
         <WidthCard className='mb-6  grid grid-cols-1 md:grid-cols-2   gap-6 min-h-[90vh] lg:grid-cols-4'>
