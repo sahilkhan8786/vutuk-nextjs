@@ -33,31 +33,43 @@ const authConfig:NextAuthConfig = {
     ],
     callbacks: {
 
-        async session({ session, token }) {
-          if (token.sub && session.user) {
-            session.user.id = token.sub;
-          }
-          if (token.role && session.user) { 
-            session.user.role  = token.role;
-          }
-    
-    
-    
-          return session;  
-        },
+      async session({ session, token }) {
+        
+        if (token.sub && session.user) {
+          const user = await getUserById(token.sub);
+          console.log("SESSION", session);
+          console.log("TOKEN", token);
+     session.user.id = user._id.toString();
+      session.user.role = user.role;
+      session.user.image = user.image; // ✅ This pulls the latest image
+      session.user.name = user.username;
+      session.user.phone = user.phone;
+      session.user.isEmailVerfied = user.isEmailVerfied;
+      session.user.isPhoneVerfied = user.isPhoneVerfied;
+     
+
+  }
+
+  return session;
+},
+
         async jwt({ token }) {
-          if(!token.sub) return token
-          await connectToDB();
-          const existingUser = await getUserById(token?.sub);
-    
-          if (!existingUser) return token;
-          token.role = existingUser.role;
-    
-          
-    
-    
-          return token
-        },
+  if (!token.sub) return token;
+
+  await connectToDB();
+  const existingUser = await getUserById(token.sub);
+
+  if (!existingUser) return token;
+
+  token.role = existingUser.role;
+  token.phone = existingUser.phone;
+  token.isEmailVerfied = existingUser.isEmailVerfied;
+  token.isPhoneVerfied = existingUser.isPhoneVerfied;
+  token.deliverAddress = existingUser.deliverAddress;
+
+  return token;
+}
+
       }  ,
       cookies: {
         sessionToken: {

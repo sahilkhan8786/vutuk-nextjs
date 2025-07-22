@@ -35,3 +35,14 @@ export const updateUserById = async (id: string,data:z.infer<typeof UserUpdatefo
         return null
     }
 }
+
+
+export async function updateUserImage(userId: string, imageUrl: string): Promise<void> {
+  await connectToDB();
+
+  await User.findByIdAndUpdate(
+    userId,
+    { image: imageUrl },
+    { new: true }
+  );
+}
