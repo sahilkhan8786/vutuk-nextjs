@@ -1,5 +1,6 @@
 import ProductsCatalogue from '@/components/custom/home/ProductsCatalogue';
 import ShopLayout from '@/components/custom/shop/ShopLayout';
+import HomePageSkeleton from '@/components/custom/skeletons/HomePageSkeleton';
 import WidthCard from '@/components/ui/WidthCard';
 import { Metadata } from 'next';
 import Image from 'next/image';
@@ -62,7 +63,7 @@ const HomePage = () => {
         description='Best Designer vases available'>
         </Title> */}
 
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<HomePageSkeleton />}>
           <ShopLayout />
         </Suspense>
 
