@@ -127,14 +127,14 @@ const CartsPage = () => {
                                         payload: { sku: item.sku },
                                     })
                                 }
-                                className="text-xs"
+                                className="text-xs w-[150px]"
                             >
                                 {isSaved ? 'Move to Cart' : 'Save for Later'}
                             </Button>
                             <Button
                                 variant="destructive"
                                 onClick={() => handleRemove(item.sku, item)}
-                                className="text-xs"
+                                className="text-xs w-[150px]"
                             >
                                 Remove
                             </Button>
