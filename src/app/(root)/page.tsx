@@ -77,6 +77,7 @@ const HomePage = () => {
             alt='IMAGE'
             fill
             className='absolute object-cover object-center rounded-xl z-20 hover:scale-125 transition-all'
+            priority
           />
 
         </div>
@@ -89,6 +90,7 @@ const HomePage = () => {
             alt='IMAGE'
             fill
             className='absolute object-cover object-center rounded-xl z-20 hover:scale-125 transition-all'
+            priority
           />
 
         </div>
@@ -101,6 +103,7 @@ const HomePage = () => {
             alt='IMAGE'
             fill
             className='absolute object-cover object-center rounded-xl z-20 hover:scale-125 transition-all'
+            priority
           />
 
         </div>

@@ -25,11 +25,11 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   await connectToDB();
 
-    const token = await getToken({
-        req,
-        secret: process.env.AUTH_SECRET,
-        cookieName: cookieName
-    });
+  const token = await getToken({
+    req,
+    secret: process.env.AUTH_SECRET,
+    cookieName: cookieName
+  });
 
   if (!token || !token.sub) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -41,19 +41,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });
   }
 
-  // Validate each product item
   for (const item of body) {
     if (
       !item.productId ||
       !item.sku ||
       typeof item.quantity !== 'number' ||
-      typeof item.price !== 'number'
+      typeof item.price !== 'number' ||
+      (item.isSavedForLater !== undefined && typeof item.isSavedForLater !== 'boolean')
     ) {
       return NextResponse.json({ error: 'Invalid product data' }, { status: 400 });
     }
   }
 
-  // Upsert (update if exists, else create)
   const updatedCart = await Cart.findOneAndUpdate(
     { userId: token.sub },
     { $set: { products: body } },

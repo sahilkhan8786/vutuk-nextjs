@@ -17,4 +17,5 @@ export interface CartItem {
   sku: string;
   price: number;
   quantity: number;
+   isSavedForLater?: boolean; 
 }

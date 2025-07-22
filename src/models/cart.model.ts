@@ -28,6 +28,10 @@ const cartSchema = new mongoose.Schema(
           type: Number,
           required: true,
         },
+         isSavedForLater: {
+      type: Boolean,
+      default: false,
+    },
       },
     ],
   },

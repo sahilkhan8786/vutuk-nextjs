@@ -18,8 +18,10 @@ interface CartState {
 type CartAction =
     | { type: 'ADD_TO_CART'; payload: CartItem }
     | { type: 'REMOVE_FROM_CART'; payload: { sku: string } }
+    | { type: 'REMOVE_ONE_FROM_CART'; payload: { sku: string } } // <-- new action
     | { type: 'UPDATE_QUANTITY'; payload: { sku: string; quantity: number } }
     | { type: 'SET_CART'; payload: CartItem[] }
+    | { type: 'TOGGLE_SAVE_FOR_LATER'; payload: { sku: string } }
     | { type: 'CLEAR_CART' };
 
 const initialCart: CartState = {
@@ -49,6 +51,30 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
             };
         }
 
+        case 'REMOVE_ONE_FROM_CART': {
+            const item = state.products.find(p => p.sku === action.payload.sku);
+            if (!item) return state;
+
+            if (item.quantity === 1) {
+                // Remove the item completely
+                return {
+                    ...state,
+                    products: state.products.filter(p => p.sku !== action.payload.sku),
+                    totalItem: state.totalItem - 1,
+                };
+            }
+
+            // Decrease quantity by 1
+            return {
+                ...state,
+                products: state.products.map(p =>
+                    p.sku === action.payload.sku ? { ...p, quantity: p.quantity - 1 } : p
+                ),
+                totalItem: state.totalItem - 1,
+            };
+        }
+
+
         case 'REMOVE_FROM_CART': {
             const toRemove = state.products.find(p => p.sku === action.payload.sku);
             if (!toRemove) return state;
@@ -73,6 +99,17 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
                     p.sku === action.payload.sku
                         ? total + action.payload.quantity
                         : total + p.quantity, 0),
+            };
+        }
+
+        case 'TOGGLE_SAVE_FOR_LATER': {
+            return {
+                ...state,
+                products: state.products.map(p =>
+                    p.sku === action.payload.sku
+                        ? { ...p, isSavedForLater: !p.isSavedForLater }
+                        : p
+                ),
             };
         }
 

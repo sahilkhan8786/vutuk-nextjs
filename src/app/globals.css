@@ -182,4 +182,8 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
+  .box-width {
+    @apply max-w-[1536px] mx-auto
+  }
 }
