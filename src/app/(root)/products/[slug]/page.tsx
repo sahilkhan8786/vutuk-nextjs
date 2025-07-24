@@ -84,7 +84,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 const SingleProductPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
     const slug = (await params).slug
     const product = await getProduct(slug);
-    console.log(product)
     return <ProductClient product={product} />
 }
 

@@ -49,7 +49,7 @@ export async function updateProfileImage(formData: FormData) {
 
   try {
     // Optimize to webp using Sharp
-    const optimizedBuffer = await optimizeImage(file);
+    const optimizedBuffer = await optimizeImage(file,100);
 
     // Upload to Cloudinary
     const uploadedUrl = await uploadToCloudinary(optimizedBuffer, file.name);

@@ -11,5 +11,7 @@ export const formSchemaUserProfile = z.object({
         .min(10, { message: "Must be a valid mobile number" })
         .max(14, { message: "Must be a valid mobile number" }),
     isPhoneVerfied: z.boolean(),
+    password: z.string().min(1, "Password is required"),
+
     
 });

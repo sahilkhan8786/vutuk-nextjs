@@ -105,7 +105,6 @@ const AdminSingleOrderPage = () => {
                 credentials: 'include'
             });
             const data = await res.json();
-            console.log("Orders", data)
             setOrders(data.data.requests);
         };
         const fetchAddress = async () => {
@@ -114,7 +113,7 @@ const AdminSingleOrderPage = () => {
             });
 
             const data = await res.json()
-            console.log("ADDRESS", data)
+
             setAddress(data.data.addresses)
         }
 
@@ -178,7 +177,6 @@ const AdminSingleOrderPage = () => {
             </div>
         );
     }
-    console.log(orders)
 
     return (
         <div className="p-6 space-y-8">

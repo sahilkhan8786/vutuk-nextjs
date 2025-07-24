@@ -29,7 +29,7 @@ const RegisterFrom = () => {
         setError('');
         setSuccess('');
 
-        console.log(values)
+
         startTransition(() => {
             register(values)
                 .then((data) => {

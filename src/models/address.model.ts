@@ -6,14 +6,14 @@ export interface IAddress extends Document {
   firstName: string
   lastName: string
   email: string
-  phoneCode: string
+  countryCode: string
   phoneNumber: string
   addressLine1: string
   addressLine2?: string
   country: string
   state: string
   city: string
-  pincode: string
+  pinCode: string
   createdAt: Date
   updatedAt: Date
 }
@@ -23,23 +23,18 @@ const AddressSchema = new Schema<IAddress>({
     type: mongoose.Types.ObjectId,
     ref: 'User',
     required: true,
-  },
-  requestId: {
-    type: mongoose.Types.ObjectId,
-    ref: 'Custom3dPrintRequest',
-  },
-  
+  },  
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true },
-  phoneCode: { type: String, required: true },
+  countryCode: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   addressLine1: { type: String, required: true },
   addressLine2: { type: String },
   country: { type: String, required: true },
   state: { type: String, required: true },
   city: { type: String, required: true },
-  pincode: { type: String, required: true },
+  pinCode: { type: String, required: true },
 }, {
   timestamps: true,
 })

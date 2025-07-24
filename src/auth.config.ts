@@ -37,15 +37,14 @@ const authConfig:NextAuthConfig = {
         
         if (token.sub && session.user) {
           const user = await getUserById(token.sub);
-          console.log("SESSION", session);
-          console.log("TOKEN", token);
      session.user.id = user._id.toString();
       session.user.role = user.role;
       session.user.image = user.image; // ✅ This pulls the latest image
-      session.user.name = user.username;
+      session.user.name = user.name;
       session.user.phone = user.phone;
-      session.user.isEmailVerfied = user.isEmailVerfied;
-      session.user.isPhoneVerfied = user.isPhoneVerfied;
+      session.user.countryCode = user.countryCode;
+      session.user.emailVerified = user.emailVerified;
+      session.user.phoneVerified = user.phoneVerified;
      
 
   }
@@ -59,12 +58,14 @@ const authConfig:NextAuthConfig = {
   await connectToDB();
   const existingUser = await getUserById(token.sub);
 
-  if (!existingUser) return token;
+          if (!existingUser) return token;
+          token.name = existingUser.name;
 
   token.role = existingUser.role;
   token.phone = existingUser.phone;
-  token.isEmailVerfied = existingUser.isEmailVerfied;
-  token.isPhoneVerfied = existingUser.isPhoneVerfied;
+  token.countryCode = existingUser.countryCode;
+  token.emailVerified = existingUser.emailVerified;
+  token.phoneVerified = existingUser.phoneVerified;
   token.deliverAddress = existingUser.deliverAddress;
 
   return token;

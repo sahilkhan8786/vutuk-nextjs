@@ -66,7 +66,6 @@ const ProjectsForm = ({ isEditing = false, id, onClose }: {
             .then(res => res.json())
             .then(data => {
                 if (data.project) {
-                    console.log(data.project)
 
                     const pd: string[] = data.project.projectData
                     const images = pd.filter(i => i.includes('cloudinary.com'))

@@ -16,11 +16,11 @@ async function fileToBuffer(file: File): Promise<Buffer> {
   }
   
 
- export  async function optimizeImage(file: File): Promise<Buffer> {
+ export  async function optimizeImage(file: File,width?:number): Promise<Buffer> {
     const buffer = await fileToBuffer(file);
   
     const optimized = await sharp(buffer)
-      .resize({ width: 768, withoutEnlargement: true })
+      .resize({ width: width?? 768, withoutEnlargement: true })
       .webp({ quality: 75 })
       .toBuffer();
   

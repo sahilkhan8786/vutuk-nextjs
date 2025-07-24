@@ -30,7 +30,7 @@ const LoginForm = () => {
         setError('');
         setSuccess('');
 
-        console.log(values)
+
         startTransition(() => {
             login(values)
                 .then((data) => {

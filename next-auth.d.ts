@@ -6,8 +6,9 @@ declare module "next-auth" {
       id: string;
       role: "admin" | "user";
       phone?: string;
-      isEmailVerfied?: boolean;
-      isPhoneVerfied?: boolean;
+      emailVerified?: boolean;
+      phoneVerified?: boolean;
+      countryCode?: string;
       image?: string;
     };
   }
@@ -17,8 +18,9 @@ declare module "next-auth/jwt" {
   interface JWT {
     role: "admin" | "user";
     phone?: string;
-    isEmailVerfied?: boolean;
-    isPhoneVerfied?: boolean;
+    emailVerified?: boolean;
+    phoneVerified?: boolean;
+    countryCode?: string;
     image?: string;
   }
 }

@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
     enum: ['google', 'credentials'],
     default: 'credentials' 
   },
+  countryCode: {
+    type: String,
+    default:'+91'
+  },
   phone: {
     type: Number,
     default:0

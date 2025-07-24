@@ -87,7 +87,6 @@ const AdminAdditionalDatapage = () => {
                 subCategories: values.subCategories.map((item) => item.value),
             })
 
-            console.log('Saved:', values)
         } catch (error) {
             console.error(error)
         }

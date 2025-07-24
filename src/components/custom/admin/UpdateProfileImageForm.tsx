@@ -27,7 +27,6 @@ const UpdateProfileImageForm = ({
         try {
             const res = await updateProfileImage(formData);
             formRef.current?.reset();
-            console.log(res)
             await update({ image: res?.imageUrl });
             onClose();
         } catch (err) {

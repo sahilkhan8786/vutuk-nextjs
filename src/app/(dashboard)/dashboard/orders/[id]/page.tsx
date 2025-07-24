@@ -61,7 +61,7 @@ async function getOrders(id: string) {
     });
 
     const json = await res.json();
-    console.log(json)
+
     return json.data.orders as Order;
 }
 
@@ -71,7 +71,7 @@ const DashboardSingleOrderPage = async (
     const id = (await params).id
 
     const order = await getOrders(id);
-    console.log(order);
+
 
 
     return (

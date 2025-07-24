@@ -81,7 +81,6 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                 setSubCategoryOptions(rawProductTypes.subCategories.split(',').map((v: string) => v.trim()));
 
                 setProduct(fetchedProduct);
-                console.log(fetchedProduct)
 
                 const imageList = fetchedProduct.images || [];
                 const skuList = fetchedProduct.sku || [];

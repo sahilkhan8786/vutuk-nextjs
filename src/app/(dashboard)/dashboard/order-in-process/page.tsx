@@ -66,7 +66,6 @@ async function getOrders() {
 const UserOrderInProcessPage = async () => {
 
     const requests = await getOrders()
-    console.log(requests);
 
 
     return (

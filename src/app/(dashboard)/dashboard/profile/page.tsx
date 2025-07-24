@@ -8,7 +8,6 @@ import DashboardProfileForm from '@/components/custom/dashboard/DashboardProfile
 
 export default async function UserProfilePage() {
     const session = await auth();
-    console.log(session)
 
     if (!session || !session.user?.email) {
         return redirect('/login');
@@ -16,7 +15,6 @@ export default async function UserProfilePage() {
 
 
     const user = session.user;
-    console.log("USER FROM SESSION", user)
 
 
     const userData = {
@@ -24,9 +22,10 @@ export default async function UserProfilePage() {
         id: user?.id || '',
         username: user?.name || '',
         email: user?.email || '',
-        isEmailVerfied: user?.isEmailVerfied || false,
+        isEmailVerfied: user?.emailVerified || false,
         phone: user?.phone?.toString() || '',
-        isPhoneVerfied: user?.isPhoneVerfied || false,
+        isPhoneVerfied: user?.phoneVerified || false,
+        password: ''
 
     };
 
