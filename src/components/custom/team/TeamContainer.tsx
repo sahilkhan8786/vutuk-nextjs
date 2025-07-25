@@ -5,7 +5,7 @@ import TeamMember, { TeamMemberProps } from './TeamMember';
 
 const TeamContainer = async () => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/team`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/team?limit=3`);
 
         if (!res.ok) {
             throw new Error('Failed to fetch team data');
@@ -24,20 +24,19 @@ const TeamContainer = async () => {
             );
         }
 
-        const [featuredMember, ...otherMembers] = team;
 
         return (
-            <div className='bg-white'>
+            <div className='bg-white my-8'>
                 <WidthCard className='rounded-xl px-2 py-8'>
                     <Title
                         heading='Meet Our Team'
                         description='Lorem ipsum dolor sit amet consectetur adipisicing elit. Error deleniti velit nesciunt atque at nemo?'
                     />
 
-                    <div className='grid grid-cols-2 gap-6'>
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-6  my-16'>
                         {/* Left column: text */}
                         <div className='flex flex-col justify-center'>
-                            <h2 className='text-3xl font-semibold mb-4 text-start font-bebas'>
+                            <h2 className='text-3xl font-semibold mb-4 text-start font-bebas mt-4 md:mt-0'>
                                 Meet Our Passionate Team
                             </h2>
                             <p className='text-start text-lg leading-relaxed opacity-80'>
@@ -48,9 +47,10 @@ const TeamContainer = async () => {
                             </p>
                         </div>
 
+
                         {/* Right column: grid of team members */}
-                        <div className='grid grid-cols-2 grid-rows-2 h-[450px] gap-6'>
-                            <TeamMember
+                        <div className='flex items-center justify-center flex-col md:flex-row  gap-4 md:gap-6 '>
+                            {/* <TeamMember
                                 key={featuredMember._id}
                                 username={featuredMember.username}
                                 position={featuredMember.position}
@@ -60,9 +60,9 @@ const TeamContainer = async () => {
                                 instagramLink={featuredMember.instagramLink}
                                 twitterLink={featuredMember.twitterLink}
                                 className='col-span-1 row-span-2'
-                            />
+                                /> */}
 
-                            {otherMembers.slice(0, 3).map((member) => (
+                            {team.map((member) => (
                                 <TeamMember
                                     key={member._id}
                                     username={member.username}
@@ -74,6 +74,7 @@ const TeamContainer = async () => {
                                     twitterLink={member.twitterLink}
                                 />
                             ))}
+
                         </div>
                     </div>
                 </WidthCard>

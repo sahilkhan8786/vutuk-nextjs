@@ -4,15 +4,32 @@ import { register } from '@/actions/auth';
 import FormError from '@/components/custom/auth/form-error';
 import FormSuccess from '@/components/custom/auth/form-success';
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { registerSchema } from '@/schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useState, useTransition } from 'react'
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import React, { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const RegisterFrom = () => {
+type SignInResponse = {
+    error: string | undefined;
+    status: number;
+    ok: boolean;
+    url?: string | null;
+};
+
+const RegisterForm = () => {
+    const router = useRouter();
     const [isPending, startTransition] = useTransition();
     const [error, setError] = useState<string>('');
     const [success, setSuccess] = useState<string>('');
@@ -20,39 +37,50 @@ const RegisterFrom = () => {
     const form = useForm<z.infer<typeof registerSchema>>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
+            name: '',
             email: '',
             password: ''
         }
-    })
+    });
 
-    const onSumbit = (values: z.infer<typeof registerSchema>) => {
+    const onSubmit = (values: z.infer<typeof registerSchema>) => {
         setError('');
         setSuccess('');
 
-
         startTransition(() => {
-            register(values)
-                .then((data) => {
-                    setSuccess(data.success || '');
-                    setError(data.error || '');
-                })
-        })
+            register(values).then(async (data) => {
+                if (data?.error) {
+                    setError(data.error);
+                    return;
+                }
 
-    }
+                if (data?.success) {
+                    const res: SignInResponse | undefined = await signIn('credentials', {
+                        email: values.email,
+                        password: values.password,
+                        redirect: false,
+                        callbackUrl: '/', // Customize this as needed
+                    });
 
-
+                    if (res?.error) {
+                        setError('Account created but login failed.');
+                    } else if (res?.ok) {
+                        setSuccess('Account created and logged in!');
+                        // Optionally redirect manually:
+                        router.refresh()
+                    }
+                }
+            });
+        });
+    };
 
     return (
-        <div className=''>
+        <div>
             <h1>Register</h1>
 
-
             <Form {...form}>
-                <form onSubmit={(form.handleSubmit(onSumbit))}
-                    className='space-y-6'
-                >
+                <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
                     <div className='space-y-4'>
-
                         <FormField
                             control={form.control}
                             name='name'
@@ -60,12 +88,7 @@ const RegisterFrom = () => {
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            disabled={isPending}
-                                            {...field}
-                                            type='text'
-                                            placeholder='vutuk'
-                                        />
+                                        <Input disabled={isPending} {...field} type='text' placeholder='vutuk' />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -78,12 +101,7 @@ const RegisterFrom = () => {
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            disabled={isPending}
-                                            {...field}
-                                            type='email'
-                                            placeholder='john.doe@example.com'
-                                        />
+                                        <Input disabled={isPending} {...field} type='email' placeholder='john.doe@example.com' />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -96,34 +114,24 @@ const RegisterFrom = () => {
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            disabled={isPending}
-                                            {...field}
-                                            type='password'
-                                            placeholder='********'
-                                        />
+                                        <Input disabled={isPending} {...field} type='password' placeholder='********' />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-
-
                     </div>
+
                     <FormError message={error} />
                     <FormSuccess message={success} />
-                    <Button
-                        disabled={isPending}
-                        type='submit'
-                        size={'lg'}
-                        className='w-full'
-                    >Create an Account</Button>
 
-
+                    <Button disabled={isPending} type='submit' size='lg' className='w-full'>
+                        Create an Account
+                    </Button>
                 </form>
             </Form>
         </div>
-    )
-}
+    );
+};
 
-export default RegisterFrom
+export default RegisterForm;

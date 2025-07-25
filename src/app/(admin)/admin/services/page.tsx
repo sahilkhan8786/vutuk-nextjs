@@ -1,4 +1,5 @@
 import AddServicesFormWrapper from '@/components/custom/admin/wrappers/AddServicesFormWrapper'
+import DeleteHandler from '@/components/custom/deleteHandler/DeleteHandler'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import Image from 'next/image'
@@ -35,22 +36,22 @@ const AdminServicesPage = async () => {
             <AddServicesFormWrapper />
 
 
-            <div className='grid grid-row-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 p-2'>
 
 
-                <div className="grid grid-row-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 p-2">
-                    {services.length === 0 ? (
-                        <div className="col-span-5 text-center mt-6 text-xl font-semibold text-dark">
-                            No Projects to show Yet
-                        </div>
-                    ) : (
-                        services.map((service) => (
-                            <ServiceCard key={service._id} service={service} />
-                        ))
-                    )}
-                </div>
 
+            <div className="grid grid-row-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 p-2">
+                {services.length === 0 ? (
+                    <div className="col-span-5 text-center mt-6 text-xl font-semibold text-dark">
+                        No Services to show Yet
+                    </div>
+                ) : (
+                    services.map((service) => (
+                        <ServiceCard key={service._id} service={service} />
+                    ))
+                )}
             </div>
+
+
 
         </div>
     )
@@ -94,7 +95,13 @@ const ServiceCard = async ({ service }: { service: ServicesProps }) => {
                         <Button size={'lg'} >Edit</Button>}
                     isEditing={true} id={service.slug} />
 
-                <Button size={'lg'} >Delete</Button>
+
+                <DeleteHandler
+                    id={service._id}
+                    docToDelete='service'
+                />
+
+
             </CardFooter>
         </Card>
 

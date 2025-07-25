@@ -1,12 +1,22 @@
 import { connectToDB } from "@/lib/mongodb";
 import Service from "@/models/service.model";
-import { NextResponse } from "next/server";
+import { APIFeatures } from "@/utils/ApiFeatures";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     await connectToDB();
+    const queryParams = Object.fromEntries(req.nextUrl.searchParams.entries());
 
-    const services = await Service.find({});
+
+      // ⚙️ Normal query
+        const features = new APIFeatures(Service.find(), queryParams)
+          .filter()
+          .sort()
+      .limitFields()
+    .paginate()
+
+    const services = await features.query;;
 
     return NextResponse.json({
       status: "success",

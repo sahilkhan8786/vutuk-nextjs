@@ -18,6 +18,7 @@ import { createTeamMember } from '@/actions/team';
 import { formSchemaTeamMember } from '@/schemas/teamMemberSchema';
 import { toast } from 'sonner';
 import { SkeletonCard } from '../skeletons/SkeletonCard';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const TeamMemberForm = ({
     isEditing = false,
@@ -43,6 +44,7 @@ const TeamMemberForm = ({
             instagramLink: '',
             twitterLink: '',
             image: null,
+            isVisible: 'true'
         },
     });
 
@@ -54,9 +56,10 @@ const TeamMemberForm = ({
                 try {
                     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/team/${id}`);
                     const data = await res.json();
+                    console.log(data)
 
                     if (data?.teamMember) {
-                        const { username, position, description, freelancerLink, facebookLink, instagramLink, twitterLink, image } = data.teamMember;
+                        const { username, position, description, freelancerLink, facebookLink, instagramLink, twitterLink, image, isVisible } = data.teamMember;
 
                         form.reset({
                             username,
@@ -67,6 +70,8 @@ const TeamMemberForm = ({
                             instagramLink,
                             twitterLink,
                             image: image,
+                            isVisible: isVisible === true ? 'true' : 'false'
+
                         });
 
                         if (image) setPreview(image);
@@ -91,19 +96,20 @@ const TeamMemberForm = ({
         try {
             await createTeamMember(values, isEditing, id);
             toast.success(`Team member ${isEditing ? 'updated' : 'added'} successfully`);
+            onClose?.();
 
         } catch (error) {
             toast.error('Something went wrong. Please try again.');
             console.error('Error while creating team member:', error);
-        }
-        finally {
             onClose?.();
         }
+
     };
 
     if (isEditing && isLoading) {
         return (
             <SheetContent>
+                <SheetTitle>{isEditing ? 'Edit Member Details' : 'Add New Member'}</SheetTitle>
                 <div className="p-6">
                     {[...Array(6)].map((_, i) => (
                         <SkeletonCard key={i} isLinesShowing={true} height={25} />
@@ -132,6 +138,28 @@ const TeamMemberForm = ({
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="isVisible"
+                                render={({ field }) => (
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Team Member Visibility" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Visibility</SelectLabel>
+                                                <SelectItem value="true">True</SelectItem>
+                                                <SelectItem value="false">False</SelectItem>
+
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
                                 )}
                             />
 

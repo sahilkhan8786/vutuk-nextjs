@@ -1,11 +1,20 @@
 import { connectToDB } from "@/lib/mongodb";
 import TeamMember from "@/models/team.model";
-import {  NextResponse } from "next/server";
+import { APIFeatures } from "@/utils/ApiFeatures";
+import {  NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req:NextRequest) {
     try {
         await connectToDB();
-        const team = await TeamMember.find({});
+
+ const queryParams = Object.fromEntries(req.nextUrl.searchParams.entries());
+ const features = new APIFeatures(TeamMember.find(), queryParams)
+      .filter()
+      .sort()
+            .limitFields()
+        .paginate()
+        
+        const team = await features.query;
 
         return NextResponse.json({
             status: 'success',

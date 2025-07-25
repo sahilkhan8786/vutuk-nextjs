@@ -12,12 +12,25 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { formSchemaProjects } from '@/schemas/projectsSchema'
 import { SkeletonCard } from '../skeletons/SkeletonCard'
 import { toast } from 'sonner'
 import { createProject } from '@/actions/projects'
 import { useRouter } from 'next/navigation'
+
+export interface Stream {
+    _id: string;
+    value: string;
+    createdAt: string;
+    updatedAt: string;
+}
+export interface Service {
+    _id: string;
+    servicename: string;
+
+}
+
 
 const ProjectsForm = ({ isEditing = false, id, onClose }: {
     isEditing?: boolean,
@@ -29,6 +42,8 @@ const ProjectsForm = ({ isEditing = false, id, onClose }: {
     const [projectImagePreviews, setProjectImagePreviews] = useState<string[]>([])
     const [showFileInput, setShowFileInput] = useState<boolean>(false)
     const [deletedImages, setDeletedImages] = useState<string[]>([])
+    const [streams, setStreams] = useState([]);
+    const [services, setServices] = useState([]);
     const router = useRouter()
 
     const form = useForm<z.infer<typeof formSchemaProjects>>({
@@ -59,17 +74,49 @@ const ProjectsForm = ({ isEditing = false, id, onClose }: {
     }, [projectImagePreviews])
 
     // Fetch data for editing
-    useEffect(() => {
-        if (!isEditing || !id) return
-        setLoading(true)
-        fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/projects/${id}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.project) {
 
-                    const pd: string[] = data.project.projectData
-                    const images = pd.filter(i => i.includes('cloudinary.com'))
-                    const youtube = pd.filter(i => !i.includes('cloudinary.com')).join(', ')
+
+    // 1️⃣ Always fetch services and streams on component mount
+    useEffect(() => {
+        const fetchInitialData = async () => {
+            try {
+                const [streamRes, servicesRes] = await Promise.all([
+                    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/streams`),
+                    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/services?fields=servicename`)
+                ]);
+
+                const [streamJson, servicesJson] = await Promise.all([
+                    streamRes.json(),
+                    servicesRes.json()
+                ]);
+
+                // Optional: Set state
+                setStreams(streamJson.data.streams);
+                setServices(servicesJson.data.services);
+
+            } catch (error) {
+                console.error("Failed to fetch streams or services:", error);
+            }
+        };
+
+        fetchInitialData();
+    }, [])
+    // 2️⃣ Conditionally fetch project data only when editing and `id` exists
+    useEffect(() => {
+        if (!isEditing || !id) return;
+
+        const fetchProjectData = async () => {
+            try {
+                setLoading(true);
+
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/projects/${id}`);
+                const data = await res.json();
+
+                if (data.project) {
+                    const pd: string[] = data.project.projectData;
+                    const images = pd.filter(i => i.includes("cloudinary.com"));
+                    const youtube = pd.filter(i => !i.includes("cloudinary.com")).join(", ");
+
                     reset({
                         projectName: data.project.projectName,
                         description: data.project.description,
@@ -82,13 +129,22 @@ const ProjectsForm = ({ isEditing = false, id, onClose }: {
                         projectDataYoutubeUrls: youtube,
                         existingImages: images,
                         deletedImages: [],
-                    })
-                    setPreview(data.project.image)
+                    });
+
+                    setPreview(data.project.image);
                 }
-            })
-            .catch(e => console.error(e))
-            .finally(() => setLoading(false))
-    }, [id, isEditing, reset])
+            } catch (error) {
+                console.error("Failed to fetch project:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProjectData();
+    }, [id, isEditing, reset]);
+
+
+
 
     const onImageUpload = (files: FileList | null) => {
         if (!files) return
@@ -100,6 +156,7 @@ const ProjectsForm = ({ isEditing = false, id, onClose }: {
 
 
     const onSubmit = async (values: z.infer<typeof formSchemaProjects>) => {
+        console.log("CALLED ")
         try {
             const images = values.projectDataImages || []
             const urls = values.projectDataYoutubeUrls
@@ -139,6 +196,7 @@ const ProjectsForm = ({ isEditing = false, id, onClose }: {
     if (loading) {
         return (
             <SheetContent>
+                <SheetTitle>{isEditing ? 'Edit Project' : 'Add New Project'}</SheetTitle>
                 {Array.from({ length: 6 }).map((_, i) => (
                     <SkeletonCard key={i} isLinesShowing height={25} />
                 ))}
@@ -197,10 +255,12 @@ const ProjectsForm = ({ isEditing = false, id, onClose }: {
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectGroup>
-                                                        <SelectLabel>Stream</SelectLabel>
-                                                        <SelectItem value="media">Vutuk Media</SelectItem>
-                                                        <SelectItem value="design">Vutuk Design</SelectItem>
-                                                        <SelectItem value="web-development">Vutuk Web Development</SelectItem>
+                                                        {/* <SelectLabel>Stream</SelectLabel> */}
+                                                        {streams.map((stream: Stream) => (
+
+                                                            <SelectItem key={stream._id} value={stream.value}>{stream.value}</SelectItem>
+                                                        ))}
+
                                                     </SelectGroup>
                                                 </SelectContent>
                                             </Select>
@@ -224,9 +284,12 @@ const ProjectsForm = ({ isEditing = false, id, onClose }: {
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectGroup>
-                                                        <SelectItem value="media">Video Editing</SelectItem>
-                                                        <SelectItem value="design">3D Design</SelectItem>
-                                                        <SelectItem value="web">Next.js Website</SelectItem>
+                                                        {services.map((service: Service) => (
+
+                                                            <SelectItem key={service._id} value={service.servicename}>{service.servicename}</SelectItem>
+                                                        ))}
+
+
                                                     </SelectGroup>
                                                 </SelectContent>
                                             </Select>

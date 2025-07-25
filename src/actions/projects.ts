@@ -1,10 +1,12 @@
 'use server'
 
+import { auth } from '@/auth'
 import { optimizeImage, uploadToCloudinary } from '@/lib/cloudinary'
 import { connectToDB } from '@/lib/mongodb'
 import Project from '@/models/project.model'
 import { formSchemaProjects } from '@/schemas/projectsSchema'
 import { revalidatePath } from 'next/cache'
+import slugify from 'slugify'
 import * as z from 'zod'
 
 export const createProject = async (
@@ -72,6 +74,7 @@ export const createProject = async (
         ...data,
         image: imageURL,
         projectData: finalProjectData,
+        relatedToService: slugify(data.relatedToService, { lower: true, strict: true })
       })
     }
 
@@ -81,4 +84,25 @@ export const createProject = async (
     console.error('❌ Error in project handler:', error)
     throw error
   }
+}
+
+
+export async function deleteProject(id:string) {
+  const session = await auth();
+  
+  if (session?.user.role !== 'admin') {
+    return {
+      success: false,
+      message:"Only Admin have access to these Functionalities"
+    }
+  }
+
+  await Project.findByIdAndDelete(id);
+
+  revalidatePath('/admin/projects')
+   return {
+      success: true,
+      message:"Project Deleted Successfully"
+    }
+
 }

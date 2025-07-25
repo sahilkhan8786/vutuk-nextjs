@@ -43,6 +43,10 @@ const teamMemberSchema = new mongoose.Schema({
         trim: true,
         lower: true,
     },
+    isVisible: {
+        type: Boolean,
+        default:true
+    }
 
 });
 

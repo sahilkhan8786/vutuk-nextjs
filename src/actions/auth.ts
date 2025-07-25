@@ -7,51 +7,43 @@ import { User } from "@/models/user.model";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { loginSchema, registerSchema } from "@/schemas/authSchema";
 import bcrypt from "bcryptjs";
-import { AuthError } from "next-auth";
 import { z } from "zod";
 
 export const login = async (values: z.infer<typeof loginSchema>) => {
-    const validatedFields = loginSchema.safeParse(values);
-    if (!validatedFields.success) {
-        return {
-            error: "Invalid Fields"
-        }
-    }
-    
-    const { email, password } = validatedFields.data;
-    
-    try {
-        await connectToDB();
-        await signIn('credentials', {
-            email,
-            password,
-            redirect: true,
-            callbackUrl:DEFAULT_LOGIN_REDIRECT
-        });
-        
-    } catch (error) {
-        console.log(error)
-        if (error instanceof AuthError) {
-            switch (error.type) {
-                case "CredentialsSignin":
-                    return {
-                        error: "Invalid Credentials"
-                    }
-                default:
-                    return {
-                        error: "Something went wrong"
-                    }
-            }
-        }
-        throw error;
+  const validatedFields = loginSchema.safeParse(values);
 
-        
-    }
+  if (!validatedFields.success) {
     return {
-        success: "Logged In successfully!"
-    }
-}
-    
+      error: 'Invalid Fields',
+    };
+  }
+
+  const { email, password } = validatedFields.data;
+
+  await connectToDB();
+
+  const res = await signIn('credentials', {
+    email,
+    password,
+    redirect: false,
+  });
+
+  if (!res) {
+    return {
+      error: 'Unexpected error. Please try again.',
+    };
+  }
+
+  if (res.error) {
+    return {
+      error: 'Invalid credentials',
+    };
+  }
+
+  return {
+    success: 'Logged in successfully!',
+  };
+};
 
     export const register = async (values: z.infer<typeof registerSchema>) => {
         const validatedFields = registerSchema.safeParse(values);
@@ -94,7 +86,8 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
 
 
         return {
-            success: "User created successfully!"
+            success: true,
+            message:' "User created successfully!"'
         }
     
     }

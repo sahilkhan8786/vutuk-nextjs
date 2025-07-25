@@ -4,7 +4,9 @@ import ProjectsSidebar from '@/components/custom/projectsPage/ProjectsSidebar'
 import WidthCard from '@/components/ui/WidthCard'
 import React, { Suspense } from 'react'
 
-const ProjectsPage = () => {
+const ProjectsPage = ({ searchParams }: {
+    searchParams: { [key: string]: string }
+}) => {
     return (
         <div className='space-y-8 mt-12'>
             <Suspense fallback={<div>Loading...</div>}>
@@ -17,7 +19,9 @@ const ProjectsPage = () => {
                     <ProjectsSidebar className='sticky top-26' />
                 </div>
 
-                <ProjectsContainer className='col-span-10' />
+                <ProjectsContainer className='col-span-10'
+                    searchParams={searchParams}
+                />
             </WidthCard>
         </div>
 

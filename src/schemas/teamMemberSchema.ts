@@ -8,6 +8,7 @@ export const formSchemaTeamMember = z.object({
     facebookLink: z.string().url().optional(),
     instagramLink: z.string().url().optional(),
     twitterLink: z.string().url().optional(),
-    image: z.any().optional()
+    image: z.any().optional(),
+    isVisible:z.string()
 
 })

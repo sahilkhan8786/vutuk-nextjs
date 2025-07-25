@@ -18,13 +18,14 @@ export interface TeamMemberProps {
 
 const TeamMember: React.FC<TeamMemberProps> = ({ className = '', username, position, image, freelancerLink, facebookLink, instagramLink, twitterLink }) => {
     return (
-        <div className={`${className} flex flex-col items-center`}>
-            <div className="relative w-full h-full group overflow-hidden">
+        <div className={`${className} flex flex-col items-center border p-1`}>
+            <div className="w-full h-full group overflow-hidden  ">
                 {/* Image */}
                 <Image
                     src={image}
-                    fill
-                    className='object-cover absolute top-0 left-0 object-top grayscale group-hover:grayscale-0 transition-all duration-500'
+                    width={300}
+                    height={300}
+                    className='object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-500'
                     alt={username}
                 />
 

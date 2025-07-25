@@ -9,7 +9,7 @@ const AboutDetails = ({ data }: {
     return (
         <div className='bg-white'>
 
-            <WidthCard className='grid grid-cols-3 rounded-xl  flex-row-reverse py-6'>
+            <WidthCard className='grid grid-cols-1  md:grid-cols-3 rounded-xl  flex-row-reverse py-6'>
 
                 {!data.isReverse ? <>
                     <div className='col-span-2 text-center flex flex-col mt-6 space-y-6'>

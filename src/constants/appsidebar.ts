@@ -1,11 +1,16 @@
 import { AppSidebarProps } from "@/components/custom/app-sidebar";
-import { BookCopy, HeartIcon, Home, Newspaper, Package, PlusSquare, ProjectorIcon, Settings, ShoppingBasket, UserIcon, Users } from "lucide-react";
+import { BookCopy, FileStackIcon, HeartIcon, Home, Newspaper, Package, PlusSquare, ProjectorIcon, Settings, ShoppingBasket, UserIcon, Users } from "lucide-react";
 
 export const adminSidebarNav: AppSidebarProps[] = [
     {
         title: "Home",
         url: "/admin",
         icon: Home,
+    },
+    {
+        title: "Stream",
+        url: "/admin/streams",
+        icon: FileStackIcon,
     },
     {
         title: "Team",

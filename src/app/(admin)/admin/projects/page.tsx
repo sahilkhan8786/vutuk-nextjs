@@ -1,6 +1,7 @@
 // app/(admin)/projects/page.tsx
 
 import AddProjectsFormWrapper from "@/components/custom/admin/wrappers/AddProjectsFormWrapper";
+import DeleteHandler from "@/components/custom/deleteHandler/DeleteHandler";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
@@ -96,7 +97,10 @@ function ProjectCard({ project }: { project: ProjectsProps }) {
 
             <CardFooter className="flex justify-end gap-4">
                 <AddProjectsFormWrapper trigger={<Button size="lg">Edit</Button>} isEditing id={project._id} />
-                <Button size="lg">Delete</Button>
+                <DeleteHandler
+                    id={project._id}
+                    docToDelete="project"
+                />
             </CardFooter>
         </Card>
     )

@@ -1,4 +1,5 @@
 'use server'
+import { auth } from "@/auth";
 import { optimizeImage, uploadToCloudinary } from "@/lib/cloudinary";
 import { connectToDB } from "@/lib/mongodb";
 import Service from "@/models/service.model";
@@ -44,3 +45,24 @@ export const createServices = async (
     }
   };
   
+
+
+export async function deleteService(id:string) {
+  const session = await auth();
+
+  if (session?.user.role !== 'admin') {
+    return {
+      success: false,
+      message:"This functionality is only avialble for Admin Only"
+    }
+  }
+
+  await Service.findByIdAndDelete(id);
+
+  revalidatePath('/admin/services')
+  return {
+    success: true,
+    message:"Service deleted Successfully"
+  }
+
+  }

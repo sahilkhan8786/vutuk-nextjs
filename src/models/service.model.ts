@@ -20,7 +20,6 @@ const servicesSchema = new mongoose.Schema({
     },
     stream: {
         type: String,
-        enum: ["media", "design", "web-development"],
         required: [true, "Please provide a stream"],
     },
     slug: {

@@ -17,6 +17,11 @@ import { createServices } from '@/actions/services'
 import { toast } from 'sonner'
 import { SkeletonCard } from '../skeletons/SkeletonCard'
 
+type Stream = {
+    _id: string,
+    value: string
+}
+
 
 
 
@@ -30,6 +35,7 @@ const ServicesForm = ({ isEditing = false, id, onClose }: {
     const [preview, setPreview] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [showFileInput, setShowFileInput] = useState(false);
+    const [streams, setStreams] = useState([])
 
     const form = useForm<z.infer<typeof formSchemaServices>>({
         resolver: zodResolver(formSchemaServices),
@@ -42,6 +48,17 @@ const ServicesForm = ({ isEditing = false, id, onClose }: {
     })
 
     useEffect(() => {
+        const fetchData = async () => {
+            const streamRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/streams`);
+
+            const streamsJson = await streamRes.json();
+            console.log(streamsJson.data.streams)
+            setStreams(streamsJson.data.streams)
+        }
+        fetchData()
+    }, [])
+
+    useEffect(() => {
         if (isEditing && id) {
             console.log(id)
             const fetchData = async () => {
@@ -49,6 +66,9 @@ const ServicesForm = ({ isEditing = false, id, onClose }: {
                 try {
                     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/services/${id}`);
                     const data = await res.json();
+
+
+
 
                     if (data?.service) {
                         const { servicename, description, image } = data.service;
@@ -95,6 +115,10 @@ const ServicesForm = ({ isEditing = false, id, onClose }: {
     if (isEditing && isLoading) {
         return (
             <SheetContent>
+                <SheetTitle>
+                    {isEditing ? "Edit Service" : "Add New Service"}
+
+                </SheetTitle>
                 <div className="p-6">
                     {[...Array(6)].map((_, i) => (
                         <SkeletonCard key={i} isLinesShowing={true} height={25} />
@@ -158,9 +182,10 @@ const ServicesForm = ({ isEditing = false, id, onClose }: {
                                                 <SelectContent>
                                                     <SelectGroup>
                                                         <SelectLabel>Stream</SelectLabel>
-                                                        <SelectItem value="media">Vutuk Media</SelectItem>
-                                                        <SelectItem value="design">Vutuk Design</SelectItem>
-                                                        <SelectItem value="web-developement">Vutuk Web Development</SelectItem>
+                                                        {streams.map((stream: Stream) => (
+                                                            <SelectItem key={stream._id} value={stream.value}>Vutuk {stream.value}</SelectItem>
+
+                                                        ))}
 
                                                     </SelectGroup>
                                                 </SelectContent>
@@ -244,7 +269,7 @@ const ServicesForm = ({ isEditing = false, id, onClose }: {
                                             : 'Submitting...'
                                         : isEditing
                                             ? 'Save Changes'
-                                            : 'Add Member'}
+                                            : 'Add Service'}
                                 </Button>
                                 <SheetClose asChild>
                                     <Button variant="outline" type="button" disabled={isSubmitting}>

@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/sheet"
 import TeamMemberForm from '@/components/custom/admin/TeamMemberForm'
 import TeamMemberFormWrapper from '@/components/custom/admin/wrappers/TeamMemberFormWrapper'
+import DeleteHandler from '@/components/custom/deleteHandler/DeleteHandler'
+import { Check, X } from 'lucide-react'
 
 type TeamMemberProps = {
     _id: string
@@ -20,7 +22,8 @@ type TeamMemberProps = {
     facebookLink: string;
     instgramLink: string;
     twitterLink: string;
-    description: string
+    description: string;
+    isVisible: boolean
 
 }
 
@@ -40,6 +43,7 @@ async function getTeamMembers() {
 
 const AdminTeamPage = async () => {
     const members = await getTeamMembers();
+
 
     return (
         <div className='bg-white w-full p-2 rounded-xl'>
@@ -66,7 +70,7 @@ const AdminTeamPage = async () => {
             <div className="grid grid-row-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 p-2">
                 {members.length === 0 ? (
                     <div className="col-span-5 text-center mt-6 text-xl font-semibold text-dark">
-                        No Projects to show Yet
+                        No Team Members to show Yet
                     </div>
                 ) : (
                     members.map((member) => (
@@ -82,6 +86,7 @@ export default AdminTeamPage;
 
 
 const TeamCard = async ({ member }: { member: TeamMemberProps }) => {
+
 
     return (
 
@@ -101,10 +106,30 @@ const TeamCard = async ({ member }: { member: TeamMemberProps }) => {
 
                 </div>
 
+
+
                 <CardTitle className='font-bebas text-4xl'>{member.username}</CardTitle>
                 <CardDescription>
                     {member.position}
                 </CardDescription>
+                {/* VISIBILITY */}
+                <p className='flex gap-4 items-center justify-start'>Visibility:-
+
+                    {member.isVisible ?
+                        (
+                            <>
+                                <Check className='text-green-700' />
+                                <span className='text-green-700'>Is Visibile</span>
+                            </>
+                        ) : (
+                            <>
+                                <X className='text-shadow-red-700' />
+                                <span className='text-shadow-red-700'>Not Visible</span>
+                            </>
+                        )
+                    }
+
+                </p>
             </CardHeader>
 
             <CardContent>
@@ -134,7 +159,10 @@ const TeamCard = async ({ member }: { member: TeamMemberProps }) => {
                     trigger={<Button size={'lg'} >Edit</Button>}
                     isEditing={true} id={member._id} />
 
-                <Button size={'lg'} >Delete</Button>
+
+                <DeleteHandler
+                    docToDelete={'team'}
+                    id={member._id} />
             </CardFooter>
         </Card>
 
