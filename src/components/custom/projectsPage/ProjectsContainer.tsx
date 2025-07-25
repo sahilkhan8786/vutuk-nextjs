@@ -2,6 +2,7 @@ import React from 'react';
 import SingleProject from './SingleProject';
 import Title from '@/components/ui/Title';
 
+
 type Project = {
     _id: string;
     projectName: string;
@@ -29,10 +30,11 @@ const ProjectsContainer = async ({
     className = ""
 }: {
     className?: string,
-    searchParams: { [key: string]: string }
+    searchParams?: { service?: string }
 }) => {
 
-    const projects = await getProjects(searchParams.service);
+    const serviceName = searchParams?.service || '';
+    const projects = await getProjects(serviceName);
     console.log(projects)
 
     return (
