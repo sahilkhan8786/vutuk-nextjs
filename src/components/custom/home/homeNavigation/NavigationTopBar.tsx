@@ -69,9 +69,9 @@ const NavigationTopBar = ({ showOnScrollOnly = true }: NavigationTopBarProps) =>
     const shouldShowBar = !showOnScrollOnly || isScrolled;
 
     return (
-        <div className='bg-white'>
-            {shouldShowBar ? (
-                <div className=" mt-16 sticky z-40 top-16 shadow">
+        <div className=''>
+            {(shouldShowBar && pathname.includes('/services')) ? (
+                <div className=" mt-16 sticky z-40 top-16 shadow bg-white">
                     {/* Desktop view */}
                     <div className="hidden md:block">
                         <WidthCard className="h-10 flex items-end justify-center gap-8">
