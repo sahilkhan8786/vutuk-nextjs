@@ -8,6 +8,8 @@ import {
     getPaginationRowModel,
     useReactTable,
     PaginationState,
+    ColumnFiltersState,
+    getFilteredRowModel,
 } from "@tanstack/react-table"
 
 import {
@@ -19,6 +21,8 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -35,16 +39,23 @@ export function DataTable<TData, TValue>({
         pageIndex: 0,
         pageSize: 10,
     })
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
+        []
+    )
 
     const table = useReactTable({
         data,
         columns,
         state: {
             pagination,
+            columnFilters
         },
         onPaginationChange: setPagination,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
+        onColumnFiltersChange: setColumnFilters,
+        getFilteredRowModel: getFilteredRowModel(),
+
         manualPagination: false, // Set true if using server-side pagination
         autoResetPageIndex: false, // ✅ This keeps current page on data change
         pageCount: pageCount > 0 ? pageCount : undefined, // only needed for server-side
@@ -52,6 +63,39 @@ export function DataTable<TData, TValue>({
 
     return (
         <div className="rounded-md border">
+            <div className="flex items-center py-4 justify-between w-full gap-4 px-2">
+                <Input
+                    placeholder="Enter SKU"
+                    value={(table.getColumn("sku")?.getFilterValue() as string) ?? ""}
+                    onChange={(event) =>
+                        table.getColumn("sku")?.setFilterValue(event.target.value)
+                    }
+                    className="max-w-sm"
+                />
+
+
+                <Select
+                    onValueChange={(value) =>
+                        table.getColumn("hasConfigurations")?.setFilterValue(value === "true" ? true : value === "false" ? false : "")
+                    }
+                    value={
+                        table.getColumn("hasConfigurations")?.getFilterValue() === true
+                            ? "true"
+                            : table.getColumn("hasConfigurations")?.getFilterValue() === false
+                                ? "false"
+                                : ""
+                    }
+                >
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Filter by Configured" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="true">Configured ✅</SelectItem>
+                        <SelectItem value="false">Unconfigured ❌</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
