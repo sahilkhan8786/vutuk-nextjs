@@ -33,7 +33,7 @@ const RegisterPage = () => {
         startTransition(() => {
             register(values)
                 .then((data) => {
-                    setSuccess(data.success || '');
+                    setSuccess(data.message || '');
                     setError(data.error || '');
                 })
         })

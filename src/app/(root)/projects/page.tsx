@@ -8,7 +8,9 @@ interface Props {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-const ProjectsPage = ({ searchParams }: Props) => {
+const ProjectsPage = async ({ searchParams }: Props) => {
+
+    const resolvedSearchParams = await searchParams;
     return (
         <div className='space-y-8 mt-12'>
             <Suspense fallback={<div>Loading...</div>}>
@@ -22,10 +24,12 @@ const ProjectsPage = ({ searchParams }: Props) => {
                     <ProjectsSidebar className='sticky top-26' />
                 </div>
 
-                <ProjectsContainer
-                    className='col-span-12 md:col-span-8 lg:col-span-9'
-                    searchParams={searchParams}
-                />
+                <Suspense fallback={<div>Loading...</div>}>
+                    <ProjectsContainer
+                        className='col-span-12 md:col-span-8 lg:col-span-9'
+                        searchParams={resolvedSearchParams}
+                    />
+                </Suspense>
             </WidthCard>
         </div>
     )

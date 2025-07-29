@@ -8,13 +8,17 @@ interface Props {
 }
 
 
-const page = ({ searchParams }: Props) => {
+const page = async ({ searchParams }: Props) => {
+    const resolvedSearchParams = await searchParams;
     return (
         <div className='relative'>
             <Suspense fallback={<div>Loading...</div>}>
                 <NavigationTopBar showOnScrollOnly={false} />
             </Suspense>
-            <Services searchParams={searchParams} />
+            <Suspense fallback={<div>Loading...</div>}>
+
+                <Services searchParams={resolvedSearchParams} />
+            </Suspense>
             <ClientsContainer />
         </div>
     )

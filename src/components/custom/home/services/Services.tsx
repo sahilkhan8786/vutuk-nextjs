@@ -20,10 +20,10 @@ async function getServices(servicename: string) {
 }
 
 const Services = async ({ searchParams }: {
-    searchParams?: Promise<{ service?: string }>
+    searchParams?: { service?: string }
 }) => {
 
-    const serviceName = (await searchParams)?.service || '';
+    const serviceName = searchParams?.service || '';
     const services = await getServices(serviceName);
 
     return (

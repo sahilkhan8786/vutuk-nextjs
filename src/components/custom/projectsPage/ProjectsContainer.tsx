@@ -30,10 +30,10 @@ const ProjectsContainer = async ({
     className = ""
 }: {
     className?: string,
-    searchParams?: Promise<{ service?: string }>
+    searchParams?: { service?: string }
 }) => {
 
-    const serviceName = (await searchParams)?.service || '';
+    const serviceName = searchParams?.service || '';
     const projects = await getProjects(serviceName);
 
     return (

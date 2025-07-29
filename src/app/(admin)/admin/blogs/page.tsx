@@ -1,11 +1,11 @@
 
-import BlogEditor from '@/components/BlogEditor';
 import React from 'react'
 
 const AdminBlogsPage = () => {
     return (
         <div>
-            <BlogEditor />
+            {/* <BlogEditor /> */}
+            BLOGS PAGE
         </div>
     )
 }
