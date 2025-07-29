@@ -16,3 +16,7 @@ status:- (Upload Model->Analysing Model->Quotation Approved->Payment->In Product
 
 Update the status for the products
 
+USER ROLES:-
+1) STAFF - ACCESS:- Update Products
+2) MAKE PUBLISH :- FOR EVERY ITEMS/MODELS
+3) WRITE BLOGS 

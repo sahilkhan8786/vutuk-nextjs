@@ -25,18 +25,18 @@ type Product = {
     images: string[];
     sku: string[];
     hasConfigurations: boolean;
-    configurations?: { key: string; image: string; sku: string }[];
+    configurations: { key: string; image: string; sku: string }[];
     tags: string[];
     variations: {
         type: string;
         name: string;
         values: string[];
     }[];
-    productType?: string[];
-    mainCategories?: string[];
-    subCategories?: string[];
-    price?: string;
-    priceInUSD?: string;
+    productType: string[];
+    mainCategories: string[];
+    subCategories: string[];
+    price: number;
+    priceInUSD: number;
 };
 type MultiSelectFieldName = 'productType' | 'mainCategories' | 'subCategories';
 
@@ -57,8 +57,8 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
             productType: [],
             mainCategories: [],
             subCategories: [],
-            price: '',
-            priceInUSD: ''
+            price: 0,
+            priceInUSD: 0
         },
         mode: 'onChange',
     });
@@ -97,8 +97,8 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                         productType: fetchedProduct.productType || [],
                         mainCategories: fetchedProduct.mainCategories || [],
                         subCategories: fetchedProduct.subCategories || [],
-                        price: fetchedProduct.price?.toString() || '',
-                        priceInUSD: fetchedProduct.priceInUSD?.toString() || '',
+                        price: fetchedProduct.price || 0,
+                        priceInUSD: fetchedProduct.priceInUSD || 0,
                     });
 
                     const usedImages = new Set(fetchedProduct.configurations.map(c => c.image));
@@ -124,8 +124,8 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                     productType: fetchedProduct.productType || [],
                     mainCategories: fetchedProduct.mainCategories || [],
                     subCategories: fetchedProduct.subCategories || [],
-                    price: fetchedProduct.price || '',
-                    priceInUSD: fetchedProduct.priceInUSD || '',
+                    price: fetchedProduct.price || 0,
+                    priceInUSD: fetchedProduct.priceInUSD || 0,
                 });
 
             } catch (err) {

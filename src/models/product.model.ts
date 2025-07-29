@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 
-const productSchema = new mongoose.Schema({}, { strict: false });
+const productSchema = new mongoose.Schema({
+
+}, { strict: false });
 
 
 // CATEGORY [string,string]
