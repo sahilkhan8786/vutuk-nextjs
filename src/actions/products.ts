@@ -85,11 +85,7 @@ export async function createproductsFromCSV(formData: FormData) {
     await Product.deleteMany({});
     await Product.insertMany(finalProducts);
     
-    
-    console.log('Parsed and Transformed Products:', finalProducts);
-    
-    
-    console.log(products);
+
     revalidatePath('/admin/products');
   } catch (error) {
     console.error("❌ Error in Uplaoding daa from CSV:", error);
@@ -98,26 +94,43 @@ export async function createproductsFromCSV(formData: FormData) {
 }
 
 export async function createProductConfigurator(values: z.infer<typeof editProductSchema>) {
+  console.log(values)
   try {
     await connectToDB();
-
-    console.log(values)
 
     const alreadyExists = await AdditionalProductData.findOne({
       configKey: values.configKey,
 
     });
+    let updatedData;
 
     if (!alreadyExists) {
-      await AdditionalProductData.create(values);
+    updatedData=  await AdditionalProductData.create(values);
     } else {
       // ✅ Provide update payload here!
-      await AdditionalProductData.findOneAndUpdate(
+    updatedData=  await AdditionalProductData.findOneAndUpdate(
         { configKey: values.configKey },
         values,
         { new: true } // optional: returns updated doc
       );
+
+     
     }
+
+   const matchingProduct = await Product.findOne({
+  sku: { $regex: values.configKey, $options: 'i' } 
+});
+
+   const finalProduct =  await Product.findByIdAndUpdate(matchingProduct._id, {
+        hasConfigurations: true,
+        configurations: updatedData.variantMappings,
+        mainCategories: updatedData.mainCategories,
+        productType: updatedData.productType,
+        subCategories: updatedData.subCategories,
+        price: Number(values.price),
+        priceInUSD:Number(values.priceInUSD)
+   });
+    console.log(finalProduct)
 
     revalidatePath('/admin/products');
   } catch (error) {
@@ -146,7 +159,6 @@ try {
     );
     
     if (matchedData && matchedData.variantMappings) {
-      console.log(matchedData)
       await Product.findByIdAndUpdate(product._id, {
         hasConfigurations: true,
         configurations: matchedData.variantMappings,
@@ -157,7 +169,7 @@ try {
     }
   }
 } catch (error) {
-  console.log(error)
+  console.error(error)
  throw error 
 }
   revalidatePath('/admin/products');

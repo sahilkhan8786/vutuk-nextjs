@@ -1,8 +1,12 @@
+
+import BlogEditor from '@/components/BlogEditor';
 import React from 'react'
 
 const AdminBlogsPage = () => {
     return (
-        <div>AdminBlogsPage</div>
+        <div>
+            <BlogEditor />
+        </div>
     )
 }
 

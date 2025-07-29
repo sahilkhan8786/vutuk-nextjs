@@ -1,14 +1,20 @@
 import ClientsContainer from '@/components/custom/clients/ClientsContainer'
-import HomeHero from '@/components/custom/home/HomeHero'
+import NavigationTopBar from '@/components/custom/home/homeNavigation/NavigationTopBar'
 import Services from '@/components/custom/home/services/Services'
-import React from 'react'
+import React, { Suspense } from 'react'
 
-const page = () => {
+interface Props {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+
+const page = ({ searchParams }: Props) => {
     return (
         <div className='relative'>
-            {/* <CarouselComponent /> */}
-            <HomeHero />
-            <Services />
+            <Suspense fallback={<div>Loading...</div>}>
+                <NavigationTopBar showOnScrollOnly={false} />
+            </Suspense>
+            <Services searchParams={searchParams} />
             <ClientsContainer />
         </div>
     )

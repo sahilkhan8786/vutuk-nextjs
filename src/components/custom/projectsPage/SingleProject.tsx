@@ -24,19 +24,19 @@ const SingleProject = ({ project }: {
         <ProjectDetailsWrapper
             project={project}
             trigger={
-                <div className='bg-white p-2 rounded-xl overflow-hidden grid grid-cols-3 gap-6 hover:shadow shadow-dark cursor-pointer transition-all hover:-translate-y-2 hover:translate-x-2 mb-6'>
-                    <div className='relative h-[250px] w-[400px]'>
+                <div className='bg-white p-2 rounded-xl overflow-hidden grid  gap-4 hover:shadow shadow-dark cursor-pointer transition-all hover:-translate-y-2 hover:translate-x-2 mb-6 mt-4 w-full grid-cols-2'>
+                    <div className='relative  w-full h-[300px]  col-span-2 md:col-span-1'>
 
                         <Image
                             src={project.image}
                             alt={project.projectName}
                             fill
-                            className='rounded-xl aspect-video absolute top-0 left-0 object-cover'
+                            className='rounded-xl w-full absolute top-0 left-0   max-w-[450px] object-contain'
                         />
                     </div>
-                    <div className='col-span-2 flex flex-col items-center justify-center space-y-4'>
+                    <div className=' flex flex-col items-center justify-center space-y-4 col-span-2 md:col-span-1'>
                         <h2 className='font-bebas text-3xl text-center'>{project.projectName}</h2>
-                        <p className='opacity-80'>{project.description}</p>
+                        <p className='opacity-80 text-center'>{project.description.slice(0, 45)}...</p>
                     </div>
                 </div>
             }

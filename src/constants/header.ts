@@ -21,6 +21,11 @@ export const navLinks :NavLinkProps[]= [
         label: 'Projects',
         href:'/projects'
     },
+    {
+        id: 'blogs',
+        label: 'Blogs',
+        href:'/blogs'
+    },
     
     {
         id: 'contact-us',

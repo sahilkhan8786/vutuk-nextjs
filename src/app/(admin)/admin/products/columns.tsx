@@ -12,6 +12,7 @@ export type Product = {
     title: string
     images: string[]
     price: number
+    priceInUSD: number
     sku: string
     slug: string
     hasConfigurations: boolean
@@ -45,7 +46,7 @@ export const columns: ColumnDef<Product>[] = [
     },
     {
         accessorKey: "price",
-        header: "Price",
+        header: "Price (INR)",
         cell: ({ row }) => {
             const amount = parseFloat(row.getValue("price"))
             const formatted = new Intl.NumberFormat("en-US", {
@@ -57,6 +58,26 @@ export const columns: ColumnDef<Product>[] = [
         }
 
     },
+    {
+        accessorKey: "priceInUSD",
+        header: "Price (USD)",
+        cell: ({ row }) => {
+            const raw = row.getValue("priceInUSD");
+            const amount = parseFloat(String(raw))
+
+            if (isNaN(amount)) {
+                return <div>N/A</div>;
+            }
+
+            const formatted = new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+            }).format(amount);
+
+            return <div>{formatted}</div>;
+        }
+    }
+    ,
 
     {
         accessorKey: "sku",

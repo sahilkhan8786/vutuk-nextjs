@@ -30,15 +30,14 @@ const ProjectsContainer = async ({
     className = ""
 }: {
     className?: string,
-    searchParams?: { service?: string }
+    searchParams?: Promise<{ service?: string }>
 }) => {
 
-    const serviceName = searchParams?.service || '';
+    const serviceName = (await searchParams)?.service || '';
     const projects = await getProjects(serviceName);
-    console.log(projects)
 
     return (
-        <div className={`${className} py-4 px-4 border-l border-l-dark`}>
+        <div className={`${className} py-4 px-4 md:border-l border-l-dark min-h-[80vh]`}>
             <Title
                 heading={`Our Projects`}
                 description='Lorem ipsum dolor sit amet consectetur adipisicing elit. Error deleniti velit nesciunt atque at nemo?'
@@ -49,6 +48,9 @@ const ProjectsContainer = async ({
                     <SingleProject project={project} key={project._id} />
 
                 ))
+            }
+            {
+                projects.length === 0 && <p className='text-center mt-8 font-medium'>No Projects are added related to Selected Service</p>
             }
 
         </div>

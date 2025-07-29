@@ -6,8 +6,8 @@ const Title = ({ heading, description }: {
 }) => {
     return (
         <div className='text-center border-b-dark border-b-2 pb-2'>
-            <h1 className='text-7xl font-bebas'>{heading}</h1>
-            <p className='text-dark opacity-70 '>{description}</p>
+            <h1 className='text-4xl sm:text-7xl font-bebas'>{heading}</h1>
+            <p className='text-dark opacity-70 text-xs sm:text-base'>{description}</p>
         </div>
     )
 }

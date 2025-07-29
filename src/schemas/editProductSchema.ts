@@ -1,4 +1,4 @@
-import { z } from "zod";
+import {  z } from "zod";
 
 export const editProductSchema = z.object({
   configKey: z.string().optional(),
@@ -7,6 +7,8 @@ export const editProductSchema = z.object({
   productType: z.array(z.string()).optional(),
   mainCategories: z.array(z.string()).optional(),
   subCategories: z.array(z.string()).optional(),
+  price:z.string().optional(),
+  priceInUSD:z.string().optional(),
 
   variantMappings: z.array(z.object({
     key: z.string(),

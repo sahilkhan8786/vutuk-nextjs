@@ -18,6 +18,7 @@ import { toast } from 'sonner';
 import { SkeletonCard } from '../skeletons/SkeletonCard';
 import { Link, Loader2 } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 
 type Product = {
     title: string;
@@ -34,6 +35,8 @@ type Product = {
     productType?: string[];
     mainCategories?: string[];
     subCategories?: string[];
+    price?: string;
+    priceInUSD?: string;
 };
 type MultiSelectFieldName = 'productType' | 'mainCategories' | 'subCategories';
 
@@ -53,7 +56,9 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
             variantMappings: [],
             productType: [],
             mainCategories: [],
-            subCategories: []
+            subCategories: [],
+            price: '',
+            priceInUSD: ''
         },
         mode: 'onChange',
     });
@@ -91,7 +96,9 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                         variantMappings: fetchedProduct.configurations,
                         productType: fetchedProduct.productType || [],
                         mainCategories: fetchedProduct.mainCategories || [],
-                        subCategories: fetchedProduct.subCategories || []
+                        subCategories: fetchedProduct.subCategories || [],
+                        price: fetchedProduct.price?.toString() || '',
+                        priceInUSD: fetchedProduct.priceInUSD?.toString() || '',
                     });
 
                     const usedImages = new Set(fetchedProduct.configurations.map(c => c.image));
@@ -116,7 +123,9 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                     variantMappings: mappings,
                     productType: fetchedProduct.productType || [],
                     mainCategories: fetchedProduct.mainCategories || [],
-                    subCategories: fetchedProduct.subCategories || []
+                    subCategories: fetchedProduct.subCategories || [],
+                    price: fetchedProduct.price || '',
+                    priceInUSD: fetchedProduct.priceInUSD || '',
                 });
 
             } catch (err) {
@@ -188,6 +197,45 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                     height={200}
                     alt={product.title}
                     className='rounded-xl'
+                />
+
+                {/* PRICE */}
+                <FormField
+                    control={form.control}
+                    name="price"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Price In INR</FormLabel>
+                            <FormControl>
+                                <Input
+                                    placeholder="Enter price"
+                                    type="number"
+                                    {...field}
+
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                {/* PRICE IN USD */}
+                <FormField
+                    control={form.control}
+                    name="priceInUSD"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Price In USD</FormLabel>
+                            <FormControl>
+                                <Input
+                                    placeholder="Enter price in USD"
+                                    type="number"
+                                    {...field}
+
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
                 />
 
 

@@ -38,7 +38,7 @@ const HeaderMobile = ({ navLinks }: NavLinksComponentProps) => {
 
 
     return (
-        <div className='flex md:hidden'>
+        <div className='flex md:hidden z-50'>
             {!isHamIconClicked &&
                 <AlignRight onClick={hamIconClickedHandler} />
             }
@@ -46,10 +46,10 @@ const HeaderMobile = ({ navLinks }: NavLinksComponentProps) => {
                 <X onClick={hamIconClickedHandler} />
             }
 
-            {isHamIconClicked && <ul className='flex items-center gap-6 flex-col absolute left-0 top-[65px] bg-dark w-full border-t py-4'>
+            {isHamIconClicked && <ul className='flex items-center gap-6 flex-col absolute left-0 top-[65px] bg-dark w-full border-t py-4 z-50'>
                 {
                     navLinks.map((link: NavLinkProps) => (
-                        <li key={link.id} className='w-full flex items-center justify-center '>
+                        <li key={link.id} className='w-full flex items-center justify-center z-50'>
                             <Link
                                 className={`opacity-75 hover:opacity-100
                                 ${pathname === link.href && 'opacity-100 bg-light w-full text-dark flex items-center justify-center py-3'}
