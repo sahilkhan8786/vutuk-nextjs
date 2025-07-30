@@ -210,7 +210,8 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                                 <Input
                                     placeholder="Enter price"
                                     type="number"
-                                    {...field}
+                                    value={field.value}
+                                    onChange={(e) => field.onChange(parseFloat(e.target.value))}
 
                                 />
                             </FormControl>
@@ -229,8 +230,8 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                                 <Input
                                     placeholder="Enter price in USD"
                                     type="number"
-                                    {...field}
-
+                                    value={field.value}
+                                    onChange={(e) => field.onChange(parseFloat(e.target.value))}
                                 />
                             </FormControl>
                             <FormMessage />

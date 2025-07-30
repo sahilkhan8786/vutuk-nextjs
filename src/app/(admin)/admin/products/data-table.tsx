@@ -56,6 +56,7 @@ export function DataTable<TData, TValue>({
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
 
+
         manualPagination: false, // Set true if using server-side pagination
         autoResetPageIndex: false, // ✅ This keeps current page on data change
         pageCount: pageCount > 0 ? pageCount : undefined, // only needed for server-side
