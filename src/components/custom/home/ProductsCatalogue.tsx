@@ -22,7 +22,6 @@ async function getInitialProducts(): Promise<Product[]> {
 
 export default async function ProductsCatalogue() {
     const initialProducts = await getInitialProducts()
-
     return (
         <div className="w-full p-4">
             <InfiniteProducts initialProducts={initialProducts} />

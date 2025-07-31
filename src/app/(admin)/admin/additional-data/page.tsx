@@ -100,32 +100,35 @@ const AdminAdditionalDatapage = () => {
 
             <div className="grid w-full gap-6 grid-cols-1 my-6 bg-white p-4 rounded-xl">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8   ">
                         {/* Product Types */}
                         <FormItem>
                             <FormLabel>Product Types</FormLabel>
                             <FormDescription>Add or remove product types</FormDescription>
-                            {productTypeFields.map((field, index) => (
-                                <FormField
-                                    key={field.id}
-                                    control={form.control}
-                                    name={`productType.${index}.value`}
-                                    render={({ field }) => (
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <FormControl>
-                                                <Input {...field} placeholder="e.g., vase" />
-                                            </FormControl>
-                                            <Button
-                                                type="button"
-                                                variant="destructive"
-                                                onClick={() => removeProductType(index)}
-                                            >
-                                                Delete
-                                            </Button>
-                                        </div>
-                                    )}
-                                />
-                            ))}
+                            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5  gap-4'>
+
+                                {productTypeFields.map((field, index) => (
+                                    <FormField
+                                        key={field.id}
+                                        control={form.control}
+                                        name={`productType.${index}.value`}
+                                        render={({ field }) => (
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <FormControl>
+                                                    <Input {...field} placeholder="e.g., vase" />
+                                                </FormControl>
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    onClick={() => removeProductType(index)}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </div>
+                                        )}
+                                    />
+                                ))}
+                            </div>
                             <Button type="button" onClick={() => appendProductType({ value: '' })}>
                                 Add Product Type
                             </Button>
@@ -135,27 +138,30 @@ const AdminAdditionalDatapage = () => {
                         <FormItem>
                             <FormLabel>Main Categories</FormLabel>
                             <FormDescription>Add or remove main categories</FormDescription>
-                            {mainCategoryFields.map((field, index) => (
-                                <FormField
-                                    key={field.id}
-                                    control={form.control}
-                                    name={`mainCategories.${index}.value`}
-                                    render={({ field }) => (
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <FormControl>
-                                                <Input {...field} placeholder="e.g., decor" />
-                                            </FormControl>
-                                            <Button
-                                                type="button"
-                                                variant="destructive"
-                                                onClick={() => removeMainCategory(index)}
-                                            >
-                                                Delete
-                                            </Button>
-                                        </div>
-                                    )}
-                                />
-                            ))}
+                            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5  gap-4'>
+
+                                {mainCategoryFields.map((field, index) => (
+                                    <FormField
+                                        key={field.id}
+                                        control={form.control}
+                                        name={`mainCategories.${index}.value`}
+                                        render={({ field }) => (
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <FormControl>
+                                                    <Input {...field} placeholder="e.g., decor" />
+                                                </FormControl>
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    onClick={() => removeMainCategory(index)}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </div>
+                                        )}
+                                    />
+                                ))}
+                            </div>
                             <Button type="button" onClick={() => appendMainCategory({ value: '' })}>
                                 Add Main Category
                             </Button>
@@ -165,27 +171,30 @@ const AdminAdditionalDatapage = () => {
                         <FormItem>
                             <FormLabel>Sub Categories</FormLabel>
                             <FormDescription>Add or remove sub categories</FormDescription>
-                            {subCategoryFields.map((field, index) => (
-                                <FormField
-                                    key={field.id}
-                                    control={form.control}
-                                    name={`subCategories.${index}.value`}
-                                    render={({ field }) => (
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <FormControl>
-                                                <Input {...field} placeholder="e.g., sculpture" />
-                                            </FormControl>
-                                            <Button
-                                                type="button"
-                                                variant="destructive"
-                                                onClick={() => removeSubCategory(index)}
-                                            >
-                                                Delete
-                                            </Button>
-                                        </div>
-                                    )}
-                                />
-                            ))}
+                            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5  gap-4'>
+
+                                {subCategoryFields.map((field, index) => (
+                                    <FormField
+                                        key={field.id}
+                                        control={form.control}
+                                        name={`subCategories.${index}.value`}
+                                        render={({ field }) => (
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <FormControl>
+                                                    <Input {...field} placeholder="e.g., sculpture" />
+                                                </FormControl>
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    onClick={() => removeSubCategory(index)}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </div>
+                                        )}
+                                    />
+                                ))}
+                            </div>
                             <Button type="button" onClick={() => appendSubCategory({ value: '' })}>
                                 Add Sub Category
                             </Button>

@@ -41,9 +41,38 @@ export const columns: ColumnDef<Product>[] = [
             const title = row.getValue("title") as string;
 
 
-            return <div className="">{title.slice(0, 40)}...</div>
+            return <div className="">{title.slice(0, 25)}...</div>
         }
     },
+    {
+        accessorKey: "hasConfigurations",
+        header: "Is Configured",
+
+    },
+
+    {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => {
+            const product = row.original;
+            const slug = product?.slug as string
+
+            return (
+                <div className="flex gap-4 items-center">
+                    {/* <Button variant={'outline'} className="hover:hover:opacity-85"
+                        onClick={() => console.log(id)}
+                    >Edit</Button> */}
+                    <EditProductFormWrapper slug={slug} />
+                    <Button variant={'destructive'} className="hover:hover:opacity-85"
+                        onClick={() => console.log(slug)}
+                    >
+                        Delete
+                    </Button>
+                </div>
+            )
+        },
+    },
+
     {
         accessorKey: "price",
         header: "Price (INR)",
@@ -82,33 +111,13 @@ export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "sku",
         header: "SKUs",
-
-    },
-    {
-        accessorKey: "hasConfigurations",
-        header: "Is Configured",
-
-    },
-    {
-        id: "actions",
-        header: "Actions",
         cell: ({ row }) => {
-            const product = row.original;
-            const slug = product?.slug as string
+            const sku = row.getValue("sku") as [];
+            const filteredSKU = sku.join('').slice(0, 40);
+            return <div className="">{filteredSKU}...</div>
+        }
 
-            return (
-                <div className="flex gap-4 items-center">
-                    {/* <Button variant={'outline'} className="hover:hover:opacity-85"
-                        onClick={() => console.log(id)}
-                    >Edit</Button> */}
-                    <EditProductFormWrapper slug={slug} />
-                    <Button variant={'destructive'} className="hover:hover:opacity-85"
-                        onClick={() => console.log(slug)}
-                    >
-                        Delete
-                    </Button>
-                </div>
-            )
-        },
     },
+
+
 ]
