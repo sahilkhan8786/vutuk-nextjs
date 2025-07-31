@@ -84,7 +84,7 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                 });
                 const json = await res.json();
                 const fetchedProduct: Product = json.data.product;
-
+                console.log(fetchedProduct)
                 const productTypeRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/product-types`);
                 const productJson = await productTypeRes.json();
                 const rawProductTypes = productJson.data.productTypes[0];
@@ -302,7 +302,7 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                                                 <SelectContent>
                                                     {uniqueImages.map((imgUrl, i) => (
                                                         <SelectItem key={i} value={imgUrl}>
-                                                            <Image src={imgUrl} alt={`img-${i}`} width={30} height={30} className="inline-block mr-2 rounded-sm" />
+                                                            <Image src={imgUrl} alt={`img-${i}`} width={50} height={50} className="inline-block mr-2 rounded-sm" />
                                                             Image {i + 1}
                                                         </SelectItem>
                                                     ))}
@@ -348,7 +348,7 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                         <FormLabel className="text-sm font-semibold">Product Size Images</FormLabel>
                         <div className="flex gap-2 flex-wrap mt-2">
                             {defaultImages.map((img, i) => (
-                                <Image key={i} src={img} alt="unmapped image" width={60} height={60} className="rounded border" />
+                                <Image key={i} src={img} alt="unmapped image" width={500} height={500} className="rounded border" />
                             ))}
                         </div>
                     </div>
