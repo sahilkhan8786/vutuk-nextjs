@@ -34,6 +34,8 @@ export default function InfiniteProducts({ initialProducts }: { initialProducts:
 
     const [selectedConfigs, setSelectedConfigs] = useState<{ [productId: string]: string }>({});
 
+
+
     const fetchMore = async () => {
         const res = await fetch(`/api/products?page=${page}&limit=${LIMIT}`);
         const data = await res.json();
@@ -77,7 +79,7 @@ export default function InfiniteProducts({ initialProducts }: { initialProducts:
                                 <div className="relative w-full h-[300px]">
                                     <Image
                                         src={displayImage}
-                                        alt={product.title}
+                                        alt={product?.title || "PRODUCT IMAGE"}
                                         fill
                                         className="rounded-xl absolute object-center object-cover"
                                     />
@@ -85,7 +87,10 @@ export default function InfiniteProducts({ initialProducts }: { initialProducts:
                                 <h3 className="text-sm font-semibold line-clamp-2 capitalize mt-2 hover:underline">
                                     {product.title}
                                 </h3>
-                                <p className="text-sm text-muted-foreground mb-2">₹{product.priceInUSD === 0 ? product.price : product.priceInUSD}</p>
+                                {product.price && <p className="text-sm text-muted-foreground mb-2">₹{product.price}
+                                </p>}
+                                {product.priceInUSD && <p className="text-sm text-muted-foreground mb-2">${product.priceInUSD}
+                                </p>}
                             </Link>
 
                             {/* Color Dots */}

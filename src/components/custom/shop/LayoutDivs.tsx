@@ -109,7 +109,10 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({
                                 </Link>
 
                                 <HeartButton className="absolute right-2 top-2" itemId={productId} title={product.title} />
-                                <p className="text-sm text-muted-foreground">₹{product.price ? product.price : product.priceInUSD}</p>
+
+                                {product.price && <p className="text-sm text-muted-foreground">₹{product.price}</p>}
+                                {product.priceInUSD && <p className="text-sm text-muted-foreground">${product.priceInUSD}</p>}
+
 
                                 {/* Color Dots */}
                                 <div className="flex gap-2 mb-2">

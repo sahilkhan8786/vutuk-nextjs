@@ -14,7 +14,7 @@ interface Product {
 
 async function getInitialProducts(): Promise<Product[]> {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products?page=1&limit=25`, {
-        next: { revalidate: 60 }, // optional caching
+        credentials: 'include'
     })
     const data = await res.json()
     return data.data.products

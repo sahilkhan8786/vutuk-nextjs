@@ -18,6 +18,7 @@ interface Product {
     title: string;
     description: string;
     price: number;
+    priceInUSD: number;
     configurations: Configuration[];
     quantity: number;
 }
@@ -58,7 +59,8 @@ const ProductClient = ({ product }: { product: Product }) => {
                         <p className="text-muted-foreground whitespace-pre-wrap text-sm">
                             {product.description}
                         </p>
-                        <p className="text-xl font-semibold text-primary">₹{product.price}</p>
+                        {product.price && <p className="text-xl font-semibold text-primary">₹{product.price}</p>}
+                        {product.priceInUSD && <p className="text-xl font-semibold text-primary">${product.priceInUSD}</p>}
 
                         {/* Color Selection */}
                         <div className="space-y-2">
