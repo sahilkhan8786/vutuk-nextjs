@@ -46,6 +46,7 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({
     carousalBasis = "",
     delay
 }) => {
+
     const [selectedConfigs, setSelectedConfigs] = useState<{ [key: string]: string }>({})
 
     const handleConfigSelect = (productId: string, configKey: string) => {

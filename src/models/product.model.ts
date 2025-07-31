@@ -7,7 +7,8 @@ const productSchema = new mongoose.Schema({
     },
     priceInUSD: {
         type: Number,
-        select: false
+        select: false,
+        default: 0
     },
 }, { strict: false });
 

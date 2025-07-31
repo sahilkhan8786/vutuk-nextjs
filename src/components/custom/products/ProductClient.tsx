@@ -23,6 +23,7 @@ interface Product {
 }
 
 const ProductClient = ({ product }: { product: Product }) => {
+    console.log(product)
     const [selectedKey, setSelectedKey] = useState<string>(product.configurations[0]?.key);
     const [quantity, setQuantity] = useState<number>(1);
 

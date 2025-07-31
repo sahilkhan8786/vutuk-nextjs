@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
 
     const queryParams = Object.fromEntries(req.nextUrl.searchParams.entries());
     const isAdmin = token?.role === "admin";
-    const IsIndianUser = await isIndian()
+    const IsIndianUser = await isIndian();
 
     // ✅ Check for `random=true` query param
     if (queryParams.random === 'true') {

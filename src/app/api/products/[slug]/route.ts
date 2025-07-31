@@ -29,7 +29,7 @@ export async function GET(
 
     (
       (isIndianUser ?
-        await Product.findOne({ slug }).select('+price')
+        await Product.findOne({ slug }).select('+price ')
         : await Product.findOne({ slug }).select('+priceInUSD')
       )
     );
