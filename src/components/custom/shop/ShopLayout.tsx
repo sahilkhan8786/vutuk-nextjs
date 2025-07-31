@@ -20,7 +20,6 @@ const ShopLayout = async () => {
     })
     const json = await productsRes.json()
     const { products } = json.data
-    console.log(products)
 
     return (
         <WidthCard className='mb-6  grid grid-cols-1 md:grid-cols-2   gap-6 min-h-[90vh] lg:grid-cols-4'>

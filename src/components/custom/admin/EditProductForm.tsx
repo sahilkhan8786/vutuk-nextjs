@@ -19,6 +19,7 @@ import { SkeletonCard } from '../skeletons/SkeletonCard';
 import { Link, Loader2 } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
+import { getUsdToInrRate } from '@/lib/getExchangeRate';
 
 type Product = {
     title: string;
@@ -42,9 +43,12 @@ type MultiSelectFieldName = 'productType' | 'mainCategories' | 'subCategories';
 
 
 const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void }) => {
+
+
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
     const [defaultImages, setDefaultImages] = useState<string[]>([]);
+    const [rates, setRates] = useState(0);
 
     const [productTypeOptions, setProductTypeOptions] = useState<string[]>([]);
     const [mainCategoryOptions, setMainCategoryOptions] = useState<string[]>([]);
@@ -73,7 +77,11 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
 
         const fetchProduct = async () => {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products/${slug}`);
+                const ratesData = await getUsdToInrRate();
+                setRates(ratesData)
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products/${slug}`, {
+                    credentials: 'include'
+                });
                 const json = await res.json();
                 const fetchedProduct: Product = json.data.product;
 
@@ -84,8 +92,9 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                 setProductTypeOptions(rawProductTypes.productType.split(',').map((v: string) => v.trim()));
                 setMainCategoryOptions(rawProductTypes.mainCategories.split(',').map((v: string) => v.trim()));
                 setSubCategoryOptions(rawProductTypes.subCategories.split(',').map((v: string) => v.trim()));
-
                 setProduct(fetchedProduct);
+
+
 
                 const imageList = fetchedProduct.images || [];
                 const skuList = fetchedProduct.sku || [];
@@ -98,7 +107,7 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                         mainCategories: fetchedProduct.mainCategories || [],
                         subCategories: fetchedProduct.subCategories || [],
                         price: fetchedProduct.price || 0,
-                        priceInUSD: fetchedProduct.priceInUSD || 0,
+                        priceInUSD: fetchedProduct.priceInUSD || fetchedProduct.price / rates || 0,
                     });
 
                     const usedImages = new Set(fetchedProduct.configurations.map(c => c.image));
@@ -125,7 +134,7 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                     mainCategories: fetchedProduct.mainCategories || [],
                     subCategories: fetchedProduct.subCategories || [],
                     price: fetchedProduct.price || 0,
-                    priceInUSD: fetchedProduct.priceInUSD || 0,
+                    priceInUSD: fetchedProduct.priceInUSD || fetchedProduct.price / rates || 0,
                 });
 
             } catch (err) {
@@ -136,7 +145,7 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
         };
 
         fetchProduct();
-    }, [slug, replace, form]);
+    }, [slug, replace, form, rates]);
 
     const handleMultiCheckbox = (fieldValue: string[], option: string, onChange: (value: string[]) => void) => {
         if (fieldValue.includes(option)) {

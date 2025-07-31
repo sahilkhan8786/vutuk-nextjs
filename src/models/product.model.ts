@@ -1,16 +1,16 @@
 import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema({
-
+    price: {
+        type: Number,
+        select: false
+    },
+    priceInUSD: {
+        type: Number,
+        select: false
+    },
 }, { strict: false });
 
-
-// CATEGORY [string,string]
-// SUBCATEGORY [string]
-// discount
-
-
-// CREATE COUPON FUNCTIONALITY
 
 const Product = mongoose.models.Product || mongoose.model("Product", productSchema);
 
