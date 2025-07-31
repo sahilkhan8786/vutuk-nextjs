@@ -36,8 +36,8 @@ export async function GET(req: NextRequest) {
     // ⚙️ Normal query
     let features = new APIFeatures(isAdmin ? Product.find().select('+price +priceInUSD') :
       IsIndianUser ?
-        Product.find().select('price') :
-        Product.find().select('+priceInUSD')
+        Product.find().select(' +price ') :
+        Product.find().select(' +priceInUSD ')
       , queryParams)
       .filter()
       .sort()

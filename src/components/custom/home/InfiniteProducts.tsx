@@ -87,9 +87,9 @@ export default function InfiniteProducts({ initialProducts }: { initialProducts:
                                 <h3 className="text-sm font-semibold line-clamp-2 capitalize mt-2 hover:underline">
                                     {product.title}
                                 </h3>
-                                {product.price && <p className="text-sm text-muted-foreground mb-2">₹{product.price}
+                                {product.price && <p className="text-sm text-muted-foreground mb-2">₹&nbsp;{product.price}
                                 </p>}
-                                {product.priceInUSD && <p className="text-sm text-muted-foreground mb-2">${product.priceInUSD}
+                                {product.priceInUSD && <p className="text-sm text-muted-foreground mb-2">$&nbsp; {product.priceInUSD}
                                 </p>}
                             </Link>
 
