@@ -6,6 +6,7 @@ interface Product {
     slug: string
     title: string
     price: number
+    priceInUSD: number
     images: string[]
     sku: string
 }

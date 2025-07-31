@@ -20,6 +20,7 @@ interface Product {
     slug: string
     title: string
     price: number
+    priceInUSD: number
     images: string[]
     sku: string
     configurations: {
@@ -108,7 +109,7 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({
                                 </Link>
 
                                 <HeartButton className="absolute right-2 top-2" itemId={productId} title={product.title} />
-                                <p className="text-sm text-muted-foreground">₹{product.price}</p>
+                                <p className="text-sm text-muted-foreground">₹{product.price ? product.price : product.priceInUSD}</p>
 
                                 {/* Color Dots */}
                                 <div className="flex gap-2 mb-2">

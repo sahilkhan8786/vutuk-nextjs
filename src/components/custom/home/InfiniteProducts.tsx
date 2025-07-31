@@ -19,6 +19,7 @@ interface Product {
     slug: string;
     title: string;
     price: number;
+    priceInUSD: number;
     images: string[];
     sku: string;
     configurations?: Configuration[];
@@ -84,7 +85,7 @@ export default function InfiniteProducts({ initialProducts }: { initialProducts:
                                 <h3 className="text-sm font-semibold line-clamp-2 capitalize mt-2 hover:underline">
                                     {product.title}
                                 </h3>
-                                <p className="text-sm text-muted-foreground mb-2">₹{product.price}</p>
+                                <p className="text-sm text-muted-foreground mb-2">₹{product.price ? product.price : product.priceInUSD}</p>
                             </Link>
 
                             {/* Color Dots */}
