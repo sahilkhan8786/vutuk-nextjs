@@ -15,6 +15,7 @@ export async function GET(
   })
   const isAdmin = token?.role === 'admin';
   const isIndianUser = await isIndian();
+  console.log(isIndianUser)
 
 
   await connectToDB();
