@@ -2,15 +2,13 @@
 
 import { editProductSchema } from '@/schemas/editProductSchema';
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from "zod";
 import { useEffect, useState } from 'react';
 import {
     Form, FormField, FormItem, FormLabel, FormControl, FormMessage
 } from '@/components/ui/form';
-import {
-    Select, SelectContent, SelectItem, SelectTrigger, SelectValue
-} from '@/components/ui/select';
+
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { createProductConfigurator } from '@/actions/products';
@@ -20,13 +18,14 @@ import { Link, Loader2 } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { getUsdToInrRate } from '@/lib/getExchangeRate';
+import { Checkbox } from '@/components/ui/checkbox';
 
 type Product = {
     title: string;
+    description: string;
     images: string[];
     sku: string[];
     hasConfigurations: boolean;
-    configurations: { key: string; image: string; sku: string }[];
     tags: string[];
     variations: {
         type: string;
@@ -38,6 +37,8 @@ type Product = {
     subCategories: string[];
     price: number;
     priceInUSD: number;
+    sizeImages?: string[];
+    videoURL?: string;
 };
 type MultiSelectFieldName = 'productType' | 'mainCategories' | 'subCategories';
 
@@ -47,7 +48,6 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
 
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
-    const [defaultImages, setDefaultImages] = useState<string[]>([]);
     const [rates, setRates] = useState(0);
 
     const [productTypeOptions, setProductTypeOptions] = useState<string[]>([]);
@@ -57,7 +57,6 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
     const form = useForm<z.infer<typeof editProductSchema>>({
         resolver: zodResolver(editProductSchema),
         defaultValues: {
-            variantMappings: [],
             productType: [],
             mainCategories: [],
             subCategories: [],
@@ -67,10 +66,7 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
         mode: 'onChange',
     });
 
-    const { fields, replace } = useFieldArray({
-        control: form.control,
-        name: 'variantMappings',
-    });
+
 
     useEffect(() => {
         if (!slug) return;
@@ -84,7 +80,6 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                 });
                 const json = await res.json();
                 const fetchedProduct: Product = json.data.product;
-                console.log(fetchedProduct)
                 const productTypeRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/product-types`);
                 const productJson = await productTypeRes.json();
                 const rawProductTypes = productJson.data.productTypes[0];
@@ -96,13 +91,11 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
 
 
 
-                const imageList = fetchedProduct.images || [];
-                const skuList = fetchedProduct.sku || [];
-
-                if (fetchedProduct.hasConfigurations && fetchedProduct.configurations?.length) {
-                    replace(fetchedProduct.configurations);
+                if (fetchedProduct.hasConfigurations) {
                     form.reset({
-                        variantMappings: fetchedProduct.configurations,
+                        title: fetchedProduct.title || '',
+                        videoURL: fetchedProduct.videoURL || '',
+                        description: fetchedProduct.description || '',
                         productType: fetchedProduct.productType || [],
                         mainCategories: fetchedProduct.mainCategories || [],
                         subCategories: fetchedProduct.subCategories || [],
@@ -110,26 +103,20 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                         priceInUSD: fetchedProduct.priceInUSD || fetchedProduct.price / rates || 0,
                     });
 
-                    const usedImages = new Set(fetchedProduct.configurations.map(c => c.image));
-                    setDefaultImages(imageList.filter(img => !usedImages.has(img)));
+
+
                     return;
                 }
 
-                const usedImages = new Set<string>();
-                const variation = fetchedProduct.variations?.[0];
-                const values = variation?.values || [];
 
-                const mappings = values.map((val, i) => {
-                    const image = imageList[i] ?? '';
-                    const matchedSku = skuList.find((sku) => sku.toLowerCase().includes(val.toLowerCase()));
-                    if (image) usedImages.add(image);
-                    return { key: val, image, sku: matchedSku || '' };
-                });
 
-                setDefaultImages(imageList.filter((img) => !usedImages.has(img)));
-                replace(mappings);
+
+
+
                 form.reset({
-                    variantMappings: mappings,
+                    title: fetchedProduct.title || '',
+                    videoURL: fetchedProduct.videoURL || '',
+                    description: fetchedProduct.description || '',
                     productType: fetchedProduct.productType || [],
                     mainCategories: fetchedProduct.mainCategories || [],
                     subCategories: fetchedProduct.subCategories || [],
@@ -145,7 +132,7 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
         };
 
         fetchProduct();
-    }, [slug, replace, form, rates]);
+    }, [slug, form, rates]);
 
     const handleMultiCheckbox = (fieldValue: string[], option: string, onChange: (value: string[]) => void) => {
         if (fieldValue.includes(option)) {
@@ -199,14 +186,139 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-6">
-                <h1 className='capitalize'>Product Name: <br />{product.title}</h1>
+                <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Product Name</FormLabel>
+                            <FormControl>
+                                <Textarea
+                                    placeholder="Enter Product Name"
+                                    {...field}
 
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
                 <Image src={product.images[0]}
-                    width={200}
-                    height={200}
+                    width={450}
+                    height={450}
                     alt={product.title}
                     className='rounded-xl'
                 />
+                <div className='bg-secondary rounded-xl py-4'>
+
+                    <h3 className='mb-4 px-4'>Product Images -
+                        <span className='text-muted-foreground underline'> Select the Product Size Images</span>
+                    </h3>
+                    <div className='flex flex-wrap w-full gap-4 px-2'>
+
+                        {product.images.map(image => (
+                            <FormField
+                                key={image}
+                                control={form.control}
+                                name="sizeImages"
+                                render={({ field }) => {
+                                    const isChecked = field.value?.includes(image);
+
+                                    return (
+                                        <FormItem>
+                                            <FormControl>
+                                                <div className="flex items-center gap-4">
+                                                    <Checkbox
+                                                        checked={isChecked}
+                                                        onCheckedChange={(checked) => {
+                                                            if (checked) {
+                                                                // Add image to selected list
+                                                                field.onChange([...(field.value || []), image]);
+                                                            } else {
+                                                                // Remove image from selected list
+                                                                field.onChange(
+                                                                    (field.value || []).filter((img: string) => img !== image)
+                                                                );
+                                                            }
+                                                        }}
+                                                        className="bg-primary"
+                                                    />
+                                                    <Image
+                                                        src={image}
+                                                        alt={`Product Image - ${image}`}
+                                                        className="rounded-xl"
+                                                        width={100}
+                                                        height={100}
+                                                    />
+                                                </div>
+                                            </FormControl>
+                                        </FormItem>
+                                    );
+                                }}
+                            />
+                        ))}
+
+                    </div>
+
+
+                    <FormField
+                        control={form.control}
+                        name="videoURL"
+                        render={({ field }) => (
+                            <FormItem className='mt-8 px-4'>
+                                <FormLabel>Product Video URL</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder='Enter the URL'
+                                        {...field}
+
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+
+                </div>
+
+
+                <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Product Description</FormLabel>
+                            <FormControl>
+                                <Textarea
+                                    placeholder='Enter the Description'
+                                    {...field}
+
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                {product.sizeImages && <div className='bg-secondary p-4 rounded-xl'>
+                    <h3 className='mb-4'
+                    >Product Size Images</h3>
+                    <div className='flex flex-wrap'>
+
+                        {product.sizeImages.map(image => (
+                            <Image key={image}
+                                src={image}
+                                alt={`Size Image - ${image}`}
+                                width={450}
+                                height={450}
+                                className='rounded-xl'
+                            />
+
+
+                        ))}
+
+                    </div>
+                </div>}
 
                 {/* PRICE */}
                 <FormField
@@ -229,12 +341,13 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                     )}
                 />
                 {/* PRICE IN USD */}
+
                 <FormField
                     control={form.control}
                     name="priceInUSD"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Price In USD</FormLabel>
+                            <FormLabel>Price In USD <p className='text-xs'>Curent Rates :- ${rates}</p></FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="Enter price in USD"
@@ -280,8 +393,10 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                 ))}
 
 
+
+
                 {/* Config mappings */}
-                {fields.map((field, index) => (
+                {/* {fields.map((field, index) => (
                     <div key={field.id} className="flex flex-col gap-3 border p-3 rounded-md">
                         <FormLabel className="text-lg capitalize">{field.key}</FormLabel>
                         <div className="flex gap-4 flex-col sm:flex-row">
@@ -340,19 +455,38 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                             />
                         </div>
                     </div>
-                ))}
+                ))} */}
+                {/* SELECT SIZE IMAGE */}
 
-                {/* Preview unused images */}
-                {defaultImages.length > 0 && (
-                    <div className="mt-6">
-                        <FormLabel className="text-sm font-semibold">Product Size Images</FormLabel>
-                        <div className="flex gap-2 flex-wrap mt-2">
-                            {defaultImages.map((img, i) => (
-                                <Image key={i} src={img} alt="unmapped image" width={500} height={500} className="rounded border" />
-                            ))}
-                        </div>
-                    </div>
-                )}
+
+
+                {/* <FormField
+                    control={form.control}
+
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Select Product Size Images</FormLabel>
+                            <div className="flex flex-wrap gap-3">
+                                {options.map((option) => (
+                                    <label key={option} className="flex items-center gap-2">
+                                        <input
+                                            type="checkbox"
+                                            checked={field.value?.includes(option)}
+                                            onChange={() =>
+                                                handleMultiCheckbox(field.value ?? [], option, field.onChange)
+
+                                            }
+                                        />
+                                        <span>{option}</span>
+                                    </label>
+                                ))}
+                            </div>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                /> */}
+
+
 
                 <FormField
                     control={form.control}

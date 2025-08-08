@@ -8,7 +8,7 @@ interface Product {
     price: number
     priceInUSD: number
     images: string[]
-    sku: string
+    sku: string[]
 }
 
 

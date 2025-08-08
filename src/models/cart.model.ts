@@ -1,5 +1,7 @@
 import mongoose, { Types } from "mongoose";
 
+
+
 const cartSchema = new mongoose.Schema(
   {
     userId: {
@@ -7,32 +9,30 @@ const cartSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    products: [
+    cart: [
+
       {
         productId: {
           type: Types.ObjectId,
           ref: "Product",
           required: true,
         },
-        sku: {
-          type: String,
-          required: true,
-        },
         quantity: {
           type: Number,
           required: true,
-          min: 1,
-          default: 1,
+          default: 1
         },
-        price: {
-          type: Number,
-          required: true,
+        selectedSKU: {
+          type: String,
+          required: true
         },
-         isSavedForLater: {
-      type: Boolean,
-      default: false,
-    },
-      },
+
+        isSavedForLater: {
+          type: Boolean,
+          default: false,
+        },
+      }
+
     ],
   },
   { timestamps: true }

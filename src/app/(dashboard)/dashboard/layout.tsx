@@ -6,9 +6,10 @@ import './../../globals.css'
 import { Bebas_Neue, Rubik } from "next/font/google";
 import { Toaster } from "sonner";
 import Header from "@/components/custom/header/Header";
-import { CartContextProvider } from "@/context/cart-context";
 import { userSidebarNav } from "@/constants/appsidebar";
 import { SessionProvider } from "next-auth/react";
+import SendNotification from "@/socket/SendNotification";
+import { CartContextProvider } from "@/context/cart-context";
 
 const bebas = Bebas_Neue({
     variable: "--font-bebas",
@@ -34,17 +35,21 @@ export default async function DashboardLayout({ children }: { children: React.Re
                 <SessionProvider>
 
                     <CartContextProvider>
+
+
                         <Header />
                         <Toaster richColors position="top-center" />
 
                         <SidebarProvider defaultOpen={defaultOpen}>
                             <AppSidebar items={userSidebarNav} />
                             <main className="w-full overflow-hidden p-4">
+                                <SendNotification />
                                 <SidebarTrigger className="cursor-pointer" />
                                 {children}
                             </main>
                         </SidebarProvider>
                     </CartContextProvider>
+
                 </SessionProvider>
             </body>
         </html>

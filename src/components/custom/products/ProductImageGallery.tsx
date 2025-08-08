@@ -1,41 +1,54 @@
 'use client'
 
 import Image from 'next/image'
-import React from 'react'
-
-interface Configuration {
-    key: string
-    image: string
-    sku: string
-}
+import React, { useState, useMemo } from 'react'
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+    CarouselApi
+} from "@/components/ui/carousel"
 
 interface ProductImageGalleryProps {
-    configurations: Configuration[]
-    selectedImage: string
-    onImageSelect: (img: string) => void
+    images: string[],
+    sizeImages?: string[]
 }
 
 const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
-    configurations,
-    selectedImage,
-    onImageSelect
+    images, sizeImages
 }) => {
+    // Merge without duplicates
+    const allImages = useMemo(() => {
+        return [...images, ...(sizeImages || [])].filter(
+            (value, index, self) => self.indexOf(value) === index
+        )
+    }, [images, sizeImages])
+
+    const [selectedIndex, setSelectedIndex] = useState(0)
+    const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null)
+
+    const onImageSelect = (index: number) => {
+        setSelectedIndex(index)
+        carouselApi?.scrollTo(index) // Jump carousel to the clicked image
+    }
+
     return (
         <div className="flex flex-col md:flex-row gap-4">
-            {/* Thumbnails on the left */}
-            <div className="flex md:flex-col gap-3 ">
-                {configurations.map((config) => {
-                    const isActive = config.image === selectedImage
+            {/* Thumbnails */}
+            <div className="flex md:flex-col gap-3">
+                {allImages.map((image, index) => {
+                    const isActive = index === selectedIndex
                     return (
                         <div
-                            key={config.key}
-                            className={`relative size-16 rounded-md overflow-hidden cursor-pointer border transition-all duration-200 ${isActive ? 'ring-2 ring-primary' : ''
-                                }`}
-                            onClick={() => onImageSelect(config.image)}
+                            key={image}
+                            className={`relative size-16 rounded-md overflow-hidden cursor-pointer border transition-all duration-200 ${isActive ? 'ring-2 ring-primary' : ''}`}
+                            onClick={() => onImageSelect(index)}
                         >
                             <Image
-                                src={config.image}
-                                alt={`Thumbnail for ${config.key}`}
+                                src={image}
+                                alt={`Thumbnail for ${image}`}
                                 fill
                                 className="object-cover"
                             />
@@ -44,15 +57,28 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                 })}
             </div>
 
-            {/* Main Image */}
-            <div className="relative w-full aspect-square overflow-hidden border rounded-lg group">
-                <Image
-                    src={selectedImage}
-                    alt="Selected product"
-                    fill
-                    className="object-contain transition-transform duration-300 ease-in-out group-hover:scale-110"
-                    sizes="(max-width: 768px) 100vw, 80vw"
-                />
+            {/* Main Carousel */}
+            <div className="w-full overflow-hidden  rounded-xl flex items-center justify-center">
+                <Carousel className="w-full relative" setApi={setCarouselApi}>
+                    <CarouselContent isMargin={false}>
+                        {allImages.map((image, index) => (
+                            <CarouselItem key={index}>
+                                <div className="p-1 flex justify-center">
+                                    <Image
+                                        src={image}
+                                        alt="Selected product"
+                                        width={768}
+                                        height={768}
+                                        className="object-contain transition-transform duration-300 ease-in-out"
+                                        sizes="(max-width: 768px) 75vw, 80vw"
+                                    />
+                                </div>
+                            </CarouselItem>
+                        ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="absolute" />
+                    <CarouselNext className="absolute" />
+                </Carousel>
             </div>
         </div>
     )

@@ -2,6 +2,10 @@ import { z } from "zod";
 
 export const editProductSchema = z.object({
   configKey: z.string().optional(),
+  title: z.string().min(5),
+  videoURL: z.string().url(),
+  description: z.string().min(5),
+
 
   tags: z.array(z.string()).optional(),
 
@@ -12,11 +16,5 @@ export const editProductSchema = z.object({
   price: z.number().positive("Price must be greater than 0"),
   priceInUSD: z.number().positive("Price in USD must be greater than 0"),
 
-  variantMappings: z.array(
-    z.object({
-      key: z.string().min(1, "Key is required"),
-      image: z.string().min(1, "Image is required"),
-      sku: z.string().min(1, "SKU is required"),
-    })
-  ).min(1, "At least one variant must be provided"),
+  sizeImages: z.array(z.string()).min(1, "One Image should be of the Size")
 });

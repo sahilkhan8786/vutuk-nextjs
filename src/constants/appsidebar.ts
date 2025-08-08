@@ -1,5 +1,5 @@
 import { AppSidebarProps } from "@/components/custom/app-sidebar";
-import { BookCopy, FileStackIcon, HeartIcon, Home, Newspaper, Package, PlusSquare, ProjectorIcon, Settings, ShoppingBasket, UserIcon, Users } from "lucide-react";
+import { BookCopy, FileStackIcon, HeartIcon, Home, MessageSquareIcon, Newspaper, Package, PlusSquare, ProjectorIcon, Settings, ShoppingBasket, UserIcon, Users } from "lucide-react";
 
 export const adminSidebarNav: AppSidebarProps[] = [
     {
@@ -31,6 +31,11 @@ export const adminSidebarNav: AppSidebarProps[] = [
         title: "Blogs",
         url: "/admin/blogs",
         icon: Newspaper,
+    },
+    {
+        title: "Chats",
+        url: "/admin/chats",
+        icon: MessageSquareIcon,
     },
     {
         title: "Products",

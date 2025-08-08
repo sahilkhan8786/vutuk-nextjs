@@ -7,11 +7,11 @@ import { cookieName } from '@/utils/values';
 export async function GET(req: NextRequest) {
   await connectToDB();
 
-    const token = await getToken({
-        req,
-        secret: process.env.AUTH_SECRET,
-        cookieName:cookieName
-    });
+  const token = await getToken({
+    req,
+    secret: process.env.AUTH_SECRET,
+    cookieName: cookieName
+  });
 
   if (!token || !token.sub) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -37,27 +37,28 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json();
 
-  if (!Array.isArray(body)) {
-    return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });
-  }
+  console.log(body)
 
-  for (const item of body) {
-    if (
-      !item.productId ||
-      !item.sku ||
-      typeof item.quantity !== 'number' ||
-      typeof item.price !== 'number' ||
-      (item.isSavedForLater !== undefined && typeof item.isSavedForLater !== 'boolean')
-    ) {
-      return NextResponse.json({ error: 'Invalid product data' }, { status: 400 });
-    }
-  }
 
-  const updatedCart = await Cart.findOneAndUpdate(
-    { userId: token.sub },
-    { $set: { products: body } },
-    { new: true, upsert: true }
-  );
 
-  return NextResponse.json({ success: true, data: updatedCart });
+  // for (const item of body) {
+  //   if (
+  //     !item.productId ||
+  //     !item.sku ||
+  //     typeof item.quantity !== 'number' ||
+  //     typeof item.price !== 'number' ||
+  //     (item.isSavedForLater !== undefined && typeof item.isSavedForLater !== 'boolean')
+  //   ) {
+  //     return NextResponse.json({ error: 'Invalid product data' }, { status: 400 });
+  //   }
+  // }
+
+  // const updatedCart = await Cart.findOneAndUpdate(
+  //   { userId: token.sub },
+  //   { $set: { products: body } },
+  //   { new: true, upsert: true }
+  // );
+
+  // return NextResponse.json({ success: true, data: updatedCart });
+  return NextResponse.json({ success: true });
 }

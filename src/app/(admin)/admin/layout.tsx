@@ -6,9 +6,11 @@ import './../../globals.css'
 import { Bebas_Neue, Rubik } from "next/font/google";
 import { Toaster } from "sonner";
 import Header from "@/components/custom/header/Header";
-import { CartContextProvider } from "@/context/cart-context";
 import { adminSidebarNav } from "@/constants/appsidebar";
 import { SessionProvider } from "next-auth/react";
+import SocketListener from "@/socket/SocketListener";
+import AdminNotificationListener from "@/socket/AdminNotificationListener";
+import { CartContextProvider } from "@/context/cart-context";
 
 const bebas = Bebas_Neue({
     variable: "--font-bebas",
@@ -34,8 +36,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             >
 
                 <SessionProvider>
+                    <SocketListener />
+                    <AdminNotificationListener />
 
                     <CartContextProvider>
+
                         <Header />
                         <Toaster richColors position="top-center" />
 
@@ -46,6 +51,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                                 {children}
                             </main>
                         </SidebarProvider>
+
                     </CartContextProvider>
                 </SessionProvider>
             </body>

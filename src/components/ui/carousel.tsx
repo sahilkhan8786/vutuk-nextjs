@@ -132,13 +132,17 @@ function Carousel({
   )
 }
 
-function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
+interface CarouselContentProps extends React.ComponentProps<"div"> {
+  isMargin?: boolean
+}
+
+function CarouselContent({ isMargin = true, className, ...props }: CarouselContentProps) {
   const { carouselRef, orientation } = useCarousel()
 
   return (
     <div
       ref={carouselRef}
-      className="overflow-hidden  mx-9"
+      className={`overflow-hidden  ${isMargin && 'mx-9'}`}
       data-slot="carousel-content"
     >
       <div

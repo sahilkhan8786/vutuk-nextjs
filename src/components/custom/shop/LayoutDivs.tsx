@@ -7,13 +7,14 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from '@/components/ui/carousel'
-import Image from 'next/image'
-import React, { useState } from 'react'
+
+import React from 'react'
 import Autoplay from 'embla-carousel-autoplay'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import HeartButton from './HeartButton'
 import AddToCartButton from './AddToCartButton'
+import ImagesCarousal from './ImagesCarousal'
 
 interface Product {
     _id: string
@@ -22,12 +23,7 @@ interface Product {
     price: number
     priceInUSD: number
     images: string[]
-    sku: string
-    configurations: {
-        key: string
-        image: string
-        sku: string
-    }[],
+    sku: string[]
 }
 
 interface CarousalDivHomePageProps {
@@ -48,14 +44,7 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({
     delay
 }) => {
 
-    const [selectedConfigs, setSelectedConfigs] = useState<{ [key: string]: string }>({})
 
-    const handleConfigSelect = (productId: string, configKey: string) => {
-        setSelectedConfigs((prev) => ({
-            ...prev,
-            [productId]: configKey,
-        }))
-    }
 
     return (
         <div className={`w-full border-primary rounded-xl p-4 flex flex-col overflow-hidden ${className} bg-white shadow`}>
@@ -76,15 +65,9 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({
             >
                 <CarouselContent className="w-full">
                     {products?.map((product) => {
-                        if (!product.configurations?.length) return null
 
                         const productId = product._id
-                        const configOptions = product.configurations.map(conf => conf.key)
-                        const selectedKey = selectedConfigs[productId] || configOptions[0]
-                        const selectedConfig = product.configurations.find(conf => conf.key === selectedKey)
 
-                        // Optional: show matching image if available in config, fallback to main
-                        const displayedImage = selectedConfig?.image || product.images?.[0]
 
                         return (
                             <CarouselItem
@@ -93,12 +76,7 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({
                             >
                                 <Link href={`/products/${product.slug}`} className="w-full">
                                     <div className={`w-full rounded-xl shadow-md ${innerDivHeight} relative`}>
-                                        <Image
-                                            src={displayedImage}
-                                            alt={product.title}
-                                            fill
-                                            className="absolute object-center object-cover rounded-xl transition-all duration-500 aspect-video"
-                                        />
+                                        <ImagesCarousal images={product.images as []} />
                                     </div>
                                 </Link>
 
@@ -113,34 +91,18 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({
                                 {product.price && <p className="text-sm text-muted-foreground">₹{product.price}</p>}
                                 {product.priceInUSD && <p className="text-sm text-muted-foreground">${product.priceInUSD}</p>}
 
+                                <AddToCartButton
+                                    product={{
+                                        _id: product._id,
+                                        title: product.title,
+                                        price: product.price,
+                                        images: product.images,
+                                        sku: product.sku
+                                    }}
+                                    quantity={1}
+                                />
 
-                                {/* Color Dots */}
-                                <div className="flex gap-2 mb-2">
-                                    {product.configurations.map((conf) => (
-                                        <button
-                                            key={conf.key}
-                                            onClick={() => handleConfigSelect(productId, conf.key)}
-                                            className={`w-5 h-5 rounded-full border-2 transition-all duration-200 cursor-pointer ${selectedKey === conf.key ? 'border-black scale-110' : 'border-gray-300'
-                                                }`}
-                                            style={{ backgroundColor: conf.key.toLowerCase() }} // assumes conf.key is color name
-                                            aria-label={conf.key}
-                                        />
-                                    ))}
-                                </div>
 
-                                {selectedConfig && (
-                                    <AddToCartButton
-                                        product={{
-                                            _id: product._id,
-                                            title: product.title,
-                                            price: product.price,
-                                            images: product.images,
-                                            configurations: product.configurations || [],
-                                        }}
-                                        selectedConfig={selectedConfig}
-                                        quantity={1}
-                                    />
-                                )}
                             </CarouselItem>
                         )
                     })}

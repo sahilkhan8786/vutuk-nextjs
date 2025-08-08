@@ -24,7 +24,7 @@ const ShopLayout = async () => {
     return (
         <WidthCard className='mb-6  grid grid-cols-1 md:grid-cols-2   gap-6 min-h-[90vh] lg:grid-cols-4'>
             {/* NEW ARRIVALS DIV */}
-            <CarousalDivHomePage className='col-span-4 lg:col-span-1' title='New Arrivals' products={products} innerDivHeight='min-h-80' delay={4000}
+            <CarousalDivHomePage className='col-span-4 lg:col-span-1 w-full' title='New Arrivals' products={products} innerDivHeight='min-h-80' delay={4000}
                 carousalBasis=' sm:basis-1/3 lg:basis-1/1'
             />
 

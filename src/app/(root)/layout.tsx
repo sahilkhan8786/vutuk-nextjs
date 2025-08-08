@@ -3,10 +3,11 @@ import { Bebas_Neue, Rubik } from "next/font/google";
 import "./../globals.css";
 import Header from "@/components/custom/header/Header";
 import Footer from "@/components/custom/Footer";
-import { CartContextProvider } from "@/context/cart-context";
+
 import { FavouriteContextProvider } from "@/context/favourite-context";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "sonner";
+import { CartContextProvider } from "@/context/cart-context";
 
 
 const bebas = Bebas_Neue({
@@ -38,6 +39,7 @@ export default function RootLayout({
       >
         <SessionProvider>
           <CartContextProvider>
+
             <FavouriteContextProvider>
               <Header />
               <Toaster />
