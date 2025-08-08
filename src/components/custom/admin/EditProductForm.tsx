@@ -65,7 +65,7 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
         },
         mode: 'onChange',
     });
-
+    const selectedSizeImages = form.watch("sizeImages") || [];
 
 
     useEffect(() => {
@@ -313,12 +313,29 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                                 height={450}
                                 className='rounded-xl'
                             />
-
-
                         ))}
 
                     </div>
                 </div>}
+                {selectedSizeImages.length > 0 && (
+                    <div className='bg-secondary p-4 rounded-xl'>
+                        <h3 className='mb-4'>Selected Product Size Images</h3>
+                        <div className='flex flex-wrap gap-4'>
+                            {selectedSizeImages.map(image => (
+                                <Image
+                                    key={image}
+                                    src={image}
+                                    alt={`Selected Size Image - ${image}`}
+                                    width={450}
+                                    height={450}
+                                    className='rounded-xl'
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+
 
                 {/* PRICE */}
                 <FormField

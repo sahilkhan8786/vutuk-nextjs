@@ -3,7 +3,7 @@ import { z } from "zod";
 export const editProductSchema = z.object({
   configKey: z.string().optional(),
   title: z.string().min(5),
-  videoURL: z.string().url(),
+  videoURL: z.string().url("Invalid video URL").optional().or(z.literal("")),
   description: z.string().min(5),
 
 
