@@ -40,7 +40,7 @@ export async function middleware(req: Request) {
   // ✅ Always allow /api/auth/*
   if (isApiAuthRoute) return NextResponse.next();
 
-  if (pathname.startsWith("/api") && req.method === "GET") {
+  if (pathname.startsWith("/api") && req.method === "GET" || pathname.startsWith('/api/razorpay')) {
     return NextResponse.next();
   }
 

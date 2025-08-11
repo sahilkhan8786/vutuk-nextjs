@@ -17,17 +17,16 @@ type Product = {
 
 
 
-const AddToCartButton = ({ product, quantity = 1, className = '' }: {
+const AddToCartButton = ({ product, className = '' }: {
     product: Product;
     quantity: number;
     className?: string
 }) => {
     const { addToCart } = useCart();
-    console.log(product)
 
     const handleAdd = () => {
         const finalProduct: Product = product
-        addToCart(finalProduct, quantity);
+        addToCart(finalProduct);
         toast.success("PRODUCT SUCCESSFULLY ADDED TO CART")
     }
 

@@ -23,11 +23,11 @@ export const getUserById = async (id: string) => {
         return null
     }
 }
-export const updateUserById = async (id: string,data:z.infer<typeof UserUpdateformSchema>) => {
+export const updateUserById = async (id: string, data: z.infer<typeof UserUpdateformSchema>) => {
     try {
         await connectToDB();
         const user = await User.findByIdAndUpdate(id, data, {
-            new:true
+            new: true
         });
         return user;
     } catch (error) {
@@ -38,11 +38,11 @@ export const updateUserById = async (id: string,data:z.infer<typeof UserUpdatefo
 
 
 export async function updateUserImage(userId: string, imageUrl: string): Promise<void> {
-  await connectToDB();
+    await connectToDB();
 
-  await User.findByIdAndUpdate(
-    userId,
-    { image: imageUrl },
-    { new: true }
-  );
+    await User.findByIdAndUpdate(
+        userId,
+        { image: imageUrl },
+        { new: true }
+    );
 }
