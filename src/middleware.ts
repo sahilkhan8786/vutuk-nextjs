@@ -9,8 +9,12 @@ import {
 } from "./routes";
 import { cookieName } from "./utils/values";
 
-
-
+// Allowed origins for CORS
+const allowedOrigins = [
+  'https://vutuk.com',
+  'https://www.vutuk.com',
+  'https://vutuk-nextjs.vercel.app'
+];
 
 export async function middleware(req: Request) {
   const token = await getToken({
@@ -19,16 +23,11 @@ export async function middleware(req: Request) {
     cookieName: cookieName
   });
 
-
-
-
   const url = new URL(req.url);
   const pathname = url.pathname;
+  const origin = req.headers.get('origin');
 
   const isLoggedIn = !!token;
-
-
-
   const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
 
   // ✅ UPDATED: includes dynamic `/products/[slug]`
@@ -37,11 +36,34 @@ export async function middleware(req: Request) {
 
   const isAuthRoute = authRoutes.includes(pathname);
 
+  // Create response object
+  const response = NextResponse.next();
+
+  // ✅ Add CORS headers for all API routes
+  if (pathname.startsWith('/api')) {
+    // Check if the origin is allowed
+    if (origin && allowedOrigins.includes(origin)) {
+      response.headers.set('Access-Control-Allow-Origin', origin);
+    }
+
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-requested-with');
+    response.headers.set('Access-Control-Allow-Credentials', 'true');
+
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
+      return new Response(null, {
+        status: 200,
+        headers: Object.fromEntries(response.headers)
+      });
+    }
+  }
+
   // ✅ Always allow /api/auth/*
-  if (isApiAuthRoute) return NextResponse.next();
+  if (isApiAuthRoute) return response;
 
   if (pathname.startsWith("/api") && req.method === "GET" || pathname.startsWith('/api/razorpay')) {
-    return NextResponse.next();
+    return response;
   }
 
   // ✅ If already logged in and accessing /log-in etc., redirect based on role
@@ -69,7 +91,7 @@ export async function middleware(req: Request) {
     }
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {

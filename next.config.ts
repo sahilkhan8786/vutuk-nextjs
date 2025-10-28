@@ -21,15 +21,7 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '200mb'
     }
-  },
-  async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        destination: "https://vutuk-nextjs.vercel.app/api/:path*",
-      },
-    ];
-  },
+  }
 };
 
 export default nextConfig;
