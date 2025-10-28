@@ -90,12 +90,12 @@ export async function verifyPhoneTokenSend({ countryCode, phoneNumber }: PhoneDa
   });
 
   try {
- const res =    await twilioClient.messages.create({
+    const res = await twilioClient.messages.create({
       body: `Your OTP is ${otp}`,
       from: TWILIO_PHONE,
       to: fullPhone,
     });
-console.log(res)
+    console.log(res)
 
     return { success: true };
   } catch (err) {

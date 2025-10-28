@@ -4,6 +4,7 @@ import React from 'react'
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { OrderStatusTracker } from '@/components/custom/requests/OrderStatusTracker';
+import DeliveryTrackButton from '@/components/custom/DeliveryTrackButton';
 
 type Order = {
     _id: string;
@@ -71,6 +72,7 @@ const DashboardSingleOrderPage = async (
     const id = (await params).id
 
     const order = await getOrders(id);
+    console.log(order)
 
 
 
@@ -213,30 +215,37 @@ const DashboardSingleOrderPage = async (
                             </div>
                         </>
                     )}
-                    {order.status === 'Delivered' && (
+                    {order.status === "Out for Delivery" && (
                         <>
-
-                            <h2 className='font-semibold text-xl'>Your Product is Delivered</h2>
+                            <h2 className="font-semibold text-xl">Out for Delivery</h2>
                             <div className="mt-4 flex items-center justify-between w-full h-full gap-6">
-                                {/*3D PRODUCT IMAGE */}
-                                <div className='rounded-xl border p-4 '>
-
-                                    <Image src={order?.image || 'https://i.etsystatic.com/59876780/r/il/d0a4be/6918944986/il_794xN.6918944986_bfnz.jpg'} alt='' width={200} height={200} className=' rounded-xl' />
+                                {/* 3D PRODUCT IMAGE */}
+                                <div className="rounded-xl border p-4">
+                                    <Image
+                                        src={
+                                            order?.image ||
+                                            "https://i.etsystatic.com/59876780/r/il/d0a4be/6918944986/il_794xN.6918944986_bfnz.jpg"
+                                        }
+                                        alt=""
+                                        width={200}
+                                        height={200}
+                                        className="rounded-xl"
+                                    />
                                 </div>
-                                <div className='flex-1 flex items-center justify-center   flex-col gap-6 py-4'>
-                                    <h3>Your Product is Delivered</h3>
-
+                                <div className="flex-1 flex items-center justify-center flex-col gap-6 py-4">
+                                    <h3>Your Product is Out for Delivery</h3>
                                     <p>
-                                        You can rate your experience here
-
+                                        You can track your product with this{" "}
+                                        <strong>Delivery Id</strong>: {order.trackingId}
                                     </p>
-                                    <Button>Leave a Review</Button>
 
-
+                                    {/* Track Button */}
+                                    <DeliveryTrackButton order={order} />
                                 </div>
                             </div>
                         </>
                     )}
+
                 </div>
             }
         </>

@@ -36,7 +36,7 @@ async function getOrders() {
     const headersList = await headers();
     const cookieHeader = headersList.get("cookie") ?? '';
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/requests`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/requests?isCustomOrderRequest=true`, {
         headers: {
             cookie: cookieHeader,
         }
@@ -48,6 +48,7 @@ async function getOrders() {
 
 const Admin3DPrintOnDeamandOrdersPage = async () => {
     const orders = await getOrders();
+    console.log(orders)
 
 
     return (
@@ -77,7 +78,7 @@ const Admin3DPrintOnDeamandOrdersPage = async () => {
                                     className='rounded-xl'
                                 />
 
-                                <p>PRODUCT NAME</p>
+                                <p>{order.material}_{order.color}</p>
 
                                 <p>PRICE</p>
 

@@ -19,6 +19,8 @@ interface OrderStatusTrackerProps {
 }
 
 export const OrderStatusTracker: React.FC<OrderStatusTrackerProps> = ({ currentStatus }) => {
+
+
     const currentIndex = STATUS_STEPS.indexOf(currentStatus);
 
     return (
@@ -26,8 +28,8 @@ export const OrderStatusTracker: React.FC<OrderStatusTrackerProps> = ({ currentS
             <h2 className="text-lg font-semibold text-center">Order Status</h2>
             <div className="flex items-center justify-between gap-2 overflow-x-auto">
                 {STATUS_STEPS.map((step, index) => {
-                    const isCompleted = index <= currentIndex;
-                    const isNextStep = index === currentIndex + 1;
+                    const isCompleted = index < currentIndex;
+                    const isNextStep = index === currentIndex;
 
                     return (
                         <div key={step} className="flex-1 min-w-[120px] text-center">

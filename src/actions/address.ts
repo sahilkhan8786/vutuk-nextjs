@@ -7,7 +7,7 @@ import Address from "@/models/address.model";
 import { addressFormSchema, AddressFromType } from "@/schemas/addressSchema";
 import { revalidatePath } from "next/cache";
 
-export async function createAddress(values:AddressFromType) {
+export async function createAddress(values: AddressFromType) {
     const session = await auth();
 
     if (!session) return {
@@ -20,7 +20,7 @@ export async function createAddress(values:AddressFromType) {
     if (!validatedFields.success) {
         return {
             success: false,
-            message:"Please provide correct fields"
+            message: "Please provide correct fields"
         }
     }
 
@@ -39,7 +39,7 @@ export async function createAddress(values:AddressFromType) {
     if (user.addressCount >= 5) {
         return {
             success: false,
-            message:"Single User can only add upto 5 addresses"
+            message: "Single User can only add upto 5 addresses"
         }
     }
 
@@ -54,8 +54,8 @@ export async function createAddress(values:AddressFromType) {
     revalidatePath('/dashboard/profile');
     return {
         success: true,
-        message:"Address added Successfully"
+        message: "Address added Successfully"
     }
-  
+
 
 }

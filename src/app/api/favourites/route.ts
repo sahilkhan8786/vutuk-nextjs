@@ -5,35 +5,36 @@ import mongoose from "mongoose";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
-export async function GET(req:Request) {
-    try {
-        const token = await getToken({
-            req,
-            secret: process.env.AUTH_SECRET,
-            cookieName: cookieName
-        });
+export async function GET(req: Request) {
+  try {
+    const token = await getToken({
+      req,
+      secret: process.env.AUTH_SECRET,
+      cookieName: cookieName
+    });
 
 
-        const isAdmin = token?.role === 'admin';
-        await connectToDB();
-        let favourites;
-        if (isAdmin) {
-             favourites = await FavouriteProducts.find({}).populate('products');
-        } else {
-            favourites = await FavouriteProducts.find({userId:token?.sub}).populate('products')
-}
+    const isAdmin = token?.role === 'admin';
 
-        return NextResponse.json({
-            status: 'success',
-            data: {
-                favourites
-            }
-        })
-        
-    } catch (error) {
-        console.log(error)
-        throw error
+    await connectToDB();
+    let favourites;
+    if (isAdmin) {
+      favourites = await FavouriteProducts.find({}).populate('products');
+    } else {
+      favourites = await FavouriteProducts.find({ userId: token?.sub }).populate('products')
     }
+
+    return NextResponse.json({
+      status: 'success',
+      data: {
+        favourites
+      }
+    })
+
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
 }
 
 
@@ -79,4 +80,3 @@ export async function POST(req: Request) {
   }
 }
 
-  

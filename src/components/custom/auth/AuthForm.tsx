@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
 import { Button } from '@/components/ui/button'
+import SignInWithGoogle from './sign-in-with-google'
 
 const AuthForm = () => {
     const [isLogin, setIsLogin] = useState(true)
@@ -11,6 +12,8 @@ const AuthForm = () => {
     return (
         <div className="space-y-4">
             {isLogin ? <LoginForm /> : <RegisterForm />}
+
+            <SignInWithGoogle />
 
             <div className="text-center">
                 {isLogin ? (

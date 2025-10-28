@@ -1,8 +1,8 @@
-import { Button } from '@/components/ui/button';
+import DeliveryTrackButton from '@/components/custom/DeliveryTrackButton';
 import { headers } from 'next/headers';
 import Image from 'next/image';
-import Link from 'next/link';
-import React from 'react'
+import React from 'react';
+import { WatchLive } from './WatchLive';
 
 type Order = {
     _id: string;
@@ -23,83 +23,80 @@ type Order = {
     price: number;
     youtubeLink: string;
     trackingId: string;
+    trackingLink?: string;
+    addressId?: string;
+    items: [];
+    totalAmount: number;
 
-    // ✅ New fields for dimensions
+    // ✅ Dimensions
     length?: number;
     breadth?: number;
     height?: number;
     dimensionUnit?: string;
     customRequest?: boolean;
 };
+
 async function getOrders() {
     const headersList = await headers();
-    const cookieHeader = headersList.get("cookie") ?? ""; // ✅ correct and safe
+    const cookieHeader = headersList.get("cookie") ?? "";
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/requests`, {
-        headers: {
-            cookie: cookieHeader,
-        }
+        headers: { cookie: cookieHeader },
     });
 
     const json = await res.json();
+    console.log(json)
     return json.data.requests as Order[];
 }
 
 const UserOrdersPage = async () => {
-
     const orders = await getOrders();
-
 
     return (
         <>
             <h1 className='text-4xl font-semibold uppercase bg-white rounded-xl p-4'>My Orders</h1>
 
+            <div className='grid grid-cols-1 gap-4 my-6'>
+                {orders.map(order => (
+                    <div key={order._id} className='bg-white rounded-xl p-4'>
+                        <div className='flex justify-between'>
+                            <span><strong>Order Id: </strong>{order._id}</span>
 
-            <div className='grid grid-cols-1 gap-4 my-6 '>
-                {
-                    orders.map(order => (
+                        </div>
 
-                        <div key={order._id} className='bg-white rounded-xl p-4'>
-                            <div className='flex justify-between'>
+                        <div className='flex items-center justify-between mt-4'>
+                            <Image
+                                src={order.image || 'https://i.etsystatic.com/59876780/r/il/d0a4be/6918944986/il_794xN.6918944986_bfnz.jpg'}
+                                alt='Product Image'
+                                width={80}
+                                height={80}
+                                className='rounded-xl'
+                            />
 
-                                <span> <strong>Order Id:&nbsp;</strong>{order._id}</span>
-                                {order.customRequest && (
-                                    <span className='bg-green-400 text-green-900 rounded-xl px-3'>Custom Request</span>
-                                )}
+                            <div>
+                                <p>
+                                    Total Items:- {order.items.length} <br />
+                                    Total Amount:- {order.totalAmount}/- <br />
+
+                                </p>
                             </div>
 
-                            <div className='flex items-center justify-between mt-4'>
-                                <Image
-                                    src={'https://i.etsystatic.com/59876780/r/il/d0a4be/6918944986/il_794xN.6918944986_bfnz.jpg'}
-                                    alt='Product Image'
-                                    width={80}
-                                    height={80}
-                                    className='rounded-xl'
-                                />
-
-                                <p>PRODUCT NAME</p>
-
-                                <p>PRICE</p>
-
-
-                                <Link href={`/dashboard/orders/${order._id}`}>
-                                    <Button>Track Order</Button>
-                                </Link>
-
+                            <div>
+                                {order.status === 'Out for Delivery'
+                                    ? <DeliveryTrackButton trackingId={order.trackingId} />
+                                    : <p>{order.status}</p>
+                                }
+                                {order.status === "In Production" && <WatchLive youtubeLink={order.youtubeLink} />}
 
 
                             </div>
 
                         </div>
-
-
-
-                    ))
-                }
-
+                    </div>
+                ))}
             </div>
         </>
-    )
-}
+    );
+};
 
-export default UserOrdersPage
+export default UserOrdersPage;

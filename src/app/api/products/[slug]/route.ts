@@ -14,12 +14,13 @@ export async function GET(
     cookieName: cookieName
   })
   const isAdmin = token?.role === 'admin';
-  const isIndianUser = await isIndian();
+  const isIndianUser = await isIndian;
   console.log(isIndianUser)
 
 
   await connectToDB();
   const slug = (await params).slug;
+  console.log(slug)
   if (!slug) {
     return NextResponse.json({ error: "Slug is required" }, { status: 400 });
   }
@@ -29,7 +30,7 @@ export async function GET(
     (await Product.findOne({ slug }).select('+price +priceInUSD')) :
 
     (
-      (isIndianUser ?
+      (await isIndianUser ?
         await Product.findOne({ slug }).select('+price ')
         : await Product.findOne({ slug }).select('+priceInUSD')
       )

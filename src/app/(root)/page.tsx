@@ -1,10 +1,10 @@
 import ProductsCatalogue from '@/components/custom/home/ProductsCatalogue';
 import ShopLayout from '@/components/custom/shop/ShopLayout';
-import HomePageSkeleton from '@/components/custom/skeletons/HomePageSkeleton';
 import WidthCard from '@/components/ui/WidthCard';
 import { Metadata } from 'next';
 import Image from 'next/image';
-import React, { Suspense } from 'react'
+import Link from 'next/link';
+import React from 'react'
 
 export const metadata: Metadata = {
   title: 'Vutuk – Affordable & Trendy Products Online',
@@ -63,9 +63,9 @@ const HomePage = () => {
         description='Best Designer vases available'>
         </Title> */}
 
-        <Suspense fallback={<HomePageSkeleton />}>
-          <ShopLayout />
-        </Suspense>
+        {/* <Suspense fallback={<HomePageSkeleton />}> */}
+        <ShopLayout />
+        {/* </Suspense> */}
 
 
       </div>
@@ -74,14 +74,15 @@ const HomePage = () => {
         <div className=' bg-dark w-full rounded-xl p-4  relative overflow-hidden'>
           <h2 className='text-xl mb-4 z-40  absolute w-full bg-dark/60 left-0 -bottom-4 p-4 text-center'>Gifts for Him</h2>
 
-
-          <Image
-            src={'/banner-1.jpg'}
-            alt='IMAGE'
-            fill
-            className='absolute object-cover object-center rounded-xl z-20 hover:scale-125 transition-all'
-            priority
-          />
+          <Link href={'/products'}>
+            <Image
+              src={'/banner-1.jpg'}
+              alt='IMAGE'
+              fill
+              className='absolute object-cover object-center rounded-xl z-20 hover:scale-125 transition-all'
+              priority
+            />
+          </Link>
 
         </div>
         <div className=' bg-dark w-full rounded-xl p-4  relative overflow-hidden'>

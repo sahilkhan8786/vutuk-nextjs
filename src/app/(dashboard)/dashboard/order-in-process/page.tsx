@@ -53,7 +53,7 @@ async function getOrders() {
     const headersList = await headers();
     const cookieHeader = headersList.get("cookie") ?? ""; // ✅ correct and safe
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/requests`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/requests?isCustomOrderRequest=true`, {
         headers: {
             cookie: cookieHeader,
         }
@@ -66,12 +66,15 @@ async function getOrders() {
 const UserOrderInProcessPage = async () => {
 
     const requests = await getOrders()
+    console.log(requests)
 
 
     return (
         <>
+
             {requests?.map((order) => (
                 <div key={order._id} className="p-4 border rounded-md mb-6">
+                    <h1>Order Id:- {order._id}</h1>
                     {isValidStatus(order.status) ? (
                         <OrderStatusTracker currentStatus={order.status} />
                     ) : (

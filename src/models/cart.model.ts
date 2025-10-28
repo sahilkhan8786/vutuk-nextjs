@@ -19,7 +19,7 @@ const cartItemSchema = new Schema({
       }
     }
   ]
-});
+}, { _id: false });
 
 const cartSchema = new Schema({
   userId: {

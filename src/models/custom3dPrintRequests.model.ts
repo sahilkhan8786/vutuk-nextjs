@@ -2,6 +2,7 @@ import mongoose, { Schema, Document, model } from 'mongoose';
 
 export interface ICustom3DPrintRequest extends Document {
   userId: mongoose.Types.ObjectId | null;
+  addressId: mongoose.Types.ObjectId | null;
   modelFileUrl?: string;
   material: string;
   otherMaterial?: string;
@@ -11,14 +12,13 @@ export interface ICustom3DPrintRequest extends Document {
   otherPriority?: string;
   quantity: number;
   notes?: string;
-  isBusiness: boolean;
-  gstOrFirm?: string;
+
   status: Custom3DPrintStatus;
   image?: string;
   price?: number;
   trackingId?: string;
   youtubeLink?: string;
-  customRequest: boolean;
+  isCustomOrderRequest: boolean;
 
   // ✅ New Fields for Dimensions
   length?: number;
@@ -48,6 +48,11 @@ const Custom3dPrintSchema = new Schema<ICustom3DPrintRequest>(
       ref: 'User',
       default: null,
     },
+    addressId: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Address',
+      default: null,
+    },
     image: {
       type: String,
       default: '',
@@ -73,8 +78,7 @@ const Custom3dPrintSchema = new Schema<ICustom3DPrintRequest>(
     otherPriority: String,
     quantity: { type: Number, required: true, min: 1 },
     notes: String,
-    isBusiness: { type: Boolean, required: true },
-    gstOrFirm: String,
+
 
     // ✅ Dimensions
     length: { type: Number, default: 0 },
@@ -82,10 +86,10 @@ const Custom3dPrintSchema = new Schema<ICustom3DPrintRequest>(
     height: { type: Number, default: 0 },
     dimensionUnit: { type: String, default: 'mm' },
 
-    customRequest: {
-      type:Boolean,
-      default:true
-      
+    isCustomOrderRequest: {
+      type: Boolean,
+      default: true
+
     },
 
     status: {

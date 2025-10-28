@@ -1,5 +1,5 @@
 import { AppSidebarProps } from "@/components/custom/app-sidebar";
-import { BookCopy, CurrencyIcon, FileStackIcon, HeartIcon, Home, MessageSquareIcon, Newspaper, Package, PlusSquare, ProjectorIcon, Settings, ShoppingBasket, UserIcon, Users } from "lucide-react";
+import { BookCopy, CurrencyIcon, FileStackIcon, HeartIcon, Home, MessageSquareIcon, Newspaper, Package, PlusSquare, ProjectorIcon, Settings, ShoppingBasket, TicketPercent, TicketPercentIcon, UserIcon, Users } from "lucide-react";
 
 export const adminSidebarNav: AppSidebarProps[] = [
     {
@@ -77,6 +77,12 @@ export const adminSidebarNav: AppSidebarProps[] = [
         url: "/admin/3d-print-on-demand",
         icon: Settings,
     },
+    {
+        title: "Coupons",
+        url: "/admin/coupons",
+        icon: TicketPercentIcon,
+    },
+
 ]
 
 export const userSidebarNav: AppSidebarProps[] = [

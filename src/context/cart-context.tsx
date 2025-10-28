@@ -4,13 +4,17 @@ import { useSession } from "next-auth/react";
 import { createContext, ReactNode, useContext, useEffect, useReducer, useRef, useState } from "react";
 
 // ================== TYPES ==================
+// src/types/product.ts
 export interface Product {
     _id: string;
+    slug: string;
     title: string;
     price: number;
-    images?: string[];
+    priceInUSD: number;
+    images: string[];
     sku: string[];
 }
+
 
 export interface Variant {
     quantity: number;

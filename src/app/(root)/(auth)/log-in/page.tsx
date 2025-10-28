@@ -11,6 +11,7 @@ import { loginSchema } from '@/schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form';
+import { FaSpinner } from 'react-icons/fa6';
 import { z } from 'zod';
 
 const LogInPage = () => {
@@ -100,7 +101,10 @@ const LogInPage = () => {
                         type='submit'
                         size={'lg'}
                         className='w-full'
-                    >Log In</Button>
+                    >
+                        {!isPending ? <FaSpinner className='animate-spin w-6' /> : 'Log In'}
+
+                    </Button>
 
 
                 </form>

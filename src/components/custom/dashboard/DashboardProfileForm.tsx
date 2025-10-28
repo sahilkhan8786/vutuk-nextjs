@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -32,101 +32,81 @@ const DashboardProfileForm = ({ defaultValues: userData }: { defaultValues: Form
 
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchemaUserProfile),
-        defaultValues: {
-            username: userData.username,
-            email: userData.email,
-            phone: userData.phone,
-            isEmailVerfied: userData.isEmailVerfied,
-            isPhoneVerfied: userData.isPhoneVerfied,
-            password: "",
-        },
+        defaultValues: userData
     });
 
-    const userIntials = userData.username && getInitials(userData.username);
+    const userInitials = userData.username && getInitials(userData.username);
 
     function onSubmit(values: FormValues) {
         console.log("Updated values:", values);
-        // call server action here
+        // Call server action here
     }
 
-
     return (
-        <div>
-            {/* Profile Image + Edit Button */}
-            <div className="flex items-center justify-center w-full relative">
-                {userData.image ? (
-                    <Image
-                        src={userData.image}
-                        alt="user-avatar"
-                        width={100}
-                        height={100}
-                        className="rounded-full cursor-pointer"
+        <div className="p-6 space-y-8 max-w-4xl mx-auto">
+            {/* Profile Header */}
+            <div className="flex flex-col md:flex-row items-center gap-6 bg-white shadow rounded-xl p-6">
+                <div className="relative">
+                    {userData.image ? (
+                        <Image
+                            src={userData.image}
+                            alt="user-avatar"
+                            width={120}
+                            height={120}
+                            className="rounded-full cursor-pointer object-cover"
+                        />
+                    ) : (
+                        <div className="rounded-full bg-gray-200 w-28 h-28 flex items-center justify-center text-xl font-bold text-gray-700">
+                            {userInitials}
+                        </div>
+                    )}
+                    <UpdatProfileImageFormWrapper
+                        id={userData.id}
+                        trigger={
+                            <div className="absolute bottom-0 right-0 bg-white rounded-full p-2 border cursor-pointer hover:bg-gray-100 transition-transform hover:scale-110">
+                                <Pencil className="h-4 w-4 text-gray-600" />
+                            </div>
+                        }
                     />
-                ) : (
-                    <div className="rounded-full text-dark size-[100px] flex items-center justify-center font-medium cursor-pointer bg-white">
-                        {userIntials}
+                </div>
+                <div className="flex-1 space-y-3">
+                    <h2 className="text-2xl font-bold">{userData.username}</h2>
+                    <p className="text-gray-500">{userData.email}</p>
+                    <div className="flex gap-3 flex-wrap">
+                        {/* Email Verification */}
+                        <div className={`flex items-center gap-2 px-4 py-1 rounded-full border ${userData.isEmailVerfied ? 'bg-green-50 border-green-500 text-green-600' : 'bg-red-50 border-red-500 text-red-600'}`}>
+                            {userData.isEmailVerfied ? <CheckCircle /> : <XCircle />}
+                            {userData.isEmailVerfied ? 'Email Verified' : 'Email Not Verified'}
+                        </div>
+                        {!userData.isEmailVerfied && (
+                            <VerifyEmailFromWrapper
+                                trigger={<Button size="sm" variant="outline">Verify Email</Button>}
+                            />
+                        )}
+
+                        {/* Phone Verification */}
+                        <div className={`flex items-center gap-2 px-4 py-1 rounded-full border ${userData.isPhoneVerfied ? 'bg-green-50 border-green-500 text-green-600' : 'bg-red-50 border-red-500 text-red-600'}`}>
+                            {userData.isPhoneVerfied ? <CheckCircle /> : <XCircle />}
+                            {userData.isPhoneVerfied ? 'Phone Verified' : 'Phone Not Verified'}
+                        </div>
+                        {!userData.isPhoneVerfied && (
+                            <VerifyMobileFormWrapper
+                                phoneNumber={userData.phone}
+                                trigger={<Button size="sm" variant="outline">Verify Phone</Button>}
+                            />
+                        )}
                     </div>
-                )}
-                <UpdatProfileImageFormWrapper
-                    trigger={
-                        <div className="absolute bottom-0 bg-white rounded-full p-1 translate-x-8 border cursor-pointer hover:bg-gray-100 hover:-translate-y-0.5 hover:scale-105 transition-all">
-                            <Pencil className="size-4 text-sm" />
-                        </div>
-                    }
-                    id={userData.id}
-                />
+                </div>
             </div>
-
-            {/* VERFIY EMAIL */}
-            {userData.isEmailVerfied ? (<div className="text-green-500 border border-green-500 w-fit px-4 rounded-full flex gap-4">
-                <CheckCircle />
-                Email is Verified</div>) :
-                (
-                    <>
-                        <div className="text-red-500 border border-red-500 w-fit px-4 rounded-full flex gap-4">
-                            <XCircle />
-                            <span>
-                                Email Not Verified
-                            </span>
-                            {/*VERIFY EMAIL FORM WRAPPER  */}
-
-                        </div>
-                        <VerifyEmailFromWrapper
-                            trigger={<Button>Verify Email</Button>}
-                        />
-                    </>
-                )
-            }
-
-            {/* PHONE VERIFICATION */}
-            {userData.isPhoneVerfied ? (<div className="text-green-500 border border-green-500 w-fit px-4 rounded-full flex gap-4">
-                <CheckCircle />
-                Phone is Verified</div>) :
-                (
-                    <>
-                        <div className="text-red-500 border border-red-500 w-fit px-4 rounded-full flex gap-4">
-                            <XCircle />
-                            <span>
-                                Phone Not Verified
-                            </span>
-                            {/*VERIFY EMAIL FORM WRAPPER  */}
-
-                        </div>
-                        <VerifyMobileFormWrapper
-                            phoneNumber={userData.phone}
-
-                            trigger={<Button>Verify Phone Number</Button>}
-                        />
-                    </>
-                )
-            }
 
             {/* Profile Form */}
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-6 max-w-2xl mx-auto bg-white p-4 rounded-xl"
+                    className="bg-white shadow rounded-xl p-6 space-y-6"
                 >
+                    <h3 className="text-xl font-semibold border-b pb-2">Profile Details</h3>
+
                     {/* Username */}
                     <FormField
                         control={form.control}
@@ -135,7 +115,7 @@ const DashboardProfileForm = ({ defaultValues: userData }: { defaultValues: Form
                             <FormItem>
                                 <FormLabel>Username</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Iamvutuk" {...field} />
+                                    <Input placeholder="John Doe" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -150,70 +130,42 @@ const DashboardProfileForm = ({ defaultValues: userData }: { defaultValues: Form
                             <FormItem>
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <Input {...field} readOnly className="bg-muted cursor-not-allowed" />
+                                    <Input {...field} readOnly className="bg-gray-100 cursor-not-allowed" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
 
-                    {/* Phone number - read-only if it exists */}
-                    {/* <FormField
-                        control={form.control}
-                        name="phone"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Phone</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        {...field}
-                                        placeholder="+91 1234567890"
-                                        readOnly={!phoneEditable}
-                                        className={!phoneEditable ? "bg-muted cursor-not-allowed" : ""}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    /> */}
+                    {/* Verified Checkboxes */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                            control={form.control}
+                            name="isEmailVerfied"
+                            render={({ field }) => (
+                                <FormItem className="flex items-center gap-2">
+                                    <FormLabel>Email Verified</FormLabel>
+                                    <FormControl>
+                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="isPhoneVerfied"
+                            render={({ field }) => (
+                                <FormItem className="flex items-center gap-2">
+                                    <FormLabel>Phone Verified</FormLabel>
+                                    <FormControl>
+                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
 
-                    {/* Phone Verified */}
-                    <FormField
-                        control={form.control}
-                        name="isPhoneVerfied"
-                        render={({ field }) => (
-                            <FormItem className="flex items-center gap-2">
-                                <FormLabel>Phone Verified</FormLabel>
-                                <FormControl>
-                                    <Checkbox
-                                        checked={field.value}
-                                        onCheckedChange={field.onChange}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Email Verified */}
-                    <FormField
-                        control={form.control}
-                        name="isEmailVerfied"
-                        render={({ field }) => (
-                            <FormItem className="flex items-center gap-2">
-                                <FormLabel>Email Verified</FormLabel>
-                                <FormControl>
-                                    <Checkbox
-                                        checked={field.value}
-                                        onCheckedChange={field.onChange}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Password (required to confirm updates) */}
+                    {/* Password */}
                     <FormField
                         control={form.control}
                         name="password"
@@ -228,25 +180,20 @@ const DashboardProfileForm = ({ defaultValues: userData }: { defaultValues: Form
                         )}
                     />
 
-                    <Button type="submit" className="mt-4">
-                        Submit
+                    <Button type="submit" className="w-full">
+                        Update Profile
                     </Button>
                 </form>
             </Form>
 
-            {/* ADDRESSES */}
-            <form >
-                <h3>You Addresses</h3>
+            {/* Addresses */}
+            <div className="bg-white shadow rounded-xl p-6 space-y-4">
+                <h3 className="text-xl font-semibold border-b pb-2">My Addresses</h3>
                 <ShowAddress />
-
-
                 <AddAddressFormWrapper
-                    trigger={<Button variant={'secondary'}>Add Address</Button>}
+                    trigger={<Button variant="secondary">Add Address</Button>}
                 />
-
-
-            </form>
-
+            </div>
         </div>
     );
 };

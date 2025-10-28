@@ -19,6 +19,7 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
+import { FaSpinner } from 'react-icons/fa6';
 import { z } from 'zod';
 
 type SignInResponse = {
@@ -75,7 +76,7 @@ const RegisterForm = () => {
     };
 
     return (
-        <div>
+        <div className='space-y-4'>
             <h1>Register</h1>
 
             <Form {...form}>
@@ -126,7 +127,7 @@ const RegisterForm = () => {
                     <FormSuccess message={success} />
 
                     <Button disabled={isPending} type='submit' size='lg' className='w-full'>
-                        Create an Account
+                        {isPending ? <FaSpinner className='size-6 animate-spin' /> : "Create An Account"}
                     </Button>
                 </form>
             </Form>

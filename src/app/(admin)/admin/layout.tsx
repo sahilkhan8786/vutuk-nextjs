@@ -8,8 +8,6 @@ import { Toaster } from "sonner";
 import Header from "@/components/custom/header/Header";
 import { adminSidebarNav } from "@/constants/appsidebar";
 import { SessionProvider } from "next-auth/react";
-import SocketListener from "@/socket/SocketListener";
-import AdminNotificationListener from "@/socket/AdminNotificationListener";
 import { CartContextProvider } from "@/context/cart-context";
 
 const bebas = Bebas_Neue({
@@ -36,8 +34,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             >
 
                 <SessionProvider>
-                    <SocketListener />
-                    <AdminNotificationListener />
 
                     <CartContextProvider>
 

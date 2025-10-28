@@ -8,13 +8,15 @@ import {
     CarouselPrevious,
 } from '@/components/ui/carousel'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Autoplay from 'embla-carousel-autoplay'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import HeartButton from './HeartButton'
 import AddToCartButton from './AddToCartButton'
 import ImagesCarousal from './ImagesCarousal'
+import Image from 'next/image'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface Product {
     _id: string
@@ -27,7 +29,6 @@ interface Product {
 }
 
 interface CarousalDivHomePageProps {
-    products: Product[]
     title: string
     className?: string
     innerDivHeight?: string
@@ -36,13 +37,28 @@ interface CarousalDivHomePageProps {
 }
 
 export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({
-    products,
+
     title,
     className,
     innerDivHeight,
     carousalBasis = "",
     delay
 }) => {
+
+    const [products, setProducts] = useState<Product[] | []>([]);
+
+    useEffect(() => {
+        async function fetchProducts() {
+            const productsRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products?random=true`, {
+                method: "GET",
+                credentials: "include"
+            })
+            const json = await productsRes.json()
+            const { products } = json.data
+            setProducts(products || [])
+        }
+        fetchProducts();
+    }, [])
 
 
 
@@ -76,7 +92,23 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({
                             >
                                 <Link href={`/products/${product.slug}`} className="w-full">
                                     <div className={`w-full rounded-xl shadow-md ${innerDivHeight} relative`}>
-                                        <ImagesCarousal images={product.images as []} />
+                                        {/* <ImagesCarousal images={product.images as []} /> */}
+                                        <div
+
+                                            className={`absolute inset-0 transition-opacity duration-700 ease-in-out 
+                                                }`}
+                                        >
+                                            <Skeleton
+                                                className="w-full h-full bg-primary/45"
+                                            />
+                                            <Image
+                                                src={product.images[0]}
+                                                alt={`Image  ${product.title}`}
+                                                fill
+                                                sizes="100vw"
+                                                className="object-cover object-center rounded-xl"
+                                            />
+                                        </div>
                                     </div>
                                 </Link>
 
@@ -88,8 +120,11 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({
 
                                 <HeartButton className="absolute right-2 top-2" itemId={productId} title={product.title} />
 
-                                {product.price && <p className="text-sm text-muted-foreground">₹{product.price}</p>}
-                                {product.priceInUSD && <p className="text-sm text-muted-foreground">${product.priceInUSD}</p>}
+
+                                {product.price && <p className="text-sm text-muted-foreground mb-2">₹&nbsp;{product.price}
+                                </p>}
+                                {product.priceInUSD ? <p className="text-sm text-muted-foreground mb-2">$&nbsp; {product.priceInUSD}
+                                </p> : ''}
 
                                 <AddToCartButton
                                     product={{

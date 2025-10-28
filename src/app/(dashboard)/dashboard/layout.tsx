@@ -8,7 +8,7 @@ import { Toaster } from "sonner";
 import Header from "@/components/custom/header/Header";
 import { userSidebarNav } from "@/constants/appsidebar";
 import { SessionProvider } from "next-auth/react";
-import SendNotification from "@/socket/SendNotification";
+
 import { CartContextProvider } from "@/context/cart-context";
 
 const bebas = Bebas_Neue({
@@ -43,7 +43,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
                         <SidebarProvider defaultOpen={defaultOpen}>
                             <AppSidebar items={userSidebarNav} />
                             <main className="w-full overflow-hidden p-4">
-                                <SendNotification />
                                 <SidebarTrigger className="cursor-pointer" />
                                 {children}
                             </main>

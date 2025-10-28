@@ -9,7 +9,7 @@ const emailVerificationSchema = new mongoose.Schema({
     token: {
         type: String,
         required: true,
-    
+
     },
     expiresAt: {
         type: Date,

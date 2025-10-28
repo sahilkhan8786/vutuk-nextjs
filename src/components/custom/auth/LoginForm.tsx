@@ -3,7 +3,6 @@
 import { signIn } from 'next-auth/react';
 import FormError from '@/components/custom/auth/form-error';
 import FormSuccess from '@/components/custom/auth/form-success';
-import SignInWithGoogle from '@/components/custom/auth/sign-in-with-google';
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -20,6 +19,7 @@ import React, { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
+import { FaSpinner } from 'react-icons/fa6';
 
 type SignInResponse = {
     error: string | undefined;
@@ -66,7 +66,7 @@ const LoginForm = () => {
     };
 
     return (
-        <div>
+        <div className='space-y-4'>
             <h1>Login</h1>
 
             <Form {...form}>
@@ -114,12 +114,11 @@ const LoginForm = () => {
                     <FormSuccess message={success} />
 
                     <Button disabled={isPending} type="submit" size="lg" className="w-full">
-                        Log In
+                        {isPending ? <FaSpinner className='size-6 animate-spin' /> : "Log In"}
                     </Button>
                 </form>
             </Form>
 
-            <SignInWithGoogle />
         </div>
     );
 };
