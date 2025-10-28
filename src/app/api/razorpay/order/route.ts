@@ -1,10 +1,14 @@
 import Razorpay from "razorpay";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
+import { connectToDB } from "@/lib/mongodb"; // Your connection utility
 import Cart from "@/models/cart.model";
 import { Coupon, ICoupon } from "@/models/Coupon";
 import { isIndian } from "@/lib/getIP";
 import { cookieName } from "@/utils/values";
+
+// Import Product model to ensure it's registered
+import "@/models/product.model"; // This ensures the Product schema is registered
 
 interface RazorpayOrderRequestBody {
     couponCode?: string;
@@ -30,11 +34,15 @@ interface CartDocument {
 
 export async function POST(req: Request) {
     try {
+        // ✅ Connect to database FIRST before any DB operations
+        await connectToDB();
+
         const token = await getToken({
             req,
             secret: process.env.AUTH_SECRET,
             cookieName: cookieName
         });
+
         if (!token?.sub) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
@@ -42,6 +50,7 @@ export async function POST(req: Request) {
         const IsIndianUser = await isIndian();
         const { couponCode }: RazorpayOrderRequestBody = await req.json();
 
+        // Now the models should be properly registered
         const cart = (await Cart.findOne({ userId: token.sub }).populate({
             path: "cart.product",
             select: IsIndianUser ? "price" : "priceInUSD",
@@ -107,14 +116,12 @@ export async function POST(req: Request) {
             key_secret: process.env.RAZORPAY_KEY_SECRET!,
         });
 
-        // ✅ Correct type import (no warning)
         const order = await razorpay.orders.create({
             amount: Math.round(finalAmount * 100),
             currency: IsIndianUser ? "INR" : "USD",
             receipt: `order_rcptid_${Date.now()}`,
         });
 
-        // ✅ TypeScript will correctly infer the type from Razorpay SDK
         return NextResponse.json({ order });
 
     } catch (error) {

@@ -1,36 +1,49 @@
-import mongoose, { Mongoose } from 'mongoose';
+// lib/mongodb.ts
+import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI || '';
+const MONGODB_URI = process.env.MONGODB_URI!;
 
 if (!MONGODB_URI) {
-    throw new Error("Please define the MONGO_DB environment variable inside the .env file");
+    throw new Error('Please define the MONGODB_URI environment variable');
 }
 
-// Define the type for our cached connection
 interface MongooseCache {
-    conn: Mongoose | null;
-    promise: Promise<Mongoose> | null;
+    conn: typeof mongoose | null;
+    promise: Promise<typeof mongoose> | null;
 }
 
-// Initialize cached variable with proper typing
-const cached: MongooseCache = (global as typeof globalThis & { mongoose?: MongooseCache }).mongoose || { 
-    conn: null, 
-    promise: null 
+// Global cache for serverless environment
+const globalWithMongoose = global as typeof globalThis & {
+    mongoose?: MongooseCache;
 };
 
-export async function connectToDB(): Promise<Mongoose> {
+const cached: MongooseCache = globalWithMongoose.mongoose || {
+    conn: null,
+    promise: null,
+};
+
+if (!globalWithMongoose.mongoose) {
+    globalWithMongoose.mongoose = cached;
+}
+
+export async function connectToDB() {
     if (cached.conn) {
         return cached.conn;
     }
 
     if (!cached.promise) {
-        cached.promise = mongoose.connect(MONGODB_URI);
+        const opts = {
+            bufferCommands: false,
+        };
+
+        cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+            return mongoose;
+        });
     }
 
     try {
         cached.conn = await cached.promise;
     } catch (e) {
-        // Reset cached promise if connection fails
         cached.promise = null;
         throw e;
     }
