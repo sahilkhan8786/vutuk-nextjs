@@ -240,7 +240,7 @@ const DashboardSingleOrderPage = async (
                                     </p>
 
                                     {/* Track Button */}
-                                    <DeliveryTrackButton order={order} />
+                                    <DeliveryTrackButton trackingId={order.trackingId} />
                                 </div>
                             </div>
                         </>

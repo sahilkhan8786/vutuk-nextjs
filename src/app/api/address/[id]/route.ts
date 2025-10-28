@@ -4,10 +4,11 @@ import Address from '@/models/address.model'; // Make sure you have an Address m
 
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const addressId = await params.id;
+        const resolvedParams = await params;
+        const addressId = resolvedParams.id;
 
         if (!addressId) {
             return NextResponse.json({ message: 'Address ID is required' }, { status: 400 });

@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import HeartButton from './HeartButton'
 import AddToCartButton from './AddToCartButton'
-import ImagesCarousal from './ImagesCarousal'
 import Image from 'next/image'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -129,10 +128,12 @@ export const CarousalDivHomePage: React.FC<CarousalDivHomePageProps> = ({
                                 <AddToCartButton
                                     product={{
                                         _id: product._id,
+                                        slug: product.slug, // ✅ added
                                         title: product.title,
-                                        price: product.price,
+                                        price: product.price || product.priceInUSD || 0,
+                                        priceInUSD: product.priceInUSD, // ✅ added
                                         images: product.images,
-                                        sku: product.sku
+                                        sku: product.sku,
                                     }}
                                     quantity={1}
                                 />

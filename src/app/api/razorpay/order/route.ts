@@ -1,64 +1,72 @@
 import Razorpay from "razorpay";
 import { getToken } from "next-auth/jwt";
-import Cart from "@/models/cart.model";
 import { NextResponse } from "next/server";
+import Cart from "@/models/cart.model";
 import { Coupon, ICoupon } from "@/models/Coupon";
 import { isIndian } from "@/lib/getIP";
 
-// ✅ Create Razorpay Order
+interface RazorpayOrderRequestBody {
+    couponCode?: string;
+}
+
+interface Variant {
+    quantity: number;
+}
+
+interface Product {
+    price?: number;
+    priceInUSD?: number;
+}
+
+interface CartItem {
+    product: Product | null;
+    variants: Variant[];
+}
+
+interface CartDocument {
+    cart: CartItem[];
+}
+
 export async function POST(req: Request) {
     try {
         const token = await getToken({ req, secret: process.env.AUTH_SECRET });
-        if (!token) {
+        if (!token?.sub) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         const IsIndianUser = await isIndian();
-        const { couponCode }: { couponCode?: string } = await req.json();
+        const { couponCode }: RazorpayOrderRequestBody = await req.json();
 
-        // ✅ Fetch cart with populated products
-        const cart = await Cart.findOne({ userId: token.sub }).populate({
+        const cart = (await Cart.findOne({ userId: token.sub }).populate({
             path: "cart.product",
             select: IsIndianUser ? "price" : "priceInUSD",
-        });
+        })) as unknown as CartDocument | null;
 
-        if (!cart || cart.cart.length === 0) {
+        if (!cart || !Array.isArray(cart.cart) || cart.cart.length === 0) {
             return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
         }
 
-        // ✅ Recalculate totals from variants
         let subtotal = 0;
         let totalQty = 0;
 
-        cart.cart.forEach((item: any) => {
-            if (!item.product) {
-                console.warn("Cart item missing product:", item);
-                return;
-            }
+        for (const item of cart.cart) {
+            if (!item.product) continue;
 
             const price = IsIndianUser
-                ? Number(item.product.price) || 0
-                : Number(item.product.priceInUSD) || 0;
+                ? Number(item.product.price ?? 0)
+                : Number(item.product.priceInUSD ?? 0);
 
-            // loop through variants
-            item.variants.forEach((variant: any) => {
+            for (const variant of item.variants) {
                 const qty = Number(variant.quantity) || 0;
-                totalQty += qty;
                 subtotal += qty * price;
-            });
-        });
-
-        // ✅ Shipping based on authenticity
-        let shipping: number;
-        if (IsIndianUser) {
-            // INR shipping
-            shipping = 1800 + (totalQty > 1 ? (totalQty - 1) * 500 : 0);
-        } else {
-            // USD shipping
-            shipping = 30 + (totalQty > 1 ? (totalQty - 1) * 10 : 0);
+                totalQty += qty;
+            }
         }
 
-        // ✅ Apply coupon if valid
+        const shipping = IsIndianUser
+            ? 1800 + Math.max(0, totalQty - 1) * 500
+            : 30 + Math.max(0, totalQty - 1) * 10;
+
         let discount = 0;
         if (couponCode) {
             const coupon: ICoupon | null = await Coupon.findOne({
@@ -67,17 +75,15 @@ export async function POST(req: Request) {
             });
 
             if (coupon) {
-                const discountPercent = Number(coupon.discountPercent) || 0;
-                const maxDiscount = Number(coupon.maxDiscount) || 0;
-
+                const discountPercent = Number(coupon.discountPercent ?? 0);
+                const maxDiscount = Number(coupon.maxDiscount ?? 0);
                 discount = Math.min(subtotal * (discountPercent / 100), maxDiscount);
             }
         }
 
         const finalAmount = subtotal + shipping - discount;
 
-        // ✅ Validate before Razorpay call
-        if (!finalAmount || isNaN(finalAmount) || finalAmount <= 0) {
+        if (isNaN(finalAmount) || finalAmount <= 0) {
             return NextResponse.json(
                 {
                     error: "Invalid order amount",
@@ -96,19 +102,23 @@ export async function POST(req: Request) {
             key_secret: process.env.RAZORPAY_KEY_SECRET!,
         });
 
+        // ✅ Correct type import (no warning)
         const order = await razorpay.orders.create({
-            amount: Math.round(finalAmount * 100), // paise or cents
-            currency: IsIndianUser ? "INR" : "USD", // 👈 dynamic currency
+            amount: Math.round(finalAmount * 100),
+            currency: IsIndianUser ? "INR" : "USD",
             receipt: `order_rcptid_${Date.now()}`,
         });
 
+        // ✅ TypeScript will correctly infer the type from Razorpay SDK
         return NextResponse.json({ order });
-    } catch (error: any) {
-        console.error("❌ Razorpay Order Error:", error);
+
+    } catch (error) {
+        const err = error as Error;
+        console.error("❌ Razorpay Order Error:", err);
         return NextResponse.json(
             {
                 error: "Razorpay order creation failed",
-                details: error.message || error,
+                details: err.message || String(error),
             },
             { status: 500 }
         );

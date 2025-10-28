@@ -6,11 +6,46 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { OrderStatusTracker } from "@/components/custom/requests/OrderStatusTracker";
 
-interface Props {
-    order: any; // you can keep typing stricter
-}
 
-const OrderTrackerClient: React.FC<Props> = ({ order }) => {
+type Order = {
+    _id: string;
+    status: "Request Submitted" |
+    "Under Verification" |
+    "Quotation Generated" |
+    "In Production" |
+    "Out for Delivery" |
+    "Delivered";
+    userId: string;
+    color: string;
+    createdAt: Date;
+    isBusiness: boolean;
+    material: string;
+    modelFileUrl: string;
+    notes: string;
+    otherColor: string;
+    otherMaterial: string;
+    otherPriority: string;
+    priority: string;
+    quantity: string;
+    image: string;
+    price: number;
+    youtubeLink: string;
+    trackingId: string;
+    trackingLink?: string;
+    addressId?: string;
+    items: [];
+    totalAmount: number;
+
+    // ✅ Dimensions
+    length?: number;
+    breadth?: number;
+    height?: number;
+    dimensionUnit?: string;
+    customRequest?: boolean;
+};
+
+
+const OrderTrackerClient = ({ order }: { order: Order }) => {
     return (
         <>
             <OrderStatusTracker currentStatus={order.status} />

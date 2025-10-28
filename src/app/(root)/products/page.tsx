@@ -6,15 +6,17 @@ import Title from '@/components/ui/Title'
 import WidthCard from '@/components/ui/WidthCard'
 import React from 'react'
 
-interface ProductsPageProps {
-    searchParams: Record<string, string | string[] | undefined>
-}
+// Remove the interface and let Next.js handle the types automatically
+// Or use the correct type if you need TypeScript definitions
 
-const ProductsPage = async ({ searchParams }: ProductsPageProps) => {
+const ProductsPage = async ({
+    searchParams
+}: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) => {
+    // Await the searchParams promise
     const resolvedSearchParams = await searchParams
-    const additionalData = await getProductExtraDetails();
-
-
+    const additionalData = await getProductExtraDetails()
 
     return (
         <div className='mt-18 md:mt-24'>

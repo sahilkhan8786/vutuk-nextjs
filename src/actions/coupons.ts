@@ -1,40 +1,61 @@
-"use server";
-
+'use server'
 import { Coupon } from "@/models/Coupon";
-import { connectToDB } from "@/lib/mongodb";
-import { addCouponSchema, CouponFormValues } from "@/schemas/AddCouponsSchema";
 import { revalidatePath } from "next/cache";
+import { connectToDB } from "@/lib/mongodb";
 
-// Create
-export async function createCoupon(data: CouponFormValues) {
-    await connectToDB();
-
-    const parsed = addCouponSchema.parse(data);
-
-    const newCoupon = new Coupon({
-        name: parsed.name,
-        type: parsed.type,
-        value: parsed.value,
-        maxUses: parsed.maxUses,
-        startDate: parsed.startDate ? new Date(parsed.startDate) : undefined,
-        endDate: parsed.endDate ? new Date(parsed.endDate) : undefined,
-    });
-
-    await newCoupon.save();
-    revalidatePath('/admin/coupons')
-
-    return { success: true, message: "Coupon created successfully!" };
+// Use the same interface as your form
+interface CouponFormValues {
+    name: string;
+    type: "percentage" | "fixed";
+    value: number;
+    maxUses: number;
+    startDate?: string | Date;
+    endDate?: string | Date;
 }
 
-// Update
-export async function updateCoupon(id: string, values: any) {
+// ✅ Create Coupon
+export async function createCoupon(data: CouponFormValues) {
     try {
         await connectToDB();
 
-        const updated = await Coupon.findByIdAndUpdate(id, values, {
+        const newCoupon = new Coupon({
+            name: data.name,
+            type: data.type,
+            value: data.value,
+            maxUses: data.maxUses,
+            startDate: data.startDate ? new Date(data.startDate) : undefined,
+            endDate: data.endDate ? new Date(data.endDate) : undefined,
+        });
+
+        await newCoupon.save();
+
+        revalidatePath("/admin/coupons");
+
+        return { success: true, message: "Coupon created successfully!" };
+    } catch (error) {
+        console.error("Error creating coupon:", error);
+        return { success: false, message: "Error creating coupon" };
+    }
+}
+
+// ✅ Update Coupon
+export async function updateCoupon(id: string, values: Partial<CouponFormValues>) {
+    try {
+        await connectToDB();
+
+        // Handle date conversion for updates
+        const updateData = { ...values };
+        if (values.startDate) {
+            updateData.startDate = new Date(values.startDate);
+        }
+        if (values.endDate) {
+            updateData.endDate = new Date(values.endDate);
+        }
+
+        const updated = await Coupon.findByIdAndUpdate(id, updateData, {
             new: true,
             runValidators: true,
-        }).lean(); // 👈 ensures plain JS object instead of Mongoose doc
+        }).lean();
 
         if (!updated) {
             return { success: false, message: "Coupon not found" };
@@ -45,7 +66,7 @@ export async function updateCoupon(id: string, values: any) {
         return {
             success: true,
             message: "Coupon updated successfully",
-            coupon: JSON.parse(JSON.stringify(updated)), // plain object, safe to send to client
+            coupon: JSON.parse(JSON.stringify(updated)),
         };
     } catch (error) {
         console.error("Error updating coupon:", error);
@@ -53,8 +74,9 @@ export async function updateCoupon(id: string, values: any) {
     }
 }
 
+// Delete function remains the same...
 
-
+// ✅ Delete Coupon
 export async function deleteCoupon(id: string) {
     try {
         await connectToDB();
@@ -64,7 +86,6 @@ export async function deleteCoupon(id: string) {
             return { success: false, message: "Coupon not found" };
         }
 
-        // Revalidate the admin coupons page
         revalidatePath("/admin/coupons");
 
         return { success: true, message: "Coupon deleted successfully" };

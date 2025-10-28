@@ -1,5 +1,5 @@
 import { AppSidebarProps } from "@/components/custom/app-sidebar";
-import { BookCopy, CurrencyIcon, FileStackIcon, HeartIcon, Home, MessageSquareIcon, Newspaper, Package, PlusSquare, ProjectorIcon, Settings, ShoppingBasket, TicketPercent, TicketPercentIcon, UserIcon, Users } from "lucide-react";
+import { BookCopy, CurrencyIcon, FileStackIcon, HeartIcon, Home, MessageSquareIcon, Newspaper, Package, PlusSquare, ProjectorIcon, Settings, ShoppingBasket, TicketPercentIcon, UserIcon, Users } from "lucide-react";
 
 export const adminSidebarNav: AppSidebarProps[] = [
     {

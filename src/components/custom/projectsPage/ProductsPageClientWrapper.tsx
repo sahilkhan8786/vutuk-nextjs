@@ -32,7 +32,7 @@ export default function ProductsPageClientWrapper({ additionalData }: Props) {
             {/* Mobile Filter Button */}
             <Button
                 className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-50"
-                onClick={() => setMobileFilterOpen(true)}
+
             >
                 Filters
             </Button>

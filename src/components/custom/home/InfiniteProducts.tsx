@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Link from 'next/link';
 import WidthCard from '@/components/ui/WidthCard';
@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 
-interface Product {
+export type Product = {
     _id: string;
     slug: string;
     title: string;
@@ -18,7 +18,8 @@ interface Product {
     priceInUSD?: number;
     images: string[];
     sku: string[];
-}
+};
+
 
 const LIMIT = 25;
 
@@ -29,12 +30,12 @@ export default function InfiniteProducts({ initialProducts }: { initialProducts:
     const [hasMore, setHasMore] = useState(true);
 
     // Construct query string from URL params
-    const buildQueryString = (page: number) => {
+    const buildQueryString = useCallback((page: number) => {
         const params = new URLSearchParams(searchParams);
         params.set('page', page.toString());
         params.set('limit', LIMIT.toString());
         return params.toString();
-    };
+    }, [searchParams]);
 
     const fetchMore = async () => {
         const query = buildQueryString(page);
@@ -63,7 +64,7 @@ export default function InfiniteProducts({ initialProducts }: { initialProducts:
             setHasMore(true);
         };
         resetProducts();
-    }, [searchParams]);
+    }, [searchParams, buildQueryString]);
 
     return (
         <InfiniteScroll
@@ -100,13 +101,16 @@ export default function InfiniteProducts({ initialProducts }: { initialProducts:
                         <AddToCartButton
                             product={{
                                 _id: product._id,
+                                slug: product.slug, // ✅ added
                                 title: product.title,
                                 price: product.price || product.priceInUSD || 0,
+                                priceInUSD: product.priceInUSD || 0, // ✅ added
                                 images: product.images,
-                                sku: product.sku
+                                sku: product.sku,
                             }}
                             quantity={1}
                         />
+
 
                         <HeartButton className="absolute right-6 top-6" itemId={product._id} title={product.title} />
                     </div>

@@ -21,6 +21,7 @@ interface Variations {
 interface Product {
     _id: string;
     title: string;
+    slug: string;
     description: string;
     price: number;
     priceInUSD: number;
@@ -115,8 +116,16 @@ const ProductClient = ({ product }: { product: Product }) => {
                             />
                             <AddToCartButton
                                 className='flex-5'
-                                product={product}
-                                quantity={quantity}
+                                product={{
+                                    _id: product._id,
+                                    slug: product.slug, // ✅ added
+                                    title: product.title,
+                                    price: product.price || product.priceInUSD || 0,
+                                    priceInUSD: product.priceInUSD || 0, // ✅ added
+                                    images: product.images,
+                                    sku: product.sku,
+                                }}
+                                quantity={1}
                             />
 
                         </div>

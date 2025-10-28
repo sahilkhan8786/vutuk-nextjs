@@ -1,16 +1,29 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 
+// models/Coupon.ts
 export interface ICoupon extends Document {
+    name: string;
     code: string;
-    discountPercent: number;
-    maxDiscount: number;
+    type: "percentage" | "fixed";
+    value: number;
+    maxUses: number;
+    startDate?: Date;
+    endDate?: Date;
     isActive: boolean;
+    discountPercent?: string;
+    maxDiscount?: string;
 }
 
 const CouponSchema: Schema<ICoupon> = new Schema({
+    name: { type: String, required: true },
     code: { type: String, required: true, unique: true },
-    discountPercent: { type: Number, required: true },
-    maxDiscount: { type: Number, required: true },
+    type: { type: String, enum: ["percentage", "fixed"], required: true },
+    value: { type: Number, required: true },
+    discountPercent: { type: String, required: true },
+    maxDiscount: { type: String, required: true },
+    maxUses: { type: Number, required: true },
+    startDate: { type: Date },
+    endDate: { type: Date },
     isActive: { type: Boolean, default: true },
 });
 

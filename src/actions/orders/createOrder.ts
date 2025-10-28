@@ -1,10 +1,8 @@
 // app/actions/orders/createOrder.ts
 "use server";
 
-import { getToken } from "next-auth/jwt";
 import { connectToDB } from "@/lib/mongodb";
 import Order from "@/models/order.model";
-import { cookieName } from "@/utils/values";
 import { auth } from "@/auth";
 
 export async function createOrder(data: {

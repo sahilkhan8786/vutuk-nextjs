@@ -1,7 +1,9 @@
 "use client";
 
+import React, { useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -13,70 +15,69 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import {
     Select,
-    SelectTrigger,
     SelectContent,
     SelectItem,
+    SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { createCoupon, updateCoupon } from "@/actions/coupons";
-import { useTransition } from "react";
-import { addCouponSchema, CouponFormValues } from "@/schemas/AddCouponsSchema";
 
-type Props = {
+import { addCouponSchema, CouponFormValues } from "@/schemas/AddCouponsSchema";
+import { createCoupon, updateCoupon } from "@/actions/coupons";
+
+// ✅ Props typed with strong schema link
+type CouponFormProps = {
     onClose: () => void;
-    defaultValues?: CouponFormValues & { _id?: string };
+    defaultValues?: Partial<CouponFormValues> & { _id?: string };
 };
 
-const CouponForm = ({ onClose, defaultValues }: Props) => {
+const CouponForm: React.FC<CouponFormProps> = ({ onClose, defaultValues }) => {
     const [isPending, startTransition] = useTransition();
-    console.log("Opened")
 
     const isEditing = Boolean(defaultValues?._id);
 
     const form = useForm<CouponFormValues>({
         resolver: zodResolver(addCouponSchema),
-        defaultValues: defaultValues
-            ? {
-                ...defaultValues,
-                startDate: defaultValues.startDate
-                    ? new Date(defaultValues.startDate).toISOString().split("T")[0]
-                    : "",
-                endDate: defaultValues.endDate
-                    ? new Date(defaultValues.endDate).toISOString().split("T")[0]
-                    : "",
-            }
-            : {
-                name: "",
-                type: "percentage",
-                value: 0,
-                maxUses: 1,
-                startDate: "",
-                endDate: "",
-            },
+        defaultValues: {
+            name: defaultValues?.name ?? "",
+            type: defaultValues?.type ?? "percentage",
+            value: defaultValues?.value ?? 0,
+            maxUses: defaultValues?.maxUses ?? 1,
+            startDate: defaultValues?.startDate ?? "",
+            endDate: defaultValues?.endDate ?? "",
+            isActive: defaultValues?.isActive ?? true,
+        },
     });
 
 
-    function onSubmit(values: CouponFormValues) {
+
+    // ✅ Values are strongly typed by zod schema
+    const onSubmit: SubmitHandler<CouponFormValues> = (values) => {
         startTransition(async () => {
-            if (isEditing && defaultValues?._id) {
-                await updateCoupon(defaultValues._id, values);
-            } else {
-                await createCoupon(values);
+            try {
+                if (isEditing && defaultValues?._id) {
+                    await updateCoupon(defaultValues._id, values);
+                } else {
+                    await createCoupon(values);
+                }
+                onClose();
+            } catch (error) {
+                console.error("Failed to save coupon:", error);
             }
-            onClose?.();
         });
-    }
+    };
 
     return (
-        <div className="">
+        <div>
             <h2 className="text-lg font-semibold mb-4">
                 {isEditing ? "Update Coupon" : "Add Coupon"}
             </h2>
 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+
                     {/* Coupon Name */}
                     <FormField
                         control={form.control}
@@ -129,7 +130,14 @@ const CouponForm = ({ onClose, defaultValues }: Props) => {
                             <FormItem>
                                 <FormLabel>Discount Value</FormLabel>
                                 <FormControl>
-                                    <Input type="number" {...field} />
+                                    <Input
+                                        type="number"
+                                        {...field}
+                                        value={field.value ?? 0}
+                                        onChange={(e) =>
+                                            field.onChange(Number(e.target.value) || 0)
+                                        }
+                                    />
                                 </FormControl>
                                 <FormDescription>
                                     Enter % or fixed amount based on type
@@ -147,7 +155,14 @@ const CouponForm = ({ onClose, defaultValues }: Props) => {
                             <FormItem>
                                 <FormLabel>Maximum Uses</FormLabel>
                                 <FormControl>
-                                    <Input type="number" {...field} />
+                                    <Input
+                                        type="number"
+                                        {...field}
+                                        value={field.value ?? 1}
+                                        onChange={(e) =>
+                                            field.onChange(parseInt(e.target.value) || 1)
+                                        }
+                                    />
                                 </FormControl>
                                 <FormDescription>
                                     How many times this coupon can be used
@@ -165,7 +180,7 @@ const CouponForm = ({ onClose, defaultValues }: Props) => {
                             <FormItem>
                                 <FormLabel>Start Date</FormLabel>
                                 <FormControl>
-                                    <Input type="date" {...field} />
+                                    <Input type="date" {...field} value={field.value ?? ""} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -180,9 +195,31 @@ const CouponForm = ({ onClose, defaultValues }: Props) => {
                             <FormItem>
                                 <FormLabel>End Date</FormLabel>
                                 <FormControl>
-                                    <Input type="date" {...field} />
+                                    <Input type="date" {...field} value={field.value ?? ""} />
                                 </FormControl>
                                 <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Active Status */}
+                    <FormField
+                        control={form.control}
+                        name="isActive"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                <div className="space-y-0.5">
+                                    <FormLabel className="text-base">Active Status</FormLabel>
+                                    <FormDescription>
+                                        Whether this coupon is active and can be used
+                                    </FormDescription>
+                                </div>
+                                <FormControl>
+                                    <Switch
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
                             </FormItem>
                         )}
                     />

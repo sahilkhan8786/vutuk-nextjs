@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import EditCouponFormWrapper from "../admin/wrappers/EditCouponFormWrapper";
 import DeleteHandler from "../deleteHandler/DeleteHandler";
 
@@ -8,7 +7,11 @@ type Coupon = {
     type: "percentage" | "fixed";
     value: number;
     maxUses: number;
+    isActive: boolean;        // ✅ add this
+    startDate?: string;       // ✅ add this
+    endDate?: string;         // ✅ add this
 };
+
 
 // ✅ Server Component
 const AdminCoupons = async () => {
