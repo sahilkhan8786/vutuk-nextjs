@@ -20,7 +20,7 @@ const AdminOrdersPage = () => {
     const [orders, setOrders] = useState<Order[]>([]);
 
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/requests`,
+        fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/requests/orders`,
             {
                 credentials: 'include'
             }
