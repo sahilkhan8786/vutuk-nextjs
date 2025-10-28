@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import Cart from "@/models/cart.model";
 import { Coupon, ICoupon } from "@/models/Coupon";
 import { isIndian } from "@/lib/getIP";
+import { cookieName } from "@/utils/values";
 
 interface RazorpayOrderRequestBody {
     couponCode?: string;
@@ -29,7 +30,11 @@ interface CartDocument {
 
 export async function POST(req: Request) {
     try {
-        const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+        const token = await getToken({
+            req,
+            secret: process.env.AUTH_SECRET,
+            cookieName: cookieName
+        });
         if (!token?.sub) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
