@@ -47,7 +47,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const IsIndianUser = await isIndian();
+        const IsIndianUser = await isIndian(req);
         const { couponCode }: RazorpayOrderRequestBody = await req.json();
 
         // Now the models should be properly registered
