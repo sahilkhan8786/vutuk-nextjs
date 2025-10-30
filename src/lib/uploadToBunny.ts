@@ -1,29 +1,33 @@
-export async function uploadToBunny(file: File, onProgress?: (percent: number) => void) {
-    return new Promise<string>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        const formData = new FormData();
-        formData.append('file', file);
+export async function uploadToBunny(
+    file: File,
+    onProgress?: (percent: number) => void
+): Promise<string> {
+    // 1️⃣ Ask backend for signed upload info
+    const res = await fetch("/api/upload-bunny");
+    const { uploadUrl, accessKey, publicUrl } = await res.json();
 
-        xhr.open('POST', '/api/upload-bunny');
+    // 2️⃣ Upload file directly to Bunny Storage
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("PUT", uploadUrl);
+        xhr.setRequestHeader("AccessKey", accessKey);
+        xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
 
         xhr.upload.onprogress = (event) => {
             if (event.lengthComputable && onProgress) {
-                const percent = Math.round((event.loaded / event.total) * 100);
-                onProgress(percent);
+                onProgress(Math.round((event.loaded / event.total) * 100));
             }
         };
 
         xhr.onload = () => {
-            if (xhr.status === 200) {
-                const resp = JSON.parse(xhr.responseText);
-                if (resp.url) resolve(resp.url);
-                else reject(resp.error);
+            if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(publicUrl); // ✅ return CDN URL
             } else {
-                reject(xhr.responseText);
+                reject(`Upload failed: ${xhr.statusText}`);
             }
         };
 
-        xhr.onerror = () => reject('Upload failed due to network error');
-        xhr.send(formData); // Send FormData instead of file directly
+        xhr.onerror = () => reject("Network error during upload");
+        xhr.send(file);
     });
 }

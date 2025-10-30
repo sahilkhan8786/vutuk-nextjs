@@ -45,63 +45,62 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
   };
 };
 
-    export const register = async (values: z.infer<typeof registerSchema>) => {
-        const validatedFields = registerSchema.safeParse(values);
-        await connectToDB();
+export const register = async (values: z.infer<typeof registerSchema>) => {
+  const validatedFields = registerSchema.safeParse(values);
+  await connectToDB();
 
-        if (!validatedFields.success) {
-            return {
-                error: "Invalid Fields"
-            }
-        }
-
-
-        const { email, password, name } = validatedFields.data;
-        const hashedPassword = await bcrypt.hash(password, 10); // Here you would hash the password
-
-        const existingUser = await getUserByEmail(email);
-        if (existingUser && existingUser.provider === 'google') {
-            return {
-              error: 'This email is already registered via Google. Please sign in with Google.',
-            };
-          }
-
-
-        if (existingUser) {
-            return {
-                error: "Email already exists"
-            }
-        }
-
-
-        await User.create({
-            name,
-            email,
-            password: hashedPassword,
-            provider:'credentials'
-        });
-
-
-        // TO DO SEND VERIFICATION TOKEN EMAIL
-
-
-        return {
-            success: true,
-            message:' "User created successfully!"'
-        }
-    
+  if (!validatedFields.success) {
+    return {
+      error: "Invalid Fields"
     }
+  }
 
 
-export async function logout() { 
-    await signOut({
-        redirectTo:'/'
-    })
+  const { email, password, name } = validatedFields.data;
+  const hashedPassword = await bcrypt.hash(password, 10); // Here you would hash the password
+
+  const existingUser = await getUserByEmail(email);
+  if (existingUser && existingUser.provider === 'google') {
+    return {
+      error: 'This email is already registered via Google. Please sign in with Google.',
+    };
+  }
+
+
+  if (existingUser) {
+    return {
+      error: "Email already exists"
+    }
+  }
+
+
+  await User.create({
+    name,
+    email,
+    password: hashedPassword,
+    provider: 'credentials'
+  });
+
+
+
+
+  return {
+    success: true,
+    message: ' "User created successfully!"'
+  }
+
 }
 
-export async function signInWithGoogle() { 
-    await signIn('google', {
-        redirect: true,
-        callbackUrl: DEFAULT_LOGIN_REDIRECT
-    })
+
+export async function logout() {
+  await signOut({
+    redirectTo: '/'
+  })
+}
+
+export async function signInWithGoogle() {
+  await signIn('google', {
+    redirect: true,
+    callbackUrl: DEFAULT_LOGIN_REDIRECT
+  })
 }

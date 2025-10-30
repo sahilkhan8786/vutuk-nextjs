@@ -2,7 +2,7 @@ import { z } from "zod";
 
 // File schema for client-side file validation
 export const fileSchema = z.instanceof(File)
-  .refine((file) => file.size <= 5 * 1024 * 1024, "File size must be less than 5MB")
+  .refine((file) => file.size <= 500 * 1024 * 1024, "File size must be less than 5MB")
   .refine((file) =>
     ['.stl', '.obj', '.step', '.glb'].some(ext => file.name.toLowerCase().endsWith(ext)),
     "Only .stl, .obj, .step, and .glb files are allowed"
