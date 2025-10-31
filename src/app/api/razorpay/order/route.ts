@@ -77,8 +77,9 @@ export async function POST(req: Request) {
             }
         }
 
+        // ✅ Free shipping for Indian users
         const shipping = IsIndianUser
-            ? 1800 + Math.max(0, totalQty - 1) * 500
+            ? 0
             : 30 + Math.max(0, totalQty - 1) * 10;
 
         let discount = 0;
@@ -96,6 +97,7 @@ export async function POST(req: Request) {
         }
 
         const finalAmount = subtotal + shipping - discount;
+
 
         if (isNaN(finalAmount) || finalAmount <= 0) {
             return NextResponse.json(

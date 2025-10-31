@@ -93,8 +93,9 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({ isIndianUser }) =
     );
 
     const shippingCost = isIndianUser
-        ? 1800 + (totalQuantity > 1 ? (totalQuantity - 1) * 500 : 0)
-        : 20 + (totalQuantity > 1 ? (totalQuantity - 1) * 5 : 0); // example USD shipping
+        ? 0 // Free shipping for Indian users
+        : 20 + (totalQuantity > 1 ? (totalQuantity - 1) * 5 : 0); // Example for international users
+
 
     const orderAmount = totalPrice + shippingCost;
 
@@ -320,8 +321,13 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({ isIndianUser }) =
                         </div>
                         <div className="flex justify-between">
                             <span>Shipping</span>
-                            <span>{currencySymbol}{shippingCost.toFixed(2)}</span>
+                            {isIndianUser ? (
+                                <span className="text-green-600 font-medium">Free Shipping</span>
+                            ) : (
+                                <span>{currencySymbol}{shippingCost.toFixed(2)}</span>
+                            )}
                         </div>
+
                         {appliedCoupon && (
                             <div className="flex justify-between text-green-600">
                                 <span>Discount ({appliedCoupon})</span>
