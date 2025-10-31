@@ -16,5 +16,5 @@ export const editProductSchema = z.object({
   price: z.number().positive("Price must be greater than 0"),
   priceInUSD: z.number().positive("Price in USD must be greater than 0"),
 
-  sizeImages: z.array(z.string()).min(1, "One Image should be of the Size")
+  sizeImages: z.array(z.string()).optional()
 });
