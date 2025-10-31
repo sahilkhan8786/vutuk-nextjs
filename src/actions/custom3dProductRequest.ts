@@ -62,7 +62,7 @@ export async function custom3dProductRequest(values: z.infer<typeof custom3dProd
     });
     await resend.emails.send({
       from: "Vutuk <orders@vutuk.com>",
-      to: session.user.email || "",
+      to: "vutuk.dm@gmail.com",
       subject: "New 3D Print Request Received",
       react: AdminNewCustomOrderEmail({
         customerName: session.user.name || "Customer",

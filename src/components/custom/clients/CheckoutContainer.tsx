@@ -107,7 +107,9 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({ isIndianUser }) =
     useEffect(() => {
         const fetchAddresses = async () => {
             try {
-                const res = await fetch("/api/address");
+                const res = await fetch("/api/address", {
+                    credentials: 'include'
+                });
                 const data = await res.json();
                 if (data.status === "success") {
                     setAddresses(data.data.addresses);

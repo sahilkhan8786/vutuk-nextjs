@@ -93,7 +93,7 @@ export const register = async (values: z.infer<typeof registerSchema>) => {
     });
     await resend.emails.send({
       from: 'Vutuk <onboarding@vutuk.com>',
-      to: email,
+      to: "vutuk.dm@gmail.com",
       subject: 'New User On Vutuk',
       react: AdminNewUserEmail({ name, email }),
     });

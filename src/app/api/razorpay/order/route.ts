@@ -1,7 +1,7 @@
 import Razorpay from "razorpay";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
-import { connectToDB } from "@/lib/mongodb"; // Your connection utility
+import { connectToDB } from "@/lib/mongodb";
 import Cart from "@/models/cart.model";
 import { Coupon, ICoupon } from "@/models/Coupon";
 import { isIndian } from "@/lib/getIP";

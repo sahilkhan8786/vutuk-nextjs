@@ -1,4 +1,3 @@
-// app/api/razorpay/verify/route.ts
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import Payment from "@/models/payments.model";
@@ -121,7 +120,7 @@ export async function POST(req: Request) {
             // 📨 Send to admin
             await resend.emails.send({
                 from: "Vutuk <system@vutuk.com>",
-                to: "admin@vutuk.com",
+                to: "vutuk.dm@gmail.com",
                 subject: "New Order Received",
                 react: AdminNewOrderEmail({
                     name: token.name || "Customer",

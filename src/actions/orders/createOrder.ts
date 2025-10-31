@@ -4,6 +4,9 @@
 import { connectToDB } from "@/lib/mongodb";
 import Order from "@/models/order.model";
 import { auth } from "@/auth";
+import { resend } from "@/lib/resend";
+import { Custom3dProductRequestEmail } from "@/emails/Custom3dProductRequestEmail";
+import { AdminNewCustomOrderEmail } from "@/emails/AdminNewCustomOrderEmail";
 
 export async function createOrder(data: {
     addressId: string;
@@ -49,6 +52,38 @@ export async function createOrder(data: {
         height: data.height,
         dimensionUnit: data.dimensionUnit,
     });
+
+
+    try {
+        await resend.emails.send({
+            from: "Vutuk <orders@vutuk.com>",
+            to: session.user.email || "",
+            subject: "Your 3D Print Request Has Been Received!",
+            react: Custom3dProductRequestEmail({
+                name: session.user.name || "Customer",
+                requestId: order._id || "N/A",
+                material: data.material,
+                color: data.color,
+                quantity: data.quantity,
+            }),
+        });
+        await resend.emails.send({
+            from: "Vutuk <orders@vutuk.com>",
+            to: "vutuk.dm@gmail.com",
+            subject: "New 3D Print Request Received",
+            react: AdminNewCustomOrderEmail({
+                customerName: session.user.name || "Customer",
+                customerEmail: session.user.email || "",
+                material: data.material,
+                color: data.color,
+                quantity: data.quantity,
+                notes: data.notes,
+            }),
+        });
+    } catch (error) {
+        console.error("Email sending failed:", error);
+    }
+
 
     return { success: true, order };
 }
