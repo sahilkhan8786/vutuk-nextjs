@@ -2,7 +2,10 @@
 
 import { signIn, signOut } from "@/auth";
 import { getUserByEmail } from "@/data/user.data";
+import { AdminNewUserEmail } from "@/emails/AdminNewUserEmail";
+import { WelcomeEmail } from "@/emails/WelcomeEmail";
 import { connectToDB } from "@/lib/mongodb";
+import { resend } from "@/lib/resend";
 import { User } from "@/models/user.model";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { loginSchema, registerSchema } from "@/schemas/authSchema";
@@ -80,6 +83,23 @@ export const register = async (values: z.infer<typeof registerSchema>) => {
     password: hashedPassword,
     provider: 'credentials'
   });
+
+  try {
+    await resend.emails.send({
+      from: 'Vutuk <onboarding@vutuk.com>',
+      to: email,
+      subject: 'Welcome to Vutuk!',
+      react: WelcomeEmail({ name }),
+    });
+    await resend.emails.send({
+      from: 'Vutuk <onboarding@vutuk.com>',
+      to: email,
+      subject: 'New User On Vutuk',
+      react: AdminNewUserEmail({ name, email }),
+    });
+  } catch (error) {
+    console.error('Email sending failed:', error);
+  }
 
 
 

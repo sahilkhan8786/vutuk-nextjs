@@ -1,10 +1,10 @@
-// components/auth/AuthFormWrapper.tsx
 'use client'
 
 import React, {
     ReactNode,
     useImperativeHandle,
     useState,
+    useEffect,
     forwardRef,
 } from 'react'
 import {
@@ -16,16 +16,36 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog'
 import AuthForm from './AuthForm'
+import { useSearchParams } from 'next/navigation'
 
 export interface AuthDialogHandle {
     open: () => void
     close: () => void
 }
 
-const AuthFormWrapper = forwardRef<AuthDialogHandle, { trigger?: ReactNode }>(
+interface AuthFormWrapperProps {
+    trigger?: ReactNode
+}
+
+const AuthFormWrapper = forwardRef<AuthDialogHandle, AuthFormWrapperProps>(
     ({ trigger }, ref) => {
         const [open, setOpen] = useState(false)
+        const searchParams = useSearchParams()
 
+        // ✅ Auto-open when redirected with ?showAuth=true
+        useEffect(() => {
+            const shouldShowAuth = searchParams.get('showAuth')
+            if (shouldShowAuth === 'true') {
+                setOpen(true)
+
+                // Optional: Clean the URL after opening
+                const url = new URL(window.location.href)
+                url.searchParams.delete('showAuth')
+                window.history.replaceState({}, '', url.toString())
+            }
+        }, [searchParams])
+
+        // ✅ Expose open/close methods for manual control (like from Header)
         useImperativeHandle(ref, () => ({
             open: () => setOpen(true),
             close: () => setOpen(false),
@@ -33,9 +53,8 @@ const AuthFormWrapper = forwardRef<AuthDialogHandle, { trigger?: ReactNode }>(
 
         return (
             <Dialog open={open} onOpenChange={setOpen}>
-                {trigger && <DialogTrigger asChild>
-                    {trigger}
-                </DialogTrigger>}
+                {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
+
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
                         <DialogTitle>Welcome to Vutuk</DialogTitle>

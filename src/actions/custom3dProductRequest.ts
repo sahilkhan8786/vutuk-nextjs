@@ -2,6 +2,9 @@
 
 
 import { auth } from "@/auth";
+import { AdminNewCustomOrderEmail } from "@/emails/AdminNewCustomOrderEmail";
+import { Custom3dProductRequestEmail } from "@/emails/Custom3dProductRequestEmail";
+import { resend } from "@/lib/resend";
 import Custom3dPrintRequest from "@/models/custom3dPrintRequests.model";
 
 import { custom3dProductRequestSchema } from "@/schemas/custom3dProductRequestSchema";
@@ -27,7 +30,7 @@ export async function custom3dProductRequest(values: z.infer<typeof custom3dProd
   const data = validatedFields.data
 
 
-  await Custom3dPrintRequest.create({
+  const request = await Custom3dPrintRequest.create({
     addressId: data.addressId,
     userId: session.user.id,
     modelFileUrl: data.modelFileUrl,
@@ -43,6 +46,36 @@ export async function custom3dProductRequest(values: z.infer<typeof custom3dProd
     isCustomOrderRequest: false
 
   })
+
+  try {
+    await resend.emails.send({
+      from: "Vutuk <orders@vutuk.com>",
+      to: session.user.email || "",
+      subject: "Your 3D Print Request Has Been Received!",
+      react: Custom3dProductRequestEmail({
+        name: session.user.name || "Customer",
+        requestId: request._id || "N/A",
+        material: data.material,
+        color: data.color,
+        quantity: data.quantity,
+      }),
+    });
+    await resend.emails.send({
+      from: "Vutuk <orders@vutuk.com>",
+      to: session.user.email || "",
+      subject: "New 3D Print Request Received",
+      react: AdminNewCustomOrderEmail({
+        customerName: session.user.name || "Customer",
+        customerEmail: session.user.email || "",
+        material: data.material,
+        color: data.color,
+        quantity: data.quantity,
+        notes: data.notes,
+      }),
+    });
+  } catch (error) {
+    console.error("Email sending failed:", error);
+  }
 
 
 

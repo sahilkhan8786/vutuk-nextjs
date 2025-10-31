@@ -7,6 +7,10 @@ import Cart from "@/models/cart.model";
 import { connectToDB } from "@/lib/mongodb";
 import { getToken } from "next-auth/jwt";
 import { cookieName } from "@/utils/values";
+import { resend } from "@/lib/resend";
+import { AdminNewOrderEmail } from "@/emails/AdminNewOrderEmail";
+import { OrderConfirmationEmail } from "@/emails/OrderConfirmationEmail";
+import { OrderItem, RawOrderItem } from "@/types/email";
 
 export async function POST(req: Request) {
     try {
@@ -92,7 +96,45 @@ export async function POST(req: Request) {
 
         // Create order
         const order = await Order.create(orderData);
-        console.log(order)
+
+
+        const orderItems: OrderItem[] = ((order.items as RawOrderItem[]) || []).map((item) => ({
+            name: item.productName || "Product",
+            quantity: item.quantity,
+            price: item.price,
+        }));
+
+        try {
+            // 📨 Send to user
+            await resend.emails.send({
+                from: "Vutuk <orders@vutuk.com>",
+                to: paymentData.email,
+                subject: "Your Vutuk Order Has Been Confirmed!",
+                react: OrderConfirmationEmail({
+                    name: token.name || "Customer",
+                    orderId: order._id.toString(),
+                    amount: paymentData.amount / 100,
+                    items: orderItems,
+                }),
+            });
+
+            // 📨 Send to admin
+            await resend.emails.send({
+                from: "Vutuk <system@vutuk.com>",
+                to: "admin@vutuk.com",
+                subject: "New Order Received",
+                react: AdminNewOrderEmail({
+                    name: token.name || "Customer",
+                    customerEmail: paymentData.email,
+                    orderId: order._id.toString(),
+                    amount: paymentData.amount / 100,
+                    items: orderItems,
+                }),
+            });
+        } catch (err) {
+            console.error("Email sending failed:", err);
+        }
+
 
         // Clear cart if it existed
         if (cart?.cart?.length) {

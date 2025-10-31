@@ -212,7 +212,7 @@ const EditProductForm = ({ slug, onClose }: { slug?: string, onClose: () => void
                 <div className='bg-secondary rounded-xl py-4'>
 
                     <h3 className='mb-4 px-4'>Product Images -
-                        <span className='text-muted-foreground underline'> Select the Product Size Images</span>
+                        <span className='text-muted-foreground underline'> Select the Product Size Images -(Mandatory)*</span>
                     </h3>
                     <div className='flex flex-wrap w-full gap-4 px-2'>
 
