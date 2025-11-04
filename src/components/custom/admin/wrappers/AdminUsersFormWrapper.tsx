@@ -18,7 +18,7 @@ const AdminUsersFormWrapper = ({ trigger, id }: {
     const [open, setOpen] = useState<boolean>(false)
 
     return (
-        <Sheet open={open} onOpenChange={setOpen} >
+        <Sheet open={open} onOpenChange={setOpen}  >
             <SheetTrigger asChild>
                 {trigger ? trigger :
                     <Button>

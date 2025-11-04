@@ -9,12 +9,12 @@ export async function GET(req: NextRequest) {
     const queryParams = Object.fromEntries(req.nextUrl.searchParams.entries());
 
 
-      // ⚙️ Normal query
-        const features = new APIFeatures(Service.find(), queryParams)
-          .filter()
-          .sort()
+    // ⚙️ Normal query
+    const features = new APIFeatures(Service.find(), queryParams)
+      .filter()
+      .sort()
       .limitFields()
-    .paginate()
+      .paginate()
 
     const services = await features.query;;
 

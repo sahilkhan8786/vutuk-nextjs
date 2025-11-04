@@ -22,81 +22,119 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
-    pageCount?: number // optional, in case you implement server-side pagination later
+    pageCount?: number
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
-    pageCount = -1, // -1 means not using server pagination
+    pageCount = -1,
 }: DataTableProps<TData, TValue>) {
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
     })
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
-        []
-    )
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+    const [filterField, setFilterField] = useState<string>("title")
 
     const table = useReactTable({
         data,
         columns,
         state: {
             pagination,
-            columnFilters
+            columnFilters,
         },
         onPaginationChange: setPagination,
+        onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
-
-
-        manualPagination: false, // Set true if using server-side pagination
-        autoResetPageIndex: false, // ✅ This keeps current page on data change
-        pageCount: pageCount > 0 ? pageCount : undefined, // only needed for server-side
+        manualPagination: false,
+        autoResetPageIndex: false,
+        pageCount: pageCount > 0 ? pageCount : undefined,
     })
+
+    const currentFilterValue = table.getColumn(filterField)?.getFilterValue() ?? ""
+
+    // Render appropriate input based on selected filter field
+    const renderFilterInput = () => {
+        switch (filterField) {
+            case "hasConfigurations":
+                return (
+                    <Select
+                        onValueChange={(value) =>
+                            table
+                                .getColumn("hasConfigurations")
+                                ?.setFilterValue(
+                                    value === "true" ? true : value === "false" ? false : ""
+                                )
+                        }
+                        value={
+                            table.getColumn("hasConfigurations")?.getFilterValue() === true
+                                ? "true"
+                                : table.getColumn("hasConfigurations")?.getFilterValue() ===
+                                    false
+                                    ? "false"
+                                    : ""
+                        }
+                    >
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="true">Configured ✅</SelectItem>
+                            <SelectItem value="false">Unconfigured ❌</SelectItem>
+                        </SelectContent>
+                    </Select>
+                )
+
+
+
+            default:
+                // title, sku, slug, etc.
+                return (
+                    <Input
+                        placeholder={`Enter ${filterField}`}
+                        value={currentFilterValue as string}
+                        onChange={(e) =>
+                            table.getColumn(filterField)?.setFilterValue(e.target.value)
+                        }
+                        className="max-w-sm"
+                    />
+                )
+        }
+    }
 
     return (
         <div className="rounded-md border">
-            <div className="flex items-center py-4 justify-between w-full gap-4 px-2">
-                <Input
-                    placeholder="Enter SKU"
-                    value={(table.getColumn("sku")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("sku")?.setFilterValue(event.target.value)
-                    }
-                    className="max-w-sm"
-                />
-
-
-                <Select
-                    onValueChange={(value) =>
-                        table.getColumn("hasConfigurations")?.setFilterValue(value === "true" ? true : value === "false" ? false : "")
-                    }
-                    value={
-                        table.getColumn("hasConfigurations")?.getFilterValue() === true
-                            ? "true"
-                            : table.getColumn("hasConfigurations")?.getFilterValue() === false
-                                ? "false"
-                                : ""
-                    }
-                >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Filter by Configured" />
+            {/* 🔍 Filter Controls */}
+            <div className="flex items-center py-4 justify-start gap-4 px-4">
+                <Select value={filterField} onValueChange={setFilterField}>
+                    <SelectTrigger className="w-[220px]">
+                        <SelectValue placeholder="Select Filter Field" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="true">Configured ✅</SelectItem>
-                        <SelectItem value="false">Unconfigured ❌</SelectItem>
+                        <SelectItem value="title">Product Title</SelectItem>
+                        <SelectItem value="sku">SKU</SelectItem>
+                        <SelectItem value="hasConfigurations">Is Configured</SelectItem>
                     </SelectContent>
                 </Select>
+
+                {renderFilterInput()}
             </div>
 
+            {/* 🧾 Table */}
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
@@ -138,6 +176,7 @@ export function DataTable<TData, TValue>({
                 </TableBody>
             </Table>
 
+            {/* 📄 Pagination */}
             <div className="flex items-center justify-end space-x-2 py-4 px-4">
                 <Button
                     variant="outline"

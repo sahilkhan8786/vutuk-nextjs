@@ -79,7 +79,7 @@ const AdminUserForm = ({ id, onClose }: {
     };
 
     return (
-        <SheetContent className='w-full'>
+        <SheetContent className='w-full overflow-y-scroll'>
             <SheetHeader>
                 <SheetTitle>Edit User</SheetTitle>
                 <SheetDescription>Update the role and verification status.</SheetDescription>

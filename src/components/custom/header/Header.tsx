@@ -25,7 +25,7 @@ const Header = async () => {
                 <Link href="/">
                     <div className="relative w-[100px] h-[100px]">
                         <Image
-                            src="/main-logo-white.png"
+                            src="/Vutuk-Website.png"
                             alt="logo"
                             priority
                             fill
